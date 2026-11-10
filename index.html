@@ -4,30 +4,659 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>サポート｜子供にご飯を食べさせるための時計</title>
+<meta name="description" content="針を指で回すだけでタイマーになるアナログ時計アプリ「子供にご飯を食べさせるための時計」のサポートページ。使い方、よくある質問、お問い合わせ。">
+<link rel="icon" href="icon-256.png">
+<script>document.documentElement.classList.add('js');</script>
 <style>
-  body { font-family: -apple-system, "Hiragino Sans", sans-serif; line-height: 1.8; margin: 2rem auto; max-width: 42rem; padding: 0 1rem; color: #222; }
-  h1 { font-size: 1.4rem; }
-  h2 { font-size: 1.1rem; margin-top: 2rem; }
+  :root{
+    --bg:#FAF6EE;
+    --ink:#2E2A24;
+    --sub:#5F574C;
+    --faint:#8A7E6E;
+    --card:#FFFCF6;
+    --line:rgba(90,70,45,.16);
+    --accent:#B5653E;
+    --accent-ink:#9A5130;
+    --ring1:#D97443;
+    --ring2:#4A8578;
+    --gold:#E0A842;
+    --wood:#C7A276;
+    --wood-dark:#A9835A;
+    --serif:"Hiragino Mincho ProN","Hiragino Mincho Pro","YuMincho","Yu Mincho","MS PMincho","Noto Serif JP",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    line-height:1.85;
+    background:var(--bg);
+    transition:background 1.4s ease;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body[data-scene="howto"]{background:#F8F1E1}
+  body[data-scene="wall"]{background:#F3E7CF}
+  body[data-scene="features"]{background:#FAF6EE}
+  body[data-scene="price"]{background:#F8F1E1}
+  body[data-scene="faq"]{background:#F5EFE2}
+  body[data-scene="contact"]{background:#F2E5CC}
+  ::selection{background:rgba(217,116,67,.28)}
+  a{color:var(--accent-ink)}
+  img{max-width:100%;height:auto}
+
+  /* ---------- header ---------- */
+  header{
+    position:fixed;inset:0 0 auto 0;z-index:50;
+    background:rgba(250,246,238,.86);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .bar{
+    max-width:1060px;margin:0 auto;padding:8px 16px;
+    display:flex;align-items:center;gap:14px;
+  }
+  .brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:600;letter-spacing:.02em;white-space:nowrap}
+  .brand img{width:32px;height:32px;border-radius:8px}
+  nav{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+  nav a{
+    color:var(--sub);text-decoration:none;font-size:.86rem;
+    padding:8px 10px;border-radius:8px;white-space:nowrap;
+  }
+  nav a:hover{color:var(--ink);background:rgba(90,70,45,.07)}
+  .guide-mini{display:flex;align-items:center;gap:7px;margin-left:6px}
+  .guide-mini svg{display:block}
+  .guide-mini .g-label{font-size:.72rem;color:var(--faint);letter-spacing:.08em;white-space:nowrap}
+  @media (max-width:640px){ .guide-mini .g-label{display:none} nav a{padding:8px 6px;font-size:.8rem} .brand span{display:none} }
+
+  main{position:relative;z-index:1}
+  section{scroll-margin-top:76px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+  .narrow{max-width:760px;margin:0 auto;padding:0 20px}
+
+  .kicker{font-size:.72rem;letter-spacing:.4em;color:var(--accent-ink);margin:0 0 14px;font-weight:600}
+  h1,h2{font-family:var(--serif);font-weight:600;text-wrap:balance}
+  h1{font-size:2.35rem;line-height:1.45;margin:0 0 18px;letter-spacing:.03em}
+  h2{font-size:1.65rem;line-height:1.55;margin:0 0 18px}
+  h3{font-size:1.02rem;margin:0 0 6px}
+  p{margin:0 0 1.05em;color:var(--sub)}
+  .lead{font-size:1.06rem;color:var(--ink)}
+  strong{color:var(--ink)}
+
+  /* reveal */
+  .js .rv{opacity:0;transform:translateY(18px);transition:opacity .9s ease,transform .9s ease}
+  .js .rv.in{opacity:1;transform:none}
+  .js .rv.d1{transition-delay:.08s}.js .rv.d2{transition-delay:.16s}
+
+  /* ---------- hero ---------- */
+  .hero{padding:118px 0 64px}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr} }
+  .wood-panel{
+    border-radius:26px;padding:34px 26px 30px;position:relative;
+    background:
+      radial-gradient(120% 90% at 30% 0%, rgba(255,244,214,.5), rgba(255,244,214,0) 55%),
+      repeating-linear-gradient(93deg,#C9A87C 0 54px,#C2A075 54px 57px,#CBA97E 57px 112px,#BE9C6E 112px 115px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.35), inset 0 -18px 34px rgba(96,66,32,.18), 0 22px 44px rgba(80,58,30,.16);
+    text-align:center;
+  }
+  .wood-panel .clock-live{filter:drop-shadow(0 14px 22px rgba(80,55,25,.28))}
+  .hero-shot{margin:0}
+  .hero-shot img{border-radius:22px;box-shadow:0 18px 40px rgba(80,58,30,.18);display:block;margin:0 auto}
+  .hero-shot figcaption{font-size:.8rem;color:var(--faint);text-align:center;margin-top:10px}
+  .app-line{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+  .app-line img{width:40px;height:40px;border-radius:10px}
+  .app-line .app-name{font-size:.9rem;color:var(--sub)}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;align-items:center}
+  .btn{
+    display:inline-block;background:var(--accent);color:#FFF8EF;text-decoration:none;
+    padding:13px 22px;border-radius:999px;font-weight:600;font-size:.95rem;border:0;cursor:pointer;
+    box-shadow:0 10px 22px rgba(181,101,62,.28);
+  }
+  .btn:active{transform:scale(.98)}
+  .btn.ghost{background:transparent;color:var(--accent-ink);box-shadow:none;border:1px solid rgba(181,101,62,.45)}
+  .scroll-cue{margin-top:34px;font-size:.82rem;color:var(--faint);letter-spacing:.14em}
+  .scroll-cue a{color:var(--faint);text-decoration:none}
+  .scroll-cue .arr{display:inline-block;animation:bob 2.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+  /* ---------- generic blocks ---------- */
+  .block{padding:84px 0}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:26px 26px 22px;box-shadow:0 10px 26px rgba(90,70,45,.07);
+  }
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:26px 0 8px}
+  @media (max-width:760px){ .steps{grid-template-columns:1fr} }
+  .step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+  .step .num{
+    display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;
+    background:var(--accent);color:#FFF8EF;font-weight:700;font-size:.9rem;margin-bottom:10px;
+  }
+  .step p{margin:0;font-size:.94rem}
+
+  /* ---------- demo ---------- */
+  .demo-card{
+    background:var(--card);border:1px solid var(--line);border-radius:24px;
+    padding:30px 26px;box-shadow:0 16px 36px rgba(90,70,45,.1);
+    display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;position:relative;overflow:hidden;
+  }
+  @media (max-width:760px){ .demo-card{grid-template-columns:1fr;justify-items:center} }
+  .dial-wrap{position:relative;width:264px;height:264px}
+  .dial-wrap:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:50%}
+  .chips{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0 6px}
+  .chip{
+    border:1px solid rgba(181,101,62,.5);background:#FFF6EA;color:var(--accent-ink);
+    border-radius:999px;padding:9px 15px;font-size:.9rem;cursor:pointer;font-family:var(--sans);
+  }
+  .chip:active{transform:scale(.97)}
+  .chip[aria-pressed="true"]{background:var(--accent);color:#FFF8EF}
+  .demo-read{font-size:1.5rem;font-weight:700;letter-spacing:.03em;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .demo-read small{font-size:.85rem;color:var(--sub);font-weight:400}
+  .demo-note{font-size:.82rem;color:var(--faint);margin-top:12px}
+  .mini-btn{
+    border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    padding:8px 13px;font-size:.88rem;cursor:pointer;font-family:var(--sans);
+  }
+  .mini-btn:active{transform:scale(.97)}
+  .particle{
+    position:absolute;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:5;
+    animation:burst .95s cubic-bezier(.17,.67,.35,1) forwards;
+  }
+  @keyframes burst{
+    0%{transform:translate(0,0) scale(1);opacity:1}
+    100%{transform:translate(var(--dx),var(--dy)) scale(.35);opacity:0}
+  }
+
+  /* ---------- wall ---------- */
+  .wall-band{
+    border-radius:28px;padding:44px 30px;
+    background:
+      radial-gradient(120% 90% at 70% 0%, rgba(255,244,214,.45), rgba(255,244,214,0) 55%),
+      repeating-linear-gradient(93deg,#C9A87C 0 54px,#C2A075 54px 57px,#CBA97E 57px 112px,#BE9C6E 112px 115px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.35), inset 0 -18px 34px rgba(96,66,32,.18);
+  }
+  .wall-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:36px;align-items:center}
+  @media (max-width:860px){ .wall-grid{grid-template-columns:1fr} }
+  .wall-grid h2,.wall-grid p{color:#3A2E20}
+  .wall-grid .kicker{color:#7C4A26}
+  .wall-shot{margin:0;text-align:center}
+  .wall-shot img{border-radius:18px;box-shadow:0 16px 34px rgba(80,55,25,.3);max-width:400px;width:100%}
+  .wall-shot figcaption{font-size:.8rem;color:#5D4630;margin-top:10px}
+  .upright-demo{display:flex;gap:22px;margin-top:22px;flex-wrap:wrap}
+  .upright-demo figure{margin:0;text-align:center}
+  .upright-demo figcaption{font-size:.78rem;color:#5D4630;margin-top:6px}
+
+  /* ---------- features ---------- */
+  .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media (max-width:760px){ .feat-grid{grid-template-columns:1fr} }
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 10px 24px rgba(90,70,45,.07)}
+  .feat img{display:block;width:100%;aspect-ratio:3/3.4;object-fit:cover;object-position:top}
+  .feat .txt{padding:16px 20px 18px}
+  .feat .txt p{margin:0;font-size:.93rem}
+  .feat.wide{grid-column:1/-1}
+  .feat.wide img{aspect-ratio:16/10.5}
+
+  /* ---------- price / faq / contact ---------- */
+  .badges{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 6px}
+  .badge{
+    border:1px solid rgba(90,70,45,.25);border-radius:999px;padding:9px 16px;
+    font-size:.9rem;background:rgba(255,252,246,.7);color:var(--ink);font-weight:600;
+  }
+  .faq-item{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-bottom:14px}
+  .faq-item h3{font-size:1rem;margin-bottom:8px}
+  .faq-item p{margin:0;font-size:.95rem}
+  .contact-card{text-align:center;padding:44px 26px}
+  .mail-big{font-size:1.12rem;font-weight:700;letter-spacing:.02em;word-break:break-all}
+  footer{border-top:1px solid var(--line);padding:30px 20px 40px;text-align:center;color:var(--faint);font-size:.85rem}
+  footer a{color:var(--sub)}
+
+  /* ---------- floating guide dial ---------- */
+  .guide-float{
+    position:fixed;right:22px;bottom:22px;z-index:40;text-align:center;
+    transition:opacity 1.2s ease;
+  }
+  .guide-float .gf-label{
+    margin-top:7px;font-size:.7rem;letter-spacing:.12em;color:var(--sub);
+    background:rgba(250,246,238,.85);border:1px solid var(--line);border-radius:999px;padding:3px 10px;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  }
+  .guide-float .gf-dial{filter:drop-shadow(0 10px 18px rgba(80,58,30,.25));transition:opacity 1.2s ease}
+  body[data-scene="wall"] .guide-float .gf-dial{opacity:.55}
+  @media (max-width:899px){ .guide-float{display:none} }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none !important;transition:none !important}
+    .js .rv{opacity:1;transform:none}
+  }
 </style>
 </head>
-<body>
-<h1>子供にご飯を食べさせるための時計 — サポート</h1>
-<p>針を指で回すだけでタイマーになる、アナログ時計アプリです。iPad / iPhone 対応（iOS 17以降）。</p>
+<body data-scene="hero">
 
-<h2>使い方</h2>
-<p><strong>タイマーをセットする:</strong> 長針を時計回りに回すと分単位、秒針を回すと秒単位でタイマーが始まります。タイマーは2つまで同時に置けます。終わると時計が粒になって飛び散る演出が流れます。</p>
-<p><strong>時刻を進める:</strong> 設定（右上の歯車）→「時刻を進める」で、表示だけを5分・10分先に進められます。端末の時刻は変わりません。</p>
-<p><strong>壁掛け時計にする:</strong> 設定→「壁の背景」で壁を撮影すると、時計の外側に壁の写真が表示され、壁に溶け込みます。「壁掛け時に0時を真上に」をオンにすると、端末が傾いても12時が真上を向きます。</p>
-<p><strong>その他の設定:</strong> 午後の時刻を13〜24で表示する学習モード、デジタル時計の表示（ドラッグで移動、ピンチで拡大縮小）、砂時計表示への切り替えなどが選べます。</p>
+<header>
+  <div class="bar">
+    <a class="brand" href="#top"><img src="icon-256.png" alt=""><span>Tokei サポート</span></a>
+    <div class="guide-mini" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="18.5" fill="#FFFCF6" stroke="#C7A276" stroke-width="2.5"/>
+        <circle id="gArc" cx="20" cy="20" r="15.5" fill="none" stroke="#D97443" stroke-width="2.6"
+          stroke-linecap="round" stroke-dasharray="0 97.4" transform="rotate(-90 20 20)"/>
+        <g id="gHand"><line x1="20" y1="20" x2="20" y2="8.5" stroke="#2E2A24" stroke-width="2.2" stroke-linecap="round"/></g>
+        <circle cx="20" cy="20" r="2.2" fill="#2E2A24"/>
+      </svg>
+      <span class="g-label" id="gLabel">はじめに</span>
+    </div>
+    <nav>
+      <a href="#howto">使い方</a><a href="#features">機能</a><a href="#faq">よくある質問</a><a href="#contact">お問い合わせ</a>
+    </nav>
+  </div>
+</header>
 
-<h2>よくある質問</h2>
-<p><strong>Q. データは収集されますか？</strong><br>
-A. いいえ。本アプリは通信を行わず、写真や設定は端末内にのみ保存されます。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
-<p><strong>Q. 画面が消えてしまいます。</strong><br>
-A. 表示開始から1時間は自動で消灯しない設定になっています。それ以降は端末の自動ロック設定に従います。長時間の壁掛け利用では、端末の設定で自動ロックを「なし」にしてください。</p>
+<main id="top">
 
-<h2>お問い合わせ</h2>
-<p>不具合のご報告・ご要望は開発者（ナリユキPdM）までご連絡ください。<br>
-メール: nariyukipdm@gmail.com</p>
+  <!-- ===== hero ===== -->
+  <section class="hero" data-name="はじめに">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="app-line rv">
+          <img src="icon-256.png" alt="アプリアイコン">
+          <span class="app-name">子供にご飯を食べさせるための時計（iPad / iPhone、iOS 17以降）</span>
+        </div>
+        <h1 class="rv d1">針を回して、<br>ごはんの時間を決める。</h1>
+        <p class="lead rv d2">時計の針を指で回すだけでタイマーになる、アナログ時計アプリです。「あと何分？」を、減っていく色の輪とデジタルの数字で見せます。終わる時間になると、時計が粒になって飛び散る演出が流れます。</p>
+        <div class="cta-row rv d2">
+          <a class="btn" href="#howto">使い方を見る</a>
+          <a class="btn ghost" href="#faq">よくある質問へ</a>
+        </div>
+        <p class="scroll-cue rv d2"><a href="#howto">SCROLL <span class="arr">↓</span></a></p>
+      </div>
+      <div class="wood-panel rv d1">
+        <svg class="clock-live" id="liveClock" width="252" height="252" viewBox="0 0 200 200" role="img" aria-label="いまの時刻を示す時計のイラスト">
+          <circle cx="100" cy="100" r="97" fill="#B98F5F"/>
+          <circle cx="100" cy="100" r="90" fill="#FFFCF6"/>
+          <g id="liveTicks"></g>
+          <g id="liveHour"><line x1="100" y1="100" x2="100" y2="56" stroke="#2E2A24" stroke-width="6.5" stroke-linecap="round"/></g>
+          <g id="liveMin"><line x1="100" y1="100" x2="100" y2="34" stroke="#2E2A24" stroke-width="4.5" stroke-linecap="round"/></g>
+          <g id="liveSec"><line x1="100" y1="112" x2="100" y2="26" stroke="#D97443" stroke-width="2" stroke-linecap="round"/></g>
+          <circle cx="100" cy="100" r="5" fill="#2E2A24"/>
+        </svg>
+        <p style="margin:12px 0 0;font-size:.82rem;color:#5D4630">この時計は、いまの時刻で動いています</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== howto / demo ===== -->
+  <section class="block" id="howto" data-name="使い方">
+    <div class="narrow">
+      <p class="kicker rv">使い方</p>
+      <h2 class="rv">まず、針を回してみてください</h2>
+      <p class="rv">長針を時計回りに回すと分単位、秒針を回すと秒単位でタイマーが始まります。タイマーは2つまで同時に置けます。下の時計は、このページで試せる練習用です。</p>
+
+      <div class="demo-card rv" id="demoCard">
+        <div class="dial-wrap" id="dialWrap" tabindex="0" role="slider" aria-label="練習用タイマー。矢印キーでも分数を変えられます" aria-valuemin="0" aria-valuemax="60" aria-valuenow="15" aria-valuetext="15分">
+          <svg id="demoDial" width="264" height="264" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="97" fill="#C7A276"/>
+            <circle cx="100" cy="100" r="90" fill="#FFFCF6"/>
+            <circle id="demoArc" cx="100" cy="100" r="82" fill="none" stroke="#D97443" stroke-width="8"
+              stroke-linecap="round" stroke-dasharray="128.8 515.2" transform="rotate(-90 100 100)"/>
+            <g id="demoTicks"></g>
+            <g id="demoHand" style="cursor:grab">
+              <line x1="100" y1="100" x2="100" y2="34" stroke="#2E2A24" stroke-width="5" stroke-linecap="round"/>
+              <circle id="demoKnob" cx="100" cy="30" r="11" fill="#B5653E" stroke="#FFFCF6" stroke-width="3"/>
+            </g>
+            <circle cx="100" cy="100" r="5.5" fill="#2E2A24"/>
+          </svg>
+        </div>
+        <div>
+          <div class="demo-read"><span id="demoVal">15</span>分 <small>のタイマー</small></div>
+          <div class="chips" role="group" aria-label="よく使う時間">
+            <button class="chip" data-min="15" aria-pressed="true">ごはん（15分）</button>
+            <button class="chip" data-min="10" aria-pressed="false">お片付け（10分）</button>
+            <button class="chip" data-min="5" aria-pressed="false">はみがき（5分）</button>
+          </div>
+          <p style="font-size:.93rem">長針の先の丸いつまみを、指やマウスで回してみてください。キーボードの ← → でも変えられます。</p>
+          <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center">
+            <button class="btn" id="demoPlay">ためす（6秒で再生）</button>
+            <button class="mini-btn" id="demoMinus">−1分</button>
+            <button class="mini-btn" id="demoPlus">＋1分</button>
+          </div>
+          <p class="demo-note" id="demoMsg">お試し用のデモです。実際の時間では動きません（6秒に短縮して再生します）。アプリでは、終わると時計が粒になって飛び散ります。</p>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step rv"><span class="num">1</span><h3>針をつまんで回す</h3><p>長針で「分」、秒針で「秒」を決めます。メニューを開く必要はありません。</p></div>
+        <div class="step rv d1"><span class="num">2</span><h3>色の輪が残り時間</h3><p>時計の外周に色の輪が出て、少しずつ減っていきます。デジタル表示や砂時計表示にもできます。</p></div>
+        <div class="step rv d2"><span class="num">3</span><h3>終わると粒子の演出</h3><p>時間が来るとチャイムとともに時計が粒になって飛び散ります。怒られるのではなく、お祝いの合図です。</p></div>
+      </div>
+
+      <div class="card rv" style="margin-top:26px">
+        <h3>時刻を進める</h3>
+        <p style="margin:0">設定（右上の歯車）→「時刻を進める」で、表示だけを5分・10分先に進められます。「針がここまで来たら、ごはん」という見せ方ができます。<strong>端末の時刻は変わりません</strong>ので、本体の時計が狂うことはありません。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== wall ===== -->
+  <section class="block" id="wall" data-name="壁掛け" style="padding-top:20px">
+    <div class="wrap">
+      <div class="wall-band rv">
+        <div class="wall-grid">
+          <div>
+            <p class="kicker">壁掛け時計にする</p>
+            <h2>壁を撮ると、時計が壁になじみます</h2>
+            <p>設定→「壁の背景」で貼り付ける壁を撮影すると、時計の外側に同じ壁の写真が出て、壁と一体化したように見えます。「壁掛け時に0時を真上に」をオンにすると、端末が少し傾いても、センサーが読み取って12時が物理的な真上を向き続けます。</p>
+            <p style="margin-bottom:0">撮影した写真は<strong>端末の中にだけ保存され、外部に送信されることはありません</strong>。いつでも設定から削除できます。</p>
+            <div class="upright-demo" aria-hidden="true">
+              <figure>
+                <svg width="104" height="104" viewBox="0 0 100 100"><g transform="rotate(14 50 50)"><circle cx="50" cy="50" r="46" fill="#FFFCF6" stroke="#A9835A" stroke-width="4"/><g font-size="13" font-family="sans-serif" fill="#2E2A24" text-anchor="middle"><text x="50" y="19">12</text><text x="50" y="90">6</text><text x="14" y="55">9</text><text x="86" y="55">3</text></g></g></svg>
+                <figcaption>端末が傾くと…</figcaption>
+              </figure>
+              <figure>
+                <svg width="104" height="104" viewBox="0 0 100 100"><g transform="rotate(14 50 50)"><circle cx="50" cy="50" r="46" fill="none" stroke="#A9835A" stroke-width="4" stroke-dasharray="3 5"/></g><circle cx="50" cy="50" r="42" fill="#FFFCF6"/><g font-size="13" font-family="sans-serif" fill="#2E2A24" text-anchor="middle"><text x="50" y="19">12</text><text x="50" y="90">6</text><text x="14" y="55">9</text><text x="86" y="55">3</text></g></svg>
+                <figcaption>12は真上を保ちます</figcaption>
+              </figure>
+            </div>
+          </div>
+          <figure class="wall-shot">
+            <img src="shot-04-wall.jpg" alt="木目の壁を背景にして、時計が壁になじんでいる画面" loading="lazy">
+            <figcaption>壁の写真を背景にした表示</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== features ===== -->
+  <section class="block" id="features" data-name="機能" style="padding-top:24px">
+    <div class="wrap">
+      <p class="kicker rv">機能</p>
+      <h2 class="rv">食卓に合わせて、表示を変えられます</h2>
+      <div class="feat-grid">
+        <article class="feat rv">
+          <img src="shot-08-two-timers.jpg" alt="2本のタイマーを同時にセットし、それぞれの色の輪が出ている画面" loading="lazy">
+          <div class="txt"><h3>タイマーは2本まで</h3><p>長針と秒針で別々のタイマーを置けます。外周の色の輪と、デジタルの残り時間で見せます。</p></div>
+        </article>
+        <article class="feat rv d1">
+          <img src="shot-03-hourglass.jpg" alt="砂時計で残り時間を表示している画面" loading="lazy">
+          <div class="txt"><h3>砂時計表示</h3><p>残り時間の見せ方は、色の輪＋デジタル、または砂時計から選べます。</p></div>
+        </article>
+        <article class="feat rv">
+          <img src="shot-06-afternoon-digital.jpg" alt="午後を13から24で表示し、デジタル時計も置いた画面" loading="lazy">
+          <div class="txt"><h3>午後の13〜24表示と、置けるデジタル時計</h3><p>午後を13〜24で表示する学習モード。デジタル時計は好きな場所へドラッグして置けます。</p></div>
+        </article>
+        <article class="feat rv d1">
+          <img src="shot-05-dark.jpg" alt="暗い色合いで表示した時計の画面" loading="lazy">
+          <div class="txt"><h3>ダークな外観</h3><p>部屋の明るさに合わせて、落ち着いた色合いの表示にもできます。</p></div>
+        </article>
+        <article class="feat wide rv">
+          <img src="shot-07-finale.jpg" alt="タイマーが終わり、時計が粒子になって飛び散る演出の画面" loading="lazy">
+          <div class="txt"><h3>終わりは、粒子のフィナーレ</h3><p>時間が来ると、時計が粒になって飛び散ります。「時間切れ」ではなく「できたね」の合図として設計しました。</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== price ===== -->
+  <section class="block" id="price" data-name="料金" style="padding-top:8px">
+    <div class="narrow">
+      <p class="kicker rv">料金</p>
+      <h2 class="rv">無料で始めて、気に入ったら買い切り</h2>
+      <p class="rv">ダウンロードは無料です。初回起動から<strong>14日間は全機能をお試し</strong>いただけます。期間が終わっても、時計表示・壁の背景・タイマー1本などの無料機能はそのまま使えます。全機能のアンロックは<strong>¥800の買い切り</strong>（非消耗型のアプリ内課金）で、サブスクリプションはありません。</p>
+      <div class="badges rv">
+        <span class="badge">14日間 全機能トライアル</span>
+        <span class="badge">¥800 買い切り</span>
+        <span class="badge">広告なし</span>
+        <span class="badge">通信なし・データ収集なし</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== faq ===== -->
+  <section class="block" id="faq" data-name="よくある質問" style="padding-top:8px">
+    <div class="narrow">
+      <p class="kicker rv">サポート案内</p>
+      <h2 class="rv">よくある質問</h2>
+      <div class="faq-item rv">
+        <h3>Q. データは収集されますか？</h3>
+        <p>A. いいえ。本アプリは通信を行わず、写真や設定は端末内にのみ保存されます。広告やアクセス解析の仕組みもありません。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+      </div>
+      <div class="faq-item rv">
+        <h3>Q. 使っている途中で画面が消えてしまいます</h3>
+        <p>A. 表示開始から1時間は自動で消灯しない設定になっています。それ以降は端末の自動ロック設定に従います。長時間の壁掛け利用では、端末の設定で自動ロックを「なし」にしてください。</p>
+      </div>
+      <div class="faq-item rv">
+        <h3>Q. 壁の写真が送信されることはありますか？</h3>
+        <p>A. ありません。壁の写真は端末内にのみ保存され、外部に送信されることはありません。アプリの設定からいつでも削除できます。</p>
+      </div>
+      <div class="faq-item rv">
+        <h3>Q. 「時刻を進める」を使うと、iPadの時計が狂いませんか？</h3>
+        <p>A. 狂いません。変わるのはこのアプリの表示だけです。端末の時刻設定には一切触れません。</p>
+      </div>
+      <div class="faq-item rv">
+        <h3>Q. 料金はかかりますか？</h3>
+        <p>A. ダウンロードは無料で、14日間は全機能をお試しいただけます。その後も無料機能は使い続けられます。全機能のアンロックは¥800の買い切りです（<a href="#price">料金の説明</a>）。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== contact ===== -->
+  <section class="block" id="contact" data-name="お問い合わせ" style="padding-top:8px">
+    <div class="narrow">
+      <div class="card contact-card rv">
+        <p class="kicker" style="letter-spacing:.4em">お問い合わせ</p>
+        <h2 style="margin-bottom:10px">困ったときは、メールでどうぞ</h2>
+        <p>不具合のご報告・ご要望は、開発者（ナリユキPdM）までご連絡ください。端末の種類と iOS のバージョンを添えていただくと、確認が早くなります。</p>
+        <p class="mail-big"><a href="mailto:nariyukipdm@gmail.com">nariyukipdm@gmail.com</a></p>
+        <p style="margin:18px 0 0"><a class="btn" href="mailto:nariyukipdm@gmail.com">メールで問い合わせる</a></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p style="margin:0 0 6px"><a href="privacy.html">プライバシーポリシー</a>　｜　<a href="#top">上へ戻る ↑</a></p>
+  <p style="margin:0">© 2026 ナリユキPdM — 子供にご飯を食べさせるための時計</p>
+</footer>
+
+<!-- floating guide dial (PC) -->
+<div class="guide-float" aria-hidden="true">
+  <svg class="gf-dial" width="104" height="104" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="48" fill="#B98F5F"/>
+    <circle cx="50" cy="50" r="43" fill="#FFFCF6"/>
+    <circle id="fArc" cx="50" cy="50" r="37" fill="none" stroke="#D97443" stroke-width="4.5"
+      stroke-linecap="round" stroke-dasharray="0 232.5" transform="rotate(-90 50 50)"/>
+    <g id="fHand"><line x1="50" y1="50" x2="50" y2="20" stroke="#2E2A24" stroke-width="3.4" stroke-linecap="round"/></g>
+    <circle cx="50" cy="50" r="3.4" fill="#2E2A24"/>
+  </svg>
+  <div class="gf-label" id="fLabel">はじめに</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- ticks for a dial group ---- */
+  function ticks(id, cx, cy, rO, rI, w){
+    var g = document.getElementById(id); if(!g) return;
+    var NS = "http://www.w3.org/2000/svg";
+    for(var i=0;i<60;i++){
+      var big = i%5===0, a = i*6*Math.PI/180;
+      var l = document.createElementNS(NS,"line");
+      l.setAttribute("x1", cx + Math.sin(a)*(big?rI:rO-4));
+      l.setAttribute("y1", cy - Math.cos(a)*(big?rI:rO-4));
+      l.setAttribute("x2", cx + Math.sin(a)*rO);
+      l.setAttribute("y2", cy - Math.cos(a)*rO);
+      l.setAttribute("stroke", "#2E2A24");
+      l.setAttribute("stroke-width", big? w : 1.4);
+      l.setAttribute("opacity", big? .85 : .35);
+      g.appendChild(l);
+    }
+  }
+  ticks("liveTicks", 100, 100, 84, 74, 3.4);
+  ticks("demoTicks", 100, 100, 84, 74, 3.4);
+
+  /* ---- live clock ---- */
+  function rot(id, deg){ var el=document.getElementById(id); if(el) el.setAttribute("transform","rotate("+deg+" 100 100)"); }
+  function tickClock(){
+    var d = new Date(), s = d.getSeconds()+d.getMilliseconds()/1000;
+    rot("liveSec", s*6);
+    rot("liveMin", (d.getMinutes()+s/60)*6);
+    rot("liveHour", ((d.getHours()%12)+d.getMinutes()/60)*30);
+  }
+  tickClock();
+  if(!reduced) setInterval(tickClock, 1000);
+
+  /* ---- scenes + reveals ---- */
+  var label = document.getElementById("gLabel"), fLabel = document.getElementById("fLabel");
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.querySelectorAll(".rv").forEach(function(el){ el.classList.add("in"); });
+        if(e.target.dataset.name){
+          document.body.dataset.scene = e.target.id || sceneOf(e.target);
+          var nm = e.target.dataset.name;
+          if(label) label.textContent = nm;
+          if(fLabel) fLabel.textContent = nm;
+        }
+      }
+    });
+  }, {rootMargin:"-38% 0px -45% 0px"});
+  function sceneOf(sec){ return sec.classList.contains("hero") ? "hero" : (sec.id||"hero"); }
+  document.querySelectorAll("main section").forEach(function(sec){
+    if(sec.classList.contains("hero")) sec.dataset.scene="hero";
+    io.observe(sec);
+  });
+  /* sections outside viewport at load (below hero) also reveal when close */
+  var io2 = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add("in"); });
+  }, {rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".rv").forEach(function(el){ io2.observe(el); });
+
+  /* ---- guide hands follow scroll (page = 60 minutes) ---- */
+  var gHand=document.getElementById("gHand"), gArc=document.getElementById("gArc"),
+      fHand=document.getElementById("fHand"), fArc=document.getElementById("fArc"),
+      ticking=false;
+  function guide(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max>0 ? Math.min(1, h.scrollTop/max) : 0;
+    var deg = p*360;
+    if(gHand) gHand.setAttribute("transform","rotate("+deg+" 20 20)");
+    if(gArc) gArc.setAttribute("stroke-dasharray", (97.4*p).toFixed(1)+" 97.4");
+    if(fHand) fHand.setAttribute("transform","rotate("+deg+" 50 50)");
+    if(fArc) fArc.setAttribute("stroke-dasharray", (232.5*p).toFixed(1)+" 232.5");
+    ticking=false;
+  }
+  window.addEventListener("scroll", function(){
+    if(!ticking){ ticking=true; requestAnimationFrame(guide); }
+  }, {passive:true});
+  guide();
+
+  /* ---- demo ---- */
+  var C = 2*Math.PI*82; // demo arc circumference
+  var minutes = 15, playing = false;
+  var wrap = document.getElementById("dialWrap"),
+      hand = document.getElementById("demoHand"),
+      arc  = document.getElementById("demoArc"),
+      val  = document.getElementById("demoVal"),
+      msg  = document.getElementById("demoMsg"),
+      playBtn = document.getElementById("demoPlay");
+  var MSG0 = msg.textContent;
+  function renderDemo(){
+    var deg = minutes*6;
+    hand.setAttribute("transform","rotate("+deg+" 100 100)");
+    arc.setAttribute("stroke-dasharray", (C*minutes/60).toFixed(1)+" "+C.toFixed(1));
+    val.textContent = minutes;
+    wrap.setAttribute("aria-valuenow", minutes);
+    wrap.setAttribute("aria-valuetext", minutes+"分");
+    document.querySelectorAll(".chip").forEach(function(c){
+      c.setAttribute("aria-pressed", String(+c.dataset.min===minutes));
+    });
+  }
+  function setMinutes(m){
+    if(playing) return;
+    minutes = Math.max(0, Math.min(60, Math.round(m)));
+    renderDemo();
+  }
+  document.querySelectorAll(".chip").forEach(function(c){
+    c.addEventListener("click", function(){ setMinutes(+c.dataset.min); msg.textContent = MSG0; });
+  });
+  document.getElementById("demoMinus").addEventListener("click", function(){ setMinutes(minutes-1); });
+  document.getElementById("demoPlus").addEventListener("click", function(){ setMinutes(minutes+1); });
+  wrap.addEventListener("keydown", function(e){
+    if(e.key==="ArrowRight"||e.key==="ArrowUp"){ setMinutes(minutes+1); e.preventDefault(); }
+    else if(e.key==="ArrowLeft"||e.key==="ArrowDown"){ setMinutes(minutes-1); e.preventDefault(); }
+    else if(e.key==="PageUp"){ setMinutes(minutes+5); e.preventDefault(); }
+    else if(e.key==="PageDown"){ setMinutes(minutes-5); e.preventDefault(); }
+  });
+  /* drag the hand */
+  var dragging=false;
+  function angleFromEvent(e){
+    var r = document.getElementById("demoDial").getBoundingClientRect();
+    var x = e.clientX - (r.left + r.width/2), y = e.clientY - (r.top + r.height/2);
+    var deg = Math.atan2(x, -y) * 180/Math.PI;
+    if(deg<0) deg+=360;
+    return deg/6;
+  }
+  hand.addEventListener("pointerdown", function(e){
+    dragging=true; hand.setPointerCapture(e.pointerId); setMinutes(angleFromEvent(e)); e.preventDefault();
+  });
+  hand.addEventListener("pointermove", function(e){ if(dragging) setMinutes(angleFromEvent(e)); });
+  hand.addEventListener("pointerup", function(){ dragging=false; });
+  hand.addEventListener("pointercancel", function(){ dragging=false; });
+  hand.style.touchAction = "none";
+
+  /* shortened preview + mini finale */
+  var timer=null;
+  playBtn.addEventListener("click", function(){
+    if(playing || minutes===0) { if(minutes===0){ msg.textContent="まず時間を決めてください。長針を回すか、ボタンを選んでください。"; } return; }
+    playing=true; playBtn.disabled=true; playBtn.style.opacity=.55;
+    var total=6000, t0=performance.now(), startMin=minutes;
+    msg.textContent="短縮再生中…（実際は "+startMin+"分 かかります）";
+    timer=setInterval(function(){
+      var p=(performance.now()-t0)/total;
+      if(p>=1){
+        clearInterval(timer);
+        hand.setAttribute("transform","rotate(0 100 100)");
+        arc.setAttribute("stroke-dasharray", "0 "+C.toFixed(1));
+        val.textContent = 0;
+        finale();
+        msg.textContent="おしまい。アプリでは、ここで時計が粒になって飛び散ります。「もう一度」で最初に戻ります。";
+        var again=document.createElement("button");
+        again.className="mini-btn"; again.textContent="もう一度"; again.style.marginLeft="10px";
+        again.addEventListener("click", function(){ minutes=startMin; renderDemo(); msg.textContent=MSG0; again.remove(); });
+        msg.appendChild(again);
+        playing=false; playBtn.disabled=false; playBtn.style.opacity=1;
+        return;
+      }
+      var remain=startMin*(1-p);
+      hand.setAttribute("transform","rotate("+(remain*6)+" 100 100)");
+      arc.setAttribute("stroke-dasharray", (C*remain/60).toFixed(1)+" "+C.toFixed(1));
+      val.textContent = Math.ceil(remain);
+    }, 100);
+  });
+  function finale(){
+    if(reduced) return;
+    var colors=["#D97443","#E0A842","#4A8578","#B5653E"];
+    for(var i=0;i<18;i++){
+      var s=document.createElement("span");
+      s.className="particle";
+      var ang=Math.random()*Math.PI*2, dist=80+Math.random()*120;
+      s.style.setProperty("--dx", Math.cos(ang)*dist+"px");
+      s.style.setProperty("--dy", Math.sin(ang)*dist+"px");
+      s.style.left="50%"; s.style.top="50%";
+      s.style.background=colors[i%colors.length];
+      wrap.appendChild(s);
+      (function(el){ setTimeout(function(){ el.remove(); }, 1100); })(s);
+    }
+  }
+  renderDemo();
+})();
+</script>
 </body>
 </html>
