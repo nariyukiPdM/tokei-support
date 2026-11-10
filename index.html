@@ -141,34 +141,46 @@
   .demo-card{
     background:var(--card);border:1px solid var(--line);border-radius:24px;
     padding:30px 26px;box-shadow:0 16px 36px rgba(90,70,45,.1);
-    display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;position:relative;overflow:hidden;
+    display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;position:relative;
   }
   @media (max-width:760px){ .demo-card{grid-template-columns:1fr;justify-items:center} }
-  .dial-wrap{position:relative;width:264px;height:264px}
+  .demo-stage{position:relative;width:344px;max-width:100%;padding:34px 28px 8px;margin:0 auto}
+  .dial-wrap{position:relative;width:288px;height:288px;margin:0 auto}
   .dial-wrap:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:50%}
-  .chips{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0 6px}
-  .chip{
-    border:1px solid rgba(181,101,62,.5);background:#FFF6EA;color:var(--accent-ink);
-    border-radius:999px;padding:9px 15px;font-size:.9rem;cursor:pointer;font-family:var(--sans);
+  .dial-wrap svg{display:block;width:100%;height:100%}
+  #demoDial{touch-action:none}
+  #demoDial text, #liveClock text{font-family:var(--sans)}
+  .pill{
+    position:absolute;z-index:6;background:#FFFCF6;border:1px solid rgba(176,126,82,.45);
+    border-radius:999px;padding:7px 15px;font-size:15px;font-weight:600;color:var(--ink);
+    white-space:nowrap;cursor:pointer;box-shadow:0 6px 16px rgba(90,70,45,.13);
+    font-variant-numeric:tabular-nums;line-height:1.35;
   }
-  .chip:active{transform:scale(.97)}
-  .chip[aria-pressed="true"]{background:var(--accent);color:#FFF8EF}
-  .demo-read{font-size:1.5rem;font-weight:700;letter-spacing:.03em;font-variant-numeric:tabular-nums;color:var(--ink)}
-  .demo-read small{font-size:.85rem;color:var(--sub);font-weight:400}
-  .demo-note{font-size:.82rem;color:var(--faint);margin-top:12px}
+  .pill .ring{position:absolute;inset:-2px;width:calc(100% + 4px);height:calc(100% + 4px);pointer-events:none;overflow:visible}
+  .pill0{top:0;left:50%;transform:translateX(-50%)}
+  .pill1{top:66px;left:50%;transform:translateX(-50%)}
+  .plus-label{
+    position:absolute;z-index:7;background:var(--ink);color:#FFF8EF;font-weight:700;font-size:14px;
+    border-radius:999px;padding:4px 11px;pointer-events:none;white-space:nowrap;
+    transform:translate(-50%,-50%);font-variant-numeric:tabular-nums;
+  }
+  .confirm-pop{
+    position:absolute;z-index:8;left:50%;transform:translateX(-50%);
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 14px 30px rgba(90,70,45,.2);padding:14px 16px;text-align:center;min-width:210px;
+  }
+  .confirm-pop p{margin:0 0 10px;font-size:.93rem;font-weight:600}
+  .confirm-pop .row{display:flex;gap:9px;justify-content:center}
   .mini-btn{
     border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
     padding:8px 13px;font-size:.88rem;cursor:pointer;font-family:var(--sans);
   }
   .mini-btn:active{transform:scale(.97)}
-  .particle{
-    position:absolute;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:5;
-    animation:burst .95s cubic-bezier(.17,.67,.35,1) forwards;
-  }
-  @keyframes burst{
-    0%{transform:translate(0,0) scale(1);opacity:1}
-    100%{transform:translate(var(--dx),var(--dy)) scale(.35);opacity:0}
-  }
+  .mini-btn.danger{color:#C62F24;border-color:rgba(198,47,36,.45);font-weight:600}
+  .burst-bit{position:absolute;border-radius:2px;pointer-events:none;z-index:5}
+  .demo-read{font-size:1.28rem;font-weight:700;letter-spacing:.02em;color:var(--ink);margin:0 0 10px}
+  .demo-side p{font-size:.94rem}
+  .demo-note{font-size:.82rem;color:var(--faint);margin-top:12px}
 
   /* ---------- wall ---------- */
   .wall-band{
@@ -266,7 +278,7 @@
           <span class="app-name">子供にご飯を食べさせるための時計（iPad / iPhone、iOS 17以降）</span>
         </div>
         <h1 class="rv d1">針を回して、<br>ごはんの時間を決める。</h1>
-        <p class="lead rv d2">時計の針を指で回すだけでタイマーになる、アナログ時計アプリです。「あと何分？」を、減っていく色の輪とデジタルの数字で見せます。終わる時間になると、時計が粒になって飛び散る演出が流れます。</p>
+        <p class="lead rv d2">時計の針を指で回すだけでタイマーになる、アナログ時計アプリです。「あと何分？」を、終わりの場所に残る色の針と「設定・残り」の数字で見せます。終わる時間になると、時計が粒になって飛び散る演出が流れます。</p>
         <div class="cta-row rv d2">
           <a class="btn" href="#howto">使い方を見る</a>
           <a class="btn ghost" href="#faq">よくある質問へ</a>
@@ -274,15 +286,7 @@
         <p class="scroll-cue rv d2"><a href="#howto">SCROLL <span class="arr">↓</span></a></p>
       </div>
       <div class="wood-panel rv d1">
-        <svg class="clock-live" id="liveClock" width="252" height="252" viewBox="0 0 200 200" role="img" aria-label="いまの時刻を示す時計のイラスト">
-          <circle cx="100" cy="100" r="97" fill="#B98F5F"/>
-          <circle cx="100" cy="100" r="90" fill="#FFFCF6"/>
-          <g id="liveTicks"></g>
-          <g id="liveHour"><line x1="100" y1="100" x2="100" y2="56" stroke="#2E2A24" stroke-width="6.5" stroke-linecap="round"/></g>
-          <g id="liveMin"><line x1="100" y1="100" x2="100" y2="34" stroke="#2E2A24" stroke-width="4.5" stroke-linecap="round"/></g>
-          <g id="liveSec"><line x1="100" y1="112" x2="100" y2="26" stroke="#D97443" stroke-width="2" stroke-linecap="round"/></g>
-          <circle cx="100" cy="100" r="5" fill="#2E2A24"/>
-        </svg>
+        <svg class="clock-live" id="liveClock" width="252" height="252" viewBox="0 0 1000 1000" role="img" aria-label="いまの時刻を示す時計"></svg>
         <p style="margin:12px 0 0;font-size:.82rem;color:#5D4630">この時計は、いまの時刻で動いています</p>
       </div>
     </div>
@@ -296,41 +300,33 @@
       <p class="rv">長針を時計回りに回すと分単位、秒針を回すと秒単位でタイマーが始まります。タイマーは2つまで同時に置けます。下の時計は、このページで試せる練習用です。</p>
 
       <div class="demo-card rv" id="demoCard">
-        <div class="dial-wrap" id="dialWrap" tabindex="0" role="slider" aria-label="練習用タイマー。矢印キーでも分数を変えられます" aria-valuemin="0" aria-valuemax="60" aria-valuenow="15" aria-valuetext="15分">
-          <svg id="demoDial" width="264" height="264" viewBox="0 0 200 200">
-            <circle cx="100" cy="100" r="97" fill="#C7A276"/>
-            <circle cx="100" cy="100" r="90" fill="#FFFCF6"/>
-            <circle id="demoArc" cx="100" cy="100" r="82" fill="none" stroke="#D97443" stroke-width="8"
-              stroke-linecap="round" stroke-dasharray="128.8 515.2" transform="rotate(-90 100 100)"/>
-            <g id="demoTicks"></g>
-            <g id="demoHand" style="cursor:grab">
-              <line x1="100" y1="100" x2="100" y2="34" stroke="#2E2A24" stroke-width="5" stroke-linecap="round"/>
-              <circle id="demoKnob" cx="100" cy="30" r="11" fill="#B5653E" stroke="#FFFCF6" stroke-width="3"/>
-            </g>
-            <circle cx="100" cy="100" r="5.5" fill="#2E2A24"/>
-          </svg>
+        <div class="demo-stage" id="demoStage">
+          <div class="pill pill0" id="pill0" data-slot="0" hidden><svg class="ring" aria-hidden="true"><path class="ring-frame" fill="none"/><path class="ring-base" fill="none"/><path class="ring-rem" fill="none"/></svg><span class="pill-text"></span></div>
+          <div class="pill pill1" id="pill1" data-slot="1" hidden><svg class="ring" aria-hidden="true"><path class="ring-frame" fill="none"/><path class="ring-base" fill="none"/><path class="ring-rem" fill="none"/></svg><span class="pill-text"></span></div>
+          <div class="dial-wrap" id="dialWrap" tabindex="0" role="slider" aria-label="練習用タイマー。長針か秒針をつかんで回すとタイマーを置けます。矢印キーでも1分ずつ置けます" aria-valuemin="0" aria-valuemax="720" aria-valuenow="0" aria-valuetext="タイマーはありません">
+            <svg id="demoDial" viewBox="0 0 1000 1000" aria-hidden="true"></svg>
+          </div>
+          <div class="plus-label" id="plusLabel" hidden>+15分</div>
+          <div class="confirm-pop" id="confirmPop" hidden>
+            <p>タイマーを消しますか？</p>
+            <div class="row">
+              <button class="mini-btn danger" id="confirmYes">消す</button>
+              <button class="mini-btn" id="confirmNo">キャンセル</button>
+            </div>
+          </div>
         </div>
-        <div>
-          <div class="demo-read"><span id="demoVal">15</span>分 <small>のタイマー</small></div>
-          <div class="chips" role="group" aria-label="よく使う時間">
-            <button class="chip" data-min="15" aria-pressed="true">ごはん（15分）</button>
-            <button class="chip" data-min="10" aria-pressed="false">お片付け（10分）</button>
-            <button class="chip" data-min="5" aria-pressed="false">はみがき（5分）</button>
-          </div>
-          <p style="font-size:.93rem">長針の先の丸いつまみを、指やマウスで回してみてください。キーボードの ← → でも変えられます。</p>
-          <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center">
-            <button class="btn" id="demoPlay">ためす（6秒で再生）</button>
-            <button class="mini-btn" id="demoMinus">−1分</button>
-            <button class="mini-btn" id="demoPlus">＋1分</button>
-          </div>
-          <p class="demo-note" id="demoMsg">お試し用のデモです。実際の時間では動きません（6秒に短縮して再生します）。アプリでは、終わると時計が粒になって飛び散ります。</p>
+        <div class="demo-side">
+          <p class="demo-read" id="demoStatus">長針を回してみてください</p>
+          <p>アプリと同じ操作です。長針をつかんで時計回りに回した分が、そのままタイマーになります。指を離すと、終わりの場所に半透明の色の針が残り、「設定・残り」の表示が出ます。本物の針が色の針に届いたら終わりです。</p>
+          <p>秒針を回せば、秒単位のタイマーも置けます（アプリでは有料機能）。タイマーは2つまで。表示のふちを触ると色が変わり、表示の真ん中を触ると消す確認が出ます。これもアプリと同じです。</p>
+          <p class="demo-note" id="demoMsg">お試し用のデモです。時間の進み方だけを早回しにしています（針を回す操作と表示の形は、アプリと同じです）。アプリでは実際の時間で進みます。</p>
         </div>
       </div>
 
       <div class="steps">
         <div class="step rv"><span class="num">1</span><h3>針をつまんで回す</h3><p>長針で「分」、秒針で「秒」を決めます。メニューを開く必要はありません。</p></div>
-        <div class="step rv d1"><span class="num">2</span><h3>色の輪が残り時間</h3><p>時計の外周に色の輪が出て、少しずつ減っていきます。デジタル表示や砂時計表示にもできます。</p></div>
-        <div class="step rv d2"><span class="num">3</span><h3>終わると粒子の演出</h3><p>時間が来るとチャイムとともに時計が粒になって飛び散ります。怒られるのではなく、お祝いの合図です。</p></div>
+        <div class="step rv d1"><span class="num">2</span><h3>色の針が「おわり」の場所</h3><p>回した分だけ先に、半透明の色の針が残ります。本物の針が届いたら終わり。「設定 30分　残り 29:58」の表示も出ます。残り時間は砂時計表示にもできます。</p></div>
+        <div class="step rv d2"><span class="num">3</span><h3>終わると粒子の演出</h3><p>時間が来ると時計が粒になって飛び散ります。怒られるのではなく、お祝いの合図です。</p></div>
       </div>
 
       <div class="card rv" style="margin-top:26px">
@@ -377,12 +373,12 @@
       <h2 class="rv">食卓に合わせて、表示を変えられます</h2>
       <div class="feat-grid">
         <article class="feat rv">
-          <img src="shot-08-two-timers.jpg" alt="2本のタイマーを同時にセットし、それぞれの色の輪が出ている画面" loading="lazy">
-          <div class="txt"><h3>タイマーは2本まで</h3><p>長針と秒針で別々のタイマーを置けます。外周の色の輪と、デジタルの残り時間で見せます。</p></div>
+          <img src="shot-08-two-timers.jpg" alt="2本のタイマーを同時にセットし、それぞれの色の針と表示が出ている画面" loading="lazy">
+          <div class="txt"><h3>タイマーは2本まで</h3><p>長針と秒針で別々のタイマーを置けます。終わりの場所に残る色の針と、「設定・残り」の表示で見せます。</p></div>
         </article>
         <article class="feat rv d1">
           <img src="shot-03-hourglass.jpg" alt="砂時計で残り時間を表示している画面" loading="lazy">
-          <div class="txt"><h3>砂時計表示</h3><p>残り時間の見せ方は、色の輪＋デジタル、または砂時計から選べます。</p></div>
+          <div class="txt"><h3>砂時計表示</h3><p>残り時間の見せ方は、「設定・残り」のデジタル表示、または砂時計から選べます。</p></div>
         </article>
         <article class="feat rv">
           <img src="shot-06-afternoon-digital.jpg" alt="午後を13から24で表示し、デジタル時計も置いた画面" loading="lazy">
@@ -480,36 +476,120 @@
   "use strict";
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---- ticks for a dial group ---- */
-  function ticks(id, cx, cy, rO, rI, w){
-    var g = document.getElementById(id); if(!g) return;
-    var NS = "http://www.w3.org/2000/svg";
-    for(var i=0;i<60;i++){
-      var big = i%5===0, a = i*6*Math.PI/180;
-      var l = document.createElementNS(NS,"line");
-      l.setAttribute("x1", cx + Math.sin(a)*(big?rI:rO-4));
-      l.setAttribute("y1", cy - Math.cos(a)*(big?rI:rO-4));
-      l.setAttribute("x2", cx + Math.sin(a)*rO);
-      l.setAttribute("y2", cy - Math.cos(a)*rO);
-      l.setAttribute("stroke", "#2E2A24");
-      l.setAttribute("stroke-width", big? w : 1.4);
-      l.setAttribute("opacity", big? .85 : .35);
-      g.appendChild(l);
+  /* ---- app-faithful dial (constants from the app's ClockView, 1000x1000) ---- */
+  var NS = "http://www.w3.org/2000/svg";
+  var PAL = { frame:"#D9AE80", frameLine:"#B07E52", frameHi:"#F0D2AD", glass:"#E2E2E2", face:"#FFFFFF", ink:"#141414", accent:"#E2392C" };
+  var PRESETS = ["#0A84FF","#50C878","#FF9F0A","#FF375F","#BF5AF2","#FF453A","#FFD60A","#64D2FF"];
+  var gradSeq = 0;
+  function svgEl(name, attrs){
+    var e = document.createElementNS(NS, name);
+    for(var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function minuteHandShape(body, stripe, tip){
+    var g = svgEl("g", {});
+    g.appendChild(svgEl("path", {d:"M-12 30 L-12 -282 L12 -282 L12 30 Z", fill:body}));
+    g.appendChild(svgEl("line", {x1:0, y1:16, x2:0, y2:-262, stroke:stripe, "stroke-width":4, "stroke-linecap":"round"}));
+    g.appendChild(svgEl("path", {d:"M-12 -280 L0 -342 L12 -280 Z", fill:tip}));
+    return g;
+  }
+  function hourHandShape(){
+    var g = svgEl("g", {});
+    g.appendChild(svgEl("path", {d:"M-26 22 L-26 -56 L-14 -136 L14 -136 L26 -56 L26 22 Z", fill:PAL.ink}));
+    g.appendChild(svgEl("path", {d:"M-14 -134 L0 -172 L14 -134 Z", fill:PAL.accent}));
+    return g;
+  }
+  function secondHandLine(color){
+    return svgEl("line", {x1:0, y1:136, x2:0, y2:-386, stroke:color, "stroke-width":5});
+  }
+  function handUnit(shape){
+    var outer = svgEl("g", {transform:"translate(500 500)"});
+    var rotor = svgEl("g", {});
+    rotor.appendChild(shape);
+    outer.appendChild(rotor);
+    return { outer:outer, rotor:rotor };
+  }
+  function setRot(unit, deg){ if(unit) unit.rotor.setAttribute("transform", "rotate("+deg+")"); }
+  function buildDial(svg){
+    var D = {};
+    var gid = "refl" + (++gradSeq);
+    var defs = svgEl("defs", {});
+    var grad = svgEl("radialGradient", {id:gid, cx:"366", cy:"303", r:"700", gradientUnits:"userSpaceOnUse"});
+    grad.appendChild(svgEl("stop", {offset:"0", "stop-color":"#FFFFFF", "stop-opacity":".14"}));
+    grad.appendChild(svgEl("stop", {offset:".65", "stop-color":"#FFFFFF", "stop-opacity":"0"}));
+    defs.appendChild(grad);
+    svg.appendChild(defs);
+    svg.appendChild(svgEl("circle", {cx:500, cy:500, r:500, fill:PAL.frame}));
+    [[489,PAL.frameLine,2],[481,PAL.frameHi,3],[473,PAL.frameLine,2]].forEach(function(t){
+      svg.appendChild(svgEl("circle", {cx:500, cy:500, r:t[0], fill:"none", stroke:t[1], "stroke-width":t[2]}));
+    });
+    svg.appendChild(svgEl("circle", {cx:500, cy:500, r:469, fill:PAL.glass}));
+    svg.appendChild(svgEl("circle", {cx:500, cy:500, r:447, fill:PAL.face}));
+    svg.appendChild(svgEl("circle", {cx:500, cy:500, r:447, fill:"url(#"+gid+")"}));
+    var m, a, t;
+    for(m=0; m<60; m++){
+      a = m*6*Math.PI/180;
+      svg.appendChild(svgEl("circle", {cx:(500+Math.sin(a)*412).toFixed(1), cy:(500-Math.cos(a)*412).toFixed(1), r:(m%5===0?7.5:3.6), fill:PAL.ink}));
     }
+    for(m=0; m<60; m+=5){
+      a = m*6*Math.PI/180;
+      t = svgEl("text", {x:(500+Math.sin(a)*367).toFixed(1), y:(500-Math.cos(a)*367).toFixed(1), "text-anchor":"middle", "dominant-baseline":"central", "font-size":"38", "font-weight":"700", fill:PAL.ink});
+      t.textContent = m;
+      svg.appendChild(t);
+    }
+    for(m=1; m<=12; m++){
+      a = m*30*Math.PI/180;
+      t = svgEl("text", {x:(500+Math.sin(a)*208).toFixed(1), y:(500-Math.cos(a)*208).toFixed(1), "text-anchor":"middle", "dominant-baseline":"central", "font-size":"68", "font-weight":"700", fill:PAL.ink});
+      t.textContent = m;
+      svg.appendChild(t);
+    }
+    D.ghostLayer = svgEl("g", {});
+    svg.appendChild(D.ghostLayer);
+    D.shadowMin = handUnit(minuteHandShape(PAL.ink, PAL.face, PAL.ink));
+    D.shadowMin.outer.setAttribute("opacity", "0.35");
+    D.shadowMin.outer.style.display = "none";
+    svg.appendChild(D.shadowMin.outer);
+    D.shadowSec = handUnit(secondHandLine(PAL.accent));
+    D.shadowSec.outer.setAttribute("opacity", "0.35");
+    D.shadowSec.outer.style.display = "none";
+    svg.appendChild(D.shadowSec.outer);
+    D.hour = handUnit(hourHandShape());
+    svg.appendChild(D.hour.outer);
+    D.min = handUnit(minuteHandShape(PAL.ink, PAL.face, PAL.accent));
+    svg.appendChild(D.min.outer);
+    D.sec = handUnit(secondHandLine(PAL.accent));
+    svg.appendChild(D.sec.outer);
+    var cap = svgEl("g", {transform:"translate(500 500)"});
+    cap.appendChild(svgEl("circle", {r:16, fill:PAL.ink}));
+    cap.appendChild(svgEl("circle", {r:10, fill:PAL.accent}));
+    svg.appendChild(cap);
+    D.makeGhostMin = function(color){
+      var u = handUnit(minuteHandShape(color, "#FFFFFF", color));
+      u.outer.setAttribute("opacity", "0.45");
+      return u;
+    };
+    D.makeGhostSec = function(color){
+      var u = handUnit(secondHandLine(color));
+      u.outer.setAttribute("opacity", "0.45");
+      return u;
+    };
+    return D;
   }
-  ticks("liveTicks", 100, 100, 84, 74, 3.4);
-  ticks("demoTicks", 100, 100, 84, 74, 3.4);
+  function anglesFor(vms){
+    var d = new Date(vms), s = d.getSeconds() + d.getMilliseconds()/1000;
+    return { sec:s*6, min:(d.getMinutes()+s/60)*6, hour:((d.getHours()%12)+d.getMinutes()/60)*30 };
+  }
 
-  /* ---- live clock ---- */
-  function rot(id, deg){ var el=document.getElementById(id); if(el) el.setAttribute("transform","rotate("+deg+" 100 100)"); }
-  function tickClock(){
-    var d = new Date(), s = d.getSeconds()+d.getMilliseconds()/1000;
-    rot("liveSec", s*6);
-    rot("liveMin", (d.getMinutes()+s/60)*6);
-    rot("liveHour", ((d.getHours()%12)+d.getMinutes()/60)*30);
+  /* ---- live clock (hero) ---- */
+  var heroDial = buildDial(document.getElementById("liveClock"));
+  function tickHero(){
+    var a = anglesFor(Date.now());
+    setRot(heroDial.hour, a.hour);
+    setRot(heroDial.min, a.min);
+    setRot(heroDial.sec, a.sec);
   }
-  tickClock();
-  if(!reduced) setInterval(tickClock, 1000);
+  tickHero();
+  if(!reduced) setInterval(tickHero, 1000);
 
   /* ---- scenes + reveals ---- */
   var label = document.getElementById("gLabel"), fLabel = document.getElementById("fLabel");
@@ -557,105 +637,312 @@
   }, {passive:true});
   guide();
 
-  /* ---- demo ---- */
-  var C = 2*Math.PI*82; // demo arc circumference
-  var minutes = 15, playing = false;
-  var wrap = document.getElementById("dialWrap"),
-      hand = document.getElementById("demoHand"),
-      arc  = document.getElementById("demoArc"),
-      val  = document.getElementById("demoVal"),
-      msg  = document.getElementById("demoMsg"),
-      playBtn = document.getElementById("demoPlay");
-  var MSG0 = msg.textContent;
-  function renderDemo(){
-    var deg = minutes*6;
-    hand.setAttribute("transform","rotate("+deg+" 100 100)");
-    arc.setAttribute("stroke-dasharray", (C*minutes/60).toFixed(1)+" "+C.toFixed(1));
-    val.textContent = minutes;
-    wrap.setAttribute("aria-valuenow", minutes);
-    wrap.setAttribute("aria-valuetext", minutes+"分");
-    document.querySelectorAll(".chip").forEach(function(c){
-      c.setAttribute("aria-pressed", String(+c.dataset.min===minutes));
-    });
+  /* ---- demo: the app's timer, faithfully (drag the hands; time is fast-forwarded) ---- */
+  var stage = document.getElementById("demoStage"),
+      demoSvg = document.getElementById("demoDial"),
+      dialWrap = document.getElementById("dialWrap"),
+      statusEl = document.getElementById("demoStatus"),
+      plusLabel = document.getElementById("plusLabel"),
+      confirmPop = document.getElementById("confirmPop");
+  var demo = buildDial(demoSvg);
+  var pills = [document.getElementById("pill0"), document.getElementById("pill1")];
+  var pillText = [pills[0].querySelector(".pill-text"), pills[1].querySelector(".pill-text")];
+  var PRESET_NAMES = PRESETS;
+  var slotColor = [0, 1];
+  var timers = [null, null];
+  var ghosts = [null, null];
+  var rate = 1, vAnchor = Date.now(), vAnchorReal = Date.now();
+  function vNow(){ return vAnchor + (Date.now() - vAnchorReal) * rate; }
+  function snapToReal(){ vAnchor = Date.now(); vAnchorReal = Date.now(); rate = 1; }
+  function durText(sec){
+    if(sec < 60) return sec + "秒";
+    if(sec % 60 === 0) return (sec/60) + "分";
+    return Math.floor(sec/60) + "分" + (sec%60) + "秒";
   }
-  function setMinutes(m){
-    if(playing) return;
-    minutes = Math.max(0, Math.min(60, Math.round(m)));
-    renderDemo();
+  function cdText(sec){
+    if(sec <= 0) return "0:00";
+    var h = Math.floor(sec/3600), m = Math.floor(sec%3600/60), s = sec%60;
+    var ss = (s<10 ? "0" : "") + s;
+    if(h > 0) return h + ":" + (m<10 ? "0" : "") + m + ":" + ss;
+    return m + ":" + ss;
   }
-  document.querySelectorAll(".chip").forEach(function(c){
-    c.addEventListener("click", function(){ setMinutes(+c.dataset.min); msg.textContent = MSG0; });
-  });
-  document.getElementById("demoMinus").addEventListener("click", function(){ setMinutes(minutes-1); });
-  document.getElementById("demoPlus").addEventListener("click", function(){ setMinutes(minutes+1); });
-  wrap.addEventListener("keydown", function(e){
-    if(e.key==="ArrowRight"||e.key==="ArrowUp"){ setMinutes(minutes+1); e.preventDefault(); }
-    else if(e.key==="ArrowLeft"||e.key==="ArrowDown"){ setMinutes(minutes-1); e.preventDefault(); }
-    else if(e.key==="PageUp"){ setMinutes(minutes+5); e.preventDefault(); }
-    else if(e.key==="PageDown"){ setMinutes(minutes-5); e.preventDefault(); }
-  });
-  /* drag the hand */
-  var dragging=false;
-  function angleFromEvent(e){
-    var r = document.getElementById("demoDial").getBoundingClientRect();
-    var x = e.clientX - (r.left + r.width/2), y = e.clientY - (r.top + r.height/2);
-    var deg = Math.atan2(x, -y) * 180/Math.PI;
-    if(deg<0) deg+=360;
-    return deg/6;
+  function capsulePath(W, H, o){
+    var r = (H - 2*o)/2, x0 = o, x1 = W - o, y0 = o, y1 = H - o, cx = W/2;
+    return "M "+cx+" "+y0+" L "+(x1-r)+" "+y0+" A "+r+" "+r+" 0 0 1 "+x1+" "+(y0+r)+
+           " L "+x1+" "+(y1-r)+" A "+r+" "+r+" 0 0 1 "+(x1-r)+" "+y1+
+           " L "+(x0+r)+" "+y1+" A "+r+" "+r+" 0 0 1 "+x0+" "+(y1-r)+
+           " L "+x0+" "+(y0+r)+" A "+r+" "+r+" 0 0 1 "+(x0+r)+" "+y0+" Z";
   }
-  hand.addEventListener("pointerdown", function(e){
-    dragging=true; hand.setPointerCapture(e.pointerId); setMinutes(angleFromEvent(e)); e.preventDefault();
-  });
-  hand.addEventListener("pointermove", function(e){ if(dragging) setMinutes(angleFromEvent(e)); });
-  hand.addEventListener("pointerup", function(){ dragging=false; });
-  hand.addEventListener("pointercancel", function(){ dragging=false; });
-  hand.style.touchAction = "none";
-
-  /* shortened preview + mini finale */
-  var timer=null;
-  playBtn.addEventListener("click", function(){
-    if(playing || minutes===0) { if(minutes===0){ msg.textContent="まず時間を決めてください。長針を回すか、ボタンを選んでください。"; } return; }
-    playing=true; playBtn.disabled=true; playBtn.style.opacity=.55;
-    var total=6000, t0=performance.now(), startMin=minutes;
-    msg.textContent="短縮再生中…（実際は "+startMin+"分 かかります）";
-    timer=setInterval(function(){
-      var p=(performance.now()-t0)/total;
-      if(p>=1){
-        clearInterval(timer);
-        hand.setAttribute("transform","rotate(0 100 100)");
-        arc.setAttribute("stroke-dasharray", "0 "+C.toFixed(1));
-        val.textContent = 0;
-        finale();
-        msg.textContent="おしまい。アプリでは、ここで時計が粒になって飛び散ります。「もう一度」で最初に戻ります。";
-        var again=document.createElement("button");
-        again.className="mini-btn"; again.textContent="もう一度"; again.style.marginLeft="10px";
-        again.addEventListener("click", function(){ minutes=startMin; renderDemo(); msg.textContent=MSG0; again.remove(); });
-        msg.appendChild(again);
-        playing=false; playBtn.disabled=false; playBtn.style.opacity=1;
-        return;
-      }
-      var remain=startMin*(1-p);
-      hand.setAttribute("transform","rotate("+(remain*6)+" 100 100)");
-      arc.setAttribute("stroke-dasharray", (C*remain/60).toFixed(1)+" "+C.toFixed(1));
-      val.textContent = Math.ceil(remain);
-    }, 100);
-  });
-  function finale(){
+  function paintRing(slot){
+    var color = PRESET_NAMES[slotColor[slot]];
+    var svg = pills[slot].querySelector(".ring");
+    svg.querySelector(".ring-base").setAttribute("stroke", color);
+    svg.querySelector(".ring-rem").setAttribute("stroke", color);
+  }
+  function buildRing(slot){
+    var pill = pills[slot];
+    var w = pill.offsetWidth, h = pill.offsetHeight;
+    var svg = pill.querySelector(".ring");
+    svg.setAttribute("viewBox", "0 0 " + (w+4) + " " + (h+4));
+    var d = capsulePath(w+4, h+4, 2);
+    var frame = svg.querySelector(".ring-frame");
+    frame.setAttribute("d", d);
+    frame.setAttribute("stroke", PAL.frameLine);
+    frame.setAttribute("stroke-width", "1");
+    frame.setAttribute("opacity", ".7");
+    var base = svg.querySelector(".ring-base");
+    base.setAttribute("d", d);
+    base.setAttribute("stroke-width", "3.5");
+    base.setAttribute("opacity", ".25");
+    var rem = svg.querySelector(".ring-rem");
+    rem.setAttribute("d", d);
+    rem.setAttribute("stroke-width", "3.5");
+    rem.setAttribute("stroke-linecap", "round");
+    rem.setAttribute("pathLength", "100");
+    paintRing(slot);
+  }
+  function updateRing(slot, frac){
+    var F = Math.max(0, Math.min(1, frac)) * 100;
+    var rem = pills[slot].querySelector(".ring-rem");
+    rem.setAttribute("stroke-dasharray", "0 " + (100-F).toFixed(1) + " " + F.toFixed(1) + " 100");
+  }
+  function paintGhost(slot){
+    var color = PRESET_NAMES[slotColor[slot]];
+    var g = ghosts[slot];
+    if(!g) return;
+    while(g.min.rotor.firstChild) g.min.rotor.removeChild(g.min.rotor.firstChild);
+    var shape = minuteHandShape(color, "#FFFFFF", color);
+    while(shape.firstChild) g.min.rotor.appendChild(shape.firstChild);
+    while(g.sec.rotor.firstChild) g.sec.rotor.removeChild(g.sec.rotor.firstChild);
+    g.sec.rotor.appendChild(secondHandLine(color));
+  }
+  function makeGhosts(slot){
+    var minU = demo.makeGhostMin(PRESET_NAMES[slotColor[slot]]);
+    var secU = demo.makeGhostSec(PRESET_NAMES[slotColor[slot]]);
+    demo.ghostLayer.appendChild(minU.outer);
+    demo.ghostLayer.appendChild(secU.outer);
+    ghosts[slot] = { min:minU, sec:secU };
+    paintGhost(slot);
+  }
+  function setStatus(txt){ if(statusEl) statusEl.textContent = txt; }
+  function ariaUpdate(){
+    var parts = [];
+    for(var i=0;i<2;i++) if(timers[i]) parts.push((i+1) + "つ目 " + durText(timers[i].total));
+    dialWrap.setAttribute("aria-valuetext", parts.length ? "タイマー：" + parts.join("、") : "タイマーはありません");
+    dialWrap.setAttribute("aria-valuenow", timers[0] ? Math.round(timers[0].total/60) : 0);
+  }
+  function createTimer(bySec, totalSec){
+    var slot;
+    if(!timers[0]) slot = 0;
+    else if(!timers[1]) slot = 1;
+    else slot = timers[0].startV <= timers[1].startV ? 0 : 1;
+    if(!timers[0] && !timers[1]){
+      var demoSecs = Math.min(10, Math.max(4, totalSec/60));
+      var v = vNow();
+      vAnchor = v; vAnchorReal = Date.now(); rate = totalSec / demoSecs;
+    }
+    timers[slot] = { total:totalSec, endV:vNow() + totalSec*1000, bySec:bySec, startV:vNow() };
+    if(!ghosts[slot]) makeGhosts(slot);
+    paintGhost(slot);
+    pills[slot].hidden = false;
+    buildRing(slot);
+    setStatus("タイマー中です（早回し）");
+    ariaUpdate();
+  }
+  function removeTimer(slot, silent){
+    timers[slot] = null;
+    pills[slot].hidden = true;
+    if(ghosts[slot]){
+      demo.ghostLayer.removeChild(ghosts[slot].min.outer);
+      demo.ghostLayer.removeChild(ghosts[slot].sec.outer);
+      ghosts[slot] = null;
+    }
+    if(!timers[0] && !timers[1]){
+      snapToReal();
+      if(!silent) setStatus("長針を回してみてください");
+    }
+    ariaUpdate();
+  }
+  function burst(){
     if(reduced) return;
-    var colors=["#D97443","#E0A842","#4A8578","#B5653E"];
-    for(var i=0;i<18;i++){
-      var s=document.createElement("span");
-      s.className="particle";
-      var ang=Math.random()*Math.PI*2, dist=80+Math.random()*120;
-      s.style.setProperty("--dx", Math.cos(ang)*dist+"px");
-      s.style.setProperty("--dy", Math.sin(ang)*dist+"px");
-      s.style.left="50%"; s.style.top="50%";
-      s.style.background=colors[i%colors.length];
-      wrap.appendChild(s);
-      (function(el){ setTimeout(function(){ el.remove(); }, 1100); })(s);
+    var rect = dialWrap.getBoundingClientRect(), srect = stage.getBoundingClientRect();
+    var cx = rect.left - srect.left + rect.width/2, cy = rect.top - srect.top + rect.height/2;
+    var R = rect.width/2, colors = [PAL.ink, PAL.accent, PAL.frame, PAL.frameLine, PAL.glass, "#FFFFFF"];
+    demoSvg.animate(
+      [{opacity:1},{opacity:.12, offset:.18},{opacity:.12, offset:.72},{opacity:1}],
+      {duration:1600, easing:"ease-in-out"}
+    );
+    for(var i=0;i<90;i++){
+      var b = document.createElement("div");
+      b.className = "burst-bit";
+      var ang = Math.random()*Math.PI*2, rr = Math.sqrt(Math.random())*R*0.92;
+      var x = cx + Math.sin(ang)*rr, y = cy - Math.cos(ang)*rr;
+      var sz = 3 + Math.random()*6;
+      b.style.left = x + "px"; b.style.top = y + "px";
+      b.style.width = sz + "px"; b.style.height = sz + "px";
+      b.style.background = colors[i % colors.length];
+      stage.appendChild(b);
+      var dx = (Math.random()-0.5)*130, dy = (Math.random()-0.35)*130;
+      var anim = b.animate([
+        {transform:"translate(0,0) rotate(0deg)", opacity:1},
+        {transform:"translate("+dx+"px,"+dy+"px) rotate("+(Math.random()*260-130)+"deg)", opacity:0}
+      ], {duration:1000 + Math.random()*600, easing:"cubic-bezier(.17,.67,.35,1)"});
+      (function(node, an){ an.onfinish = function(){ node.remove(); }; })(b, anim);
     }
   }
-  renderDemo();
+  function finishTimer(slot){
+    var wasRunning = !!(timers[0] || timers[1]);
+    removeTimer(slot, true);
+    setStatus("おしまい！ 時計が粒になりました");
+    burst();
+    setTimeout(function(){
+      if(!timers[0] && !timers[1]) setStatus("長針を回してみてください");
+      else setStatus("タイマー中です（早回し）");
+    }, 1900);
+    if(wasRunning) ariaUpdate();
+  }
+
+  /* ---- drag (same rules as the app) ---- */
+  var drag = null;
+  function signedDelta(d){ return ((d + 540) % 360) - 180; }
+  function ptAngle(e){
+    var r = demoSvg.getBoundingClientRect();
+    var x = (e.clientX - r.left)/r.width*1000 - 500;
+    var y = (e.clientY - r.top)/r.height*1000 - 500;
+    return { a:(Math.atan2(x, -y)*180/Math.PI + 360) % 360, dist:Math.hypot(x, y) };
+  }
+  demoSvg.addEventListener("pointerdown", function(e){
+    if(drag) return;
+    var p = ptAngle(e);
+    if(p.dist <= 200) return;
+    var ang = anglesFor(vNow());
+    var kind = null;
+    if(Math.abs(signedDelta(p.a - ang.min)) <= 20) kind = "min";
+    else if(Math.abs(signedDelta(p.a - ang.sec)) <= 20) kind = "sec";
+    if(!kind) return;
+    drag = { kind:kind, last:p.a, pending:0, startMinA:ang.min, startSecA:ang.sec, id:e.pointerId, lastInt:-1 };
+    try{ demoSvg.setPointerCapture(e.pointerId); }catch(err){}
+    if(kind === "min"){ demo.shadowMin.outer.style.display = ""; setRot(demo.shadowMin, ang.min); }
+    else { demo.shadowSec.outer.style.display = ""; setRot(demo.shadowSec, ang.sec); }
+    plusLabel.hidden = false;
+    setStatus("回した分がタイマーになります");
+    e.preventDefault();
+  });
+  demoSvg.addEventListener("pointermove", function(e){
+    if(!drag || e.pointerId !== drag.id) return;
+    var p = ptAngle(e);
+    var d = signedDelta(p.a - drag.last);
+    drag.last = p.a;
+    var cap = drag.kind === "min" ? 720 : 43200;
+    drag.pending = Math.max(0, Math.min(cap, drag.pending + d/6));
+  });
+  function endDrag(commit){
+    if(!drag) return;
+    var val = Math.round(drag.pending);
+    var kind = drag.kind;
+    drag = null;
+    demo.shadowMin.outer.style.display = "none";
+    demo.shadowSec.outer.style.display = "none";
+    plusLabel.hidden = true;
+    if(commit && val > 0) createTimer(kind === "sec", kind === "min" ? val*60 : val);
+    else if(timers[0] || timers[1]) setStatus("タイマー中です（早回し）");
+    else setStatus("長針を回してみてください");
+  }
+  demoSvg.addEventListener("pointerup", function(){ endDrag(true); });
+  demoSvg.addEventListener("pointercancel", function(){ endDrag(false); });
+
+  /* ---- pill taps: band = next colour, body = delete confirm (same as the app) ---- */
+  var confirmSlot = 0;
+  pills.forEach(function(pill){
+    pill.addEventListener("click", function(e){
+      var slot = +pill.getAttribute("data-slot");
+      if(!timers[slot]) return;
+      var r = pill.getBoundingClientRect();
+      var x = e.clientX - r.left, y = e.clientY - r.top, band = 11;
+      var inBody = x > band && x < r.width - band && y > band && y < r.height - band;
+      if(inBody){
+        confirmSlot = slot;
+        confirmPop.style.top = (pill.offsetTop + pill.offsetHeight + 10) + "px";
+        confirmPop.hidden = false;
+      } else {
+        slotColor[slot] = (slotColor[slot] + 1) % PRESET_NAMES.length;
+        paintGhost(slot);
+        paintRing(slot);
+      }
+    });
+  });
+  document.getElementById("confirmYes").addEventListener("click", function(){
+    confirmPop.hidden = true;
+    removeTimer(confirmSlot, false);
+  });
+  document.getElementById("confirmNo").addEventListener("click", function(){
+    confirmPop.hidden = true;
+  });
+
+  /* ---- keyboard (accessibility fallback) ---- */
+  dialWrap.addEventListener("keydown", function(e){
+    var d = 0;
+    if(e.key === "ArrowRight" || e.key === "ArrowUp") d = 1;
+    else if(e.key === "ArrowLeft" || e.key === "ArrowDown") d = -1;
+    else if(e.key === "PageUp") d = 5;
+    else if(e.key === "PageDown") d = -5;
+    else return;
+    e.preventDefault();
+    var slot = timers[0] ? 0 : (timers[1] ? 1 : -1);
+    if(slot < 0){ if(d > 0) createTimer(false, d*60); return; }
+    var t = timers[slot], nt = t.total + d*60;
+    if(nt <= 0){ removeTimer(slot, false); return; }
+    t.endV += d*60000;
+    t.total = nt;
+    ariaUpdate();
+  });
+
+  /* ---- render loop ---- */
+  function frame(){
+    var v = vNow();
+    var ang = anglesFor(v);
+    var minA = ang.min, secA = ang.sec;
+    if(drag){
+      if(drag.kind === "min") minA = drag.startMinA + drag.pending*6;
+      else secA = drag.startSecA + drag.pending*6;
+      var n = Math.round(drag.pending);
+      plusLabel.textContent = "+" + n + (drag.kind === "min" ? "分" : "秒");
+      var handA = drag.kind === "min" ? minA : secA;
+      var wr = dialWrap.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+      var cx = wr.left - sr.left + wr.width/2, cy = wr.top - sr.top + wr.height/2;
+      var rad = wr.width/2 + 24, ar = handA*Math.PI/180;
+      plusLabel.style.left = (cx + Math.sin(ar)*rad) + "px";
+      plusLabel.style.top = (cy - Math.cos(ar)*rad) + "px";
+      if(n !== drag.lastInt){
+        drag.lastInt = n;
+        if(!reduced){
+          plusLabel.animate(
+            [{transform:"translate(-50%,-50%) scale(1.3)"},{transform:"translate(-50%,-50%) scale(1)"}],
+            {duration:180, easing:"ease-out"}
+          );
+        }
+      }
+    }
+    setRot(demo.hour, ang.hour);
+    setRot(demo.min, minA);
+    setRot(demo.sec, secA);
+    for(var i=0;i<2;i++){
+      var t = timers[i];
+      if(!t) continue;
+      var ea = anglesFor(t.endV);
+      if(ghosts[i]){
+        setRot(ghosts[i].min, ea.min);
+        ghosts[i].sec.outer.style.display = t.bySec ? "" : "none";
+        if(t.bySec) setRot(ghosts[i].sec, ea.sec);
+      }
+      var rem = Math.max(0, (t.endV - v)/1000);
+      pillText[i].textContent = "設定 " + durText(t.total) + "　残り " + cdText(Math.ceil(rem));
+      updateRing(i, t.total > 0 ? rem/t.total : 0);
+      if(v >= t.endV) finishTimer(i);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
