@@ -917,6 +917,28 @@
     });
   }
 
+  /* ---- finale videos: play while in view, pause out of view (mobile autoplay対策) ---- */
+  (function(){
+    var vids = document.querySelectorAll("video.finale-video, video.feat-video");
+    if(!reduced && "IntersectionObserver" in window){
+      var vio = new IntersectionObserver(function(es){
+        es.forEach(function(e){
+          var v = e.target;
+          if(e.isIntersecting){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }
+          else{ v.pause(); }
+        });
+      }, { threshold: 0.2 });
+      vids.forEach(function(v){ vio.observe(v); });
+    }
+    vids.forEach(function(v){
+      v.addEventListener("click", function(){
+        if(reduced) return;
+        if(v.paused){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }
+        else{ v.pause(); }
+      });
+    });
+  })();
+
   /* ---- render loop ---- */
   function frame(){
     var v = vNow();
