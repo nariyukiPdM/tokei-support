@@ -292,6 +292,86 @@
     *,*::before,*::after{animation:none !important;transition:none !important}
     .js .rv{opacity:1;transform:none}
   }
+
+  /* ---------- v3: sample pill / pill band / finale stills / paid badge ---------- */
+  .pill-sample{
+    display:inline-flex;align-items:center;background:#FFFCF6;border:2px solid #0A84FF;
+    border-radius:999px;padding:7px 15px;font-size:15px;font-weight:600;color:var(--ink);
+    white-space:nowrap;font-variant-numeric:tabular-nums;line-height:1.35;
+    box-shadow:0 6px 16px rgba(90,70,45,.10);
+  }
+  .pill-band{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:16px 20px;margin-top:18px;
+  }
+  .pill-band p{margin:0;font-size:.93rem;flex:1 1 260px}
+  .color-dots{display:inline-flex;gap:6px}
+  .color-dots i{width:14px;height:14px;border-radius:50%;display:block;border:1px solid rgba(90,70,45,.18)}
+  .finale-stills{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:400px;margin:16px auto 0}
+  .finale-stills figure{margin:0;text-align:center}
+  .finale-stills img{display:block;width:100%;aspect-ratio:9/10;object-fit:cover;border-radius:14px;box-shadow:0 10px 22px rgba(80,58,30,.14);background:#EFE9DC}
+  .finale-stills figcaption{font-size:.78rem;color:var(--faint);margin-top:6px}
+  .paid-badge{
+    display:inline-block;vertical-align:.16em;background:var(--accent);color:#FFF8EF;
+    font-size:.66rem;font-weight:700;letter-spacing:.08em;border-radius:999px;
+    padding:2px 9px;margin-left:9px;white-space:nowrap;
+  }
+  .paid-line{margin:14px 0 0;font-size:.9rem}
+
+  /* ---------- v3: FAQ as details/summary ---------- */
+  details.faq-item summary{
+    font-size:1rem;font-weight:700;color:var(--ink);cursor:pointer;list-style:none;
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  }
+  details.faq-item summary::-webkit-details-marker{display:none}
+  details.faq-item summary::after{content:"＋";color:var(--accent-ink);font-weight:600;flex:none}
+  details.faq-item[open ] summary{margin-bottom:8px}
+  details.faq-item[open ] summary::after{content:"−"}
+
+  /* ---------- v3: berths (landing spots reserved in the layout) ---------- */
+  .berth{
+    position:relative;width:200px;height:200px;flex:none;
+    border:2px dashed rgba(169,131,90,.5);border-radius:50%;
+  }
+  .berth svg{display:block;width:100%;height:100%}
+  .berth-faq{width:120px;height:120px;margin:0 auto 20px}
+  .berth-footer{width:176px;height:176px;margin:0 auto 20px}
+  .berth-head{display:flex;gap:28px;align-items:center;margin-bottom:6px}
+  .berth-head-copy{min-width:0}
+  .berth-head .kicker{margin-bottom:10px}
+  .berth-head h2{margin-bottom:0}
+  .wall-side{display:flex;flex-direction:column;align-items:center;gap:22px}
+  .wall-side .wall-shot{width:100%}
+  .finale-flex{display:flex;gap:20px;align-items:center}
+  .finale-flex video.feat-video{flex:1 1 auto;min-width:0;width:auto}
+  .price-flex{display:flex;gap:26px;align-items:flex-start}
+  .price-copy{flex:1 1 auto;min-width:0}
+  @media (max-width:760px){
+    .berth{width:min(152px,44vw);height:min(152px,44vw)}
+    .berth-faq{width:120px;height:120px}
+    .berth-footer{width:144px;height:144px}
+    .berth-head{flex-direction:column;gap:16px}
+    .berth-head-copy{align-self:stretch}
+    .finale-flex{flex-direction:column}
+    .finale-flex video.feat-video{width:100%}
+    .price-flex{flex-direction:column;align-items:center}
+    .price-flex .berth{order:-1}
+    .price-copy{align-self:stretch}
+  }
+
+  /* ---------- v3: the travelling clock ---------- */
+  #traveler{
+    position:fixed;left:0;top:0;width:220px;height:220px;z-index:45;
+    pointer-events:none;opacity:0;visibility:hidden;will-change:transform;
+  }
+  #traveler svg{
+    display:block;width:100%;height:100%;
+    filter:drop-shadow(0 14px 22px rgba(80,58,30,.28));
+    transition:filter .45s ease;
+  }
+  #traveler.wall svg{filter:drop-shadow(0 5px 8px rgba(60,40,18,.5))}
+  .traveler-bit{position:absolute;border-radius:2px;pointer-events:none;z-index:3}
 </style>
 </head>
 <body data-scene="hero">
@@ -329,7 +409,7 @@
           <span class="app-name">子供にご飯を食べさせるための時計（iPad / iPhone、iOS 17以降）</span>
         </div>
         <h1>針を回して、<br>ごはんの時間を決める。</h1>
-        <p class="lead">時計の針を指で回すだけでタイマーになる、アナログ時計アプリです。「あと何分？」を、終わりの場所に残る色の針と「設定・残り」の数字で見せます。終わる時間になると、時計が粒になって飛び散る演出が流れます。</p>
+        <p class="lead">針を指で回すだけで、タイマーになる時計です。</p>
         <div class="cta-row">
           <a class="btn" href="#howto">使い方を見る</a>
           <a class="btn ghost" href="#faq">よくある質問へ</a>
@@ -360,8 +440,8 @@
         </div>
         <div class="demo-side">
           <p class="demo-read" id="demoStatus">長針を回してみてください</p>
-          <p>長針をつかんで時計回りに回した分が、そのままタイマーになります。離すと、終わりの場所に半透明の色の針が残ります。</p>
-          <p>秒針なら秒単位（アプリでは有料機能）。タイマーは2つまで。表示のふちを触ると色が変わり、真ん中を触ると消す確認が出ます。</p>
+          <p>回した分が、そのままタイマーになります。離すと、終わりの場所に薄い色の針が残ります。</p>
+          <p style="margin:14px 0 4px"><span class="pill-sample" aria-hidden="true">設定 10分　残り 09:58</span></p>
           <p class="demo-note" id="demoMsg">お試し用のデモです。時間の進み方だけを早回しにしています。</p>
         </div>
       </div>
@@ -372,24 +452,39 @@
   <!-- ===== howto: steps (v2) ===== -->
   <section class="block" id="howto-steps" data-name="使い方" style="padding-top:8px">
     <div class="narrow">
-      <p class="kicker rv">使い方</p>
-      <h2 class="rv">まず、針を回してみてください</h2>
-      <p class="rv">長針を時計回りに回すと分単位、秒針を回すと秒単位でタイマーが始まります。タイマーは2つまで同時に置けます。このページの時計は、練習用として試せます。</p>
+      <div class="berth-head">
+        <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
+        <div class="berth-head-copy">
+          <p class="kicker rv">使い方</p>
+          <h2 class="rv">まず、針を回してみてください</h2>
+        </div>
+      </div>
 
       <div class="steps">
         <div class="step rv"><span class="num">1</span><h3>針をつまんで回す</h3><p>長針で「分」、秒針で「秒」。メニューはありません。</p></div>
         <div class="step rv d1"><span class="num">2</span><h3>色の針が「おわり」の場所</h3><p>色の針と「設定・残り」の表示で、あと何分かを見せます。</p></div>
-        <div class="step rv d2"><span class="num">3</span><h3>終わると粒子の演出</h3><p>時間内に食事が終わらなければ、その家庭は崩壊します（家庭によります）。だから時間になると、時計の世界も崩壊して、時計が粒になって崩れ落ちます。下の映像が実際のアプリの動きです。</p></div>
+        <div class="step rv d2"><span class="num">3</span><h3>終わると粒子の演出</h3><p>時間内に食事が終わらなければ、その家庭は崩壊します（家庭によります）。だから時計も、粒になって崩れ落ちます。</p></div>
+      </div>
+
+      <div class="pill-band rv">
+        <span class="pill-sample" aria-hidden="true">設定 10分　残り 09:58</span>
+        <span class="color-dots" aria-hidden="true"><i style="background:#0A84FF"></i><i style="background:#50C878"></i><i style="background:#FF9F0A"></i><i style="background:#FF375F"></i><i style="background:#BF5AF2"></i><i style="background:#FF453A"></i><i style="background:#FFD60A"></i><i style="background:#64D2FF"></i></span>
+        <p>縁をタップすると色が変わります。中央をタップすると、消す確認が出ます。タイマーは2つまで。</p>
       </div>
 
       <figure class="finale-fig rv">
         <video class="finale-video" src="../finale.mp4" poster="../finale-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="タイマーが終わり、時計が粒になって飛び散る、実際のアプリの映像"></video>
         <figcaption>タイマーが終わる瞬間（実際のアプリの映像）</figcaption>
       </figure>
+      <div class="finale-stills rv">
+        <figure><img src="../finale-still-1.jpg" alt="タイマーが終わる直前の時計" loading="lazy"><figcaption>終わる前</figcaption></figure>
+        <figure><img src="../finale-still-2.jpg" alt="粒になって崩れる途中の時計" loading="lazy"><figcaption>崩れる途中</figcaption></figure>
+        <figure><img src="../finale-still-3.jpg" alt="崩れたあとに残った粒" loading="lazy"><figcaption>崩れたあと</figcaption></figure>
+      </div>
 
       <div class="card rv" style="margin-top:26px">
         <h3>時刻を進める</h3>
-        <p style="margin:0">設定→「時刻を進める」で、表示だけを先に進められます。「針がここまで来たら、ごはん」という見せ方ができます。<strong>端末の時刻は変わりません</strong>。</p>
+        <p style="margin:0">設定→「時刻を進める」で、表示だけを先に進められます。端末の時刻は変わりません。</p>
       </div>
     </div>
   </section>
@@ -402,8 +497,8 @@
           <div>
             <p class="kicker">壁掛け時計にする</p>
             <h2>壁を撮ると、時計が壁になじみます</h2>
-            <p>設定→「壁の背景」で貼り付ける壁を撮影すると、時計の外側に同じ壁の写真が出て、壁と一体化したように見えます。「壁掛け時に0時を真上に」をオンにすると、端末が少し傾いても、センサーが読み取って12時が物理的な真上を向き続けます。</p>
-            <p style="margin-bottom:0">撮影した写真は<strong>端末の中にだけ保存され、外部に送信されることはありません</strong>。いつでも設定から削除できます。</p>
+            <p>設定→「壁の背景」で壁を撮影すると、時計の外側に同じ壁の写真が出て、一体化したように見えます。端末が傾いても、12時は真上を保ちます。</p>
+            <p style="margin-bottom:0">撮影した写真は端末の中にだけ保存され、外部に送信されることはありません。いつでも設定から削除できます。</p>
             <div class="upright-demo" aria-hidden="true">
               <figure>
                 <svg width="104" height="104" viewBox="0 0 100 100"><g transform="rotate(14 50 50)"><circle cx="50" cy="50" r="46" fill="#FFFCF6" stroke="#A9835A" stroke-width="4"/><g font-size="13" font-family="sans-serif" fill="#2E2A24" text-anchor="middle"><text x="50" y="19">12</text><text x="50" y="90">6</text><text x="14" y="55">9</text><text x="86" y="55">3</text></g></g></svg>
@@ -415,10 +510,13 @@
               </figure>
             </div>
           </div>
-          <figure class="wall-shot">
-            <img src="../shot-04-wall.jpg" alt="木目の壁を背景にして、時計が壁になじんでいる画面" loading="lazy">
-            <figcaption>壁の写真を背景にした表示</figcaption>
-          </figure>
+          <div class="wall-side">
+            <figure class="wall-shot">
+              <img src="../shot-04-wall.jpg" alt="木目の壁を背景にして、時計が壁になじんでいる画面" loading="lazy">
+              <figcaption>壁の写真を背景にした表示</figcaption>
+            </figure>
+            <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
+          </div>
         </div>
       </div>
     </div>
@@ -432,23 +530,26 @@
       <div class="feat-grid">
         <article class="feat rv">
           <img src="../shot-08-two-timers.jpg" alt="2本のタイマーを同時にセットし、それぞれの色の針と表示が出ている画面" loading="lazy">
-          <div class="txt"><h3>タイマーは2本まで</h3><p>長針と秒針で別々のタイマーを置けます。終わりの場所に残る色の針と、「設定・残り」の表示で見せます。</p></div>
+          <div class="txt"><h3>タイマーは2本まで</h3><p>長針と秒針で、別々のタイマーを置けます。</p></div>
         </article>
         <article class="feat rv d1">
           <img src="../shot-03-hourglass.jpg" alt="砂時計で残り時間を表示している画面" loading="lazy">
-          <div class="txt"><h3>砂時計表示</h3><p>残り時間の見せ方は、「設定・残り」のデジタル表示、または砂時計から選べます。</p></div>
+          <div class="txt"><h3>砂時計表示<span class="paid-badge">有料</span></h3><p>残り時間の見せ方は、デジタル表示と砂時計から選べます。</p></div>
         </article>
         <article class="feat rv">
           <img src="../shot-06-afternoon-digital.jpg" alt="午後を13から24で表示し、デジタル時計も置いた画面" loading="lazy">
-          <div class="txt"><h3>午後の13〜24表示と、置けるデジタル時計</h3><p>午後を13〜24で表示する学習モード。デジタル時計は好きな場所へドラッグして置けます。</p></div>
+          <div class="txt"><h3>午後の13〜24表示と、置けるデジタル時計<span class="paid-badge">有料</span></h3><p>午後の学習モード（13〜24表示）。デジタル時計は好きな場所へドラッグして置けます。</p></div>
         </article>
         <article class="feat rv d1">
           <img src="../shot-05-dark.jpg" alt="暗い色合いで表示した時計の画面" loading="lazy">
-          <div class="txt"><h3>ダークな外観</h3><p>部屋の明るさに合わせて、落ち着いた色合いの表示にもできます。</p></div>
+          <div class="txt"><h3>ダークな外観</h3><p>部屋の明るさに合わせて、落ち着いた色合いにもできます。</p></div>
         </article>
         <article class="feat wide rv">
-          <video class="feat-video" src="../finale.mp4" poster="../finale-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="タイマーが終わり、時計が粒になって飛び散る、実際のアプリの映像"></video>
-          <div class="txt"><h3>終わりは、粒子のフィナーレ</h3><p>時間内に子供の食事が終わらないことは、その家庭の崩壊を意味します（家庭によります）。だから「時間切れ」は、世界の終わりとして描きました。時間が来ると、時計も粒になって崩れ落ちます。</p></div>
+          <div class="finale-flex">
+            <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
+            <video class="feat-video" src="../finale.mp4" poster="../finale-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="タイマーが終わり、時計が粒になって飛び散る、実際のアプリの映像"></video>
+          </div>
+          <div class="txt"><h3>終わりは、粒子のフィナーレ</h3><p>時間内に子供の食事が終わらないことは、その家庭の崩壊を意味します（家庭によります）。「時間切れ」は、世界の終わりとして描きました。</p></div>
         </article>
       </div>
     </div>
@@ -457,14 +558,20 @@
   <!-- ===== price ===== -->
   <section class="block" id="price" data-name="料金" style="padding-top:8px">
     <div class="narrow">
-      <p class="kicker rv">料金</p>
-      <h2 class="rv">無料で始めて、気に入ったら買い切り</h2>
-      <p class="rv">ダウンロードは無料です。初回起動から<strong>14日間は全機能をお試し</strong>いただけます。期間が終わっても、時計表示・壁の背景・タイマー1本などの無料機能はそのまま使えます。全機能のアンロックは<strong>¥800の買い切り</strong>（非消耗型のアプリ内課金）で、サブスクリプションはありません。</p>
-      <div class="badges rv">
-        <span class="badge">14日間 全機能トライアル</span>
-        <span class="badge">¥800 買い切り</span>
-        <span class="badge">広告なし</span>
-        <span class="badge">通信なし・データ収集なし</span>
+      <div class="price-flex">
+        <div class="price-copy">
+          <p class="kicker rv">料金</p>
+          <h2 class="rv">無料で始めて、気に入ったら買い切り</h2>
+          <p class="rv">ダウンロードは無料。初回起動から14日間は全機能をお試しいただけます。期間が終わっても、無料機能はそのまま使えます。</p>
+          <div class="badges rv">
+            <span class="badge">14日間 全機能トライアル</span>
+            <span class="badge">¥800 買い切り</span>
+            <span class="badge">広告なし</span>
+            <span class="badge">通信なし・データ収集なし</span>
+          </div>
+          <p class="paid-line rv">有料機能：2本目のタイマー、秒針タイマー、砂時計表示、表示時刻を進める、13〜24表示、秒針のスタイル</p>
+        </div>
+        <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
       </div>
     </div>
   </section>
@@ -472,28 +579,29 @@
   <!-- ===== faq ===== -->
   <section class="block" id="faq" data-name="よくある質問" style="padding-top:8px">
     <div class="narrow">
+      <div class="berth berth-faq" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
       <p class="kicker rv">サポート案内</p>
       <h2 class="rv">よくある質問</h2>
-      <div class="faq-item rv">
-        <h3>Q. データは収集されますか？</h3>
-        <p>A. いいえ。本アプリは通信を行わず、写真や設定は端末内にのみ保存されます。広告やアクセス解析の仕組みもありません。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
-      </div>
-      <div class="faq-item rv">
-        <h3>Q. 使っている途中で画面が消えてしまいます</h3>
+      <details class="faq-item rv">
+        <summary>Q. データは収集されますか？</summary>
+        <p>A. いいえ。通信を行わず、写真や設定は端末内にのみ保存されます。広告やアクセス解析もありません。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+      </details>
+      <details class="faq-item rv">
+        <summary>Q. 使っている途中で画面が消えてしまいます</summary>
         <p>A. 表示開始から1時間は自動で消灯しない設定になっています。それ以降は端末の自動ロック設定に従います。長時間の壁掛け利用では、端末の設定で自動ロックを「なし」にしてください。</p>
-      </div>
-      <div class="faq-item rv">
-        <h3>Q. 壁の写真が送信されることはありますか？</h3>
+      </details>
+      <details class="faq-item rv">
+        <summary>Q. 壁の写真が送信されることはありますか？</summary>
         <p>A. ありません。壁の写真は端末内にのみ保存され、外部に送信されることはありません。アプリの設定からいつでも削除できます。</p>
-      </div>
-      <div class="faq-item rv">
-        <h3>Q. 「時刻を進める」を使うと、iPadの時計が狂いませんか？</h3>
+      </details>
+      <details class="faq-item rv">
+        <summary>Q. 「時刻を進める」を使うと、iPadの時計が狂いませんか？</summary>
         <p>A. 狂いません。変わるのはこのアプリの表示だけです。端末の時刻設定には一切触れません。</p>
-      </div>
-      <div class="faq-item rv">
-        <h3>Q. 料金はかかりますか？</h3>
+      </details>
+      <details class="faq-item rv">
+        <summary>Q. 料金はかかりますか？</summary>
         <p>A. ダウンロードは無料で、14日間は全機能をお試しいただけます。その後も無料機能は使い続けられます。全機能のアンロックは¥800の買い切りです（<a href="#price">料金の説明</a>）。</p>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -503,7 +611,7 @@
       <div class="card contact-card rv">
         <p class="kicker" style="letter-spacing:.4em">お問い合わせ</p>
         <h2 style="margin-bottom:10px">困ったときは、メールでどうぞ</h2>
-        <p>不具合のご報告・ご要望は、開発者（ナリユキPdM）までご連絡ください。端末の種類と iOS のバージョンを添えていただくと、確認が早くなります。</p>
+        <p>不具合のご報告・ご要望は、開発者（ナリユキPdM）までご連絡ください。端末の種類とiOSのバージョンを添えていただくと、確認が早くなります。</p>
         <p class="mail-big"><a href="mailto:nariyukipdm@gmail.com">nariyukipdm@gmail.com</a></p>
         <p style="margin:18px 0 0"><a class="btn" href="mailto:nariyukipdm@gmail.com">メールで問い合わせる</a></p>
       </div>
@@ -512,9 +620,13 @@
 </main>
 
 <footer>
+  <div class="berth berth-footer" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
   <p style="margin:0 0 6px"><a href="privacy.html">プライバシーポリシー</a>　｜　<a href="#top">上へ戻る ↑</a></p>
   <p style="margin:0">© 2026 ナリユキPdM — 子供にご飯を食べさせるための時計</p>
 </footer>
+
+<!-- v3: the travelling clock (flies between the berths) -->
+<div id="traveler" aria-hidden="true"><svg id="travelerDial" viewBox="0 0 1000 1000"></svg></div>
 
 <!-- floating guide dial (PC) -->
 <div class="guide-float" aria-hidden="true">
@@ -1176,6 +1288,261 @@
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  /* ---- v3: berth flights (a second clock travels the page) ----
+     A display-only clone of the dial leaves the demo once the reader
+     scrolls on, and flies from berth to berth (steps -> wall ->
+     features -> price -> faq -> footer). Its position is a pure
+     function of scrollY: parked exactly on a dock, or interpolating
+     inside a leg. Nothing here touches the journey/demo code above. */
+  (function(){
+    var traveler = document.getElementById("traveler");
+    var tSvg = document.getElementById("travelerDial");
+    if(!traveler || !tSvg) return;
+    var BASE = 220;
+    var berthEls = Array.prototype.slice.call(document.querySelectorAll("[data-berth]"));
+    var dockEls = [dialWrap].concat(berthEls);
+    var docks = null, legs = null;
+    var vh = window.innerHeight || 800;
+    var active = false;
+    var tDial = null, photoEl = null;
+    var lastDock = -1, settleT0 = 0, finaleDone = false;
+    var lastMinute = -1;
+
+    /* transform-independent document centre of an element (offset chain) */
+    function layoutCenter(el){
+      var x = 0, y = 0, n = el;
+      while(n){ x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+      return { x:x + el.offsetWidth/2, y:y + el.offsetHeight/2, size:el.offsetWidth };
+    }
+    function measure(){
+      vh = window.innerHeight || vh;
+      var list = [], i, c;
+      for(i=0;i<dockEls.length;i++){
+        c = layoutCenter(dockEls[i]);
+        if(i === 0 && journeyEl && jStage){
+          /* the demo's sticky stage comes to rest at the bottom of the
+             (300svh) journey, so shift the demo dock down by the travel
+             of the stage itself */
+          c.y += Math.max(0, journeyEl.offsetHeight - jStage.offsetHeight);
+        }
+        if(!(c.size > 0)) throw new Error("dock not measurable");
+        c.w = (i === 2) ? 1 : 0;   /* wall dock: demo0 steps1 wall2 features3 price4 faq5 footer6 */
+        list.push(c);
+      }
+      var lg = [];
+      for(i=0;i<list.length-1;i++){
+        var st = list[i].y - vh*0.30;
+        var en = list[i+1].y - vh*0.60;
+        if(en < st + 1) en = st + 1;
+        lg.push({ st:st, en:en });
+      }
+      docks = list; legs = lg;
+    }
+    function setHands(force){
+      if(!tDial) return;
+      var now = new Date();
+      var m = now.getHours()*60 + now.getMinutes();
+      if(!force && m === lastMinute) return;
+      lastMinute = m;
+      var ang = anglesFor(now.getTime());
+      setRot(tDial.hour, ang.hour);
+      setRot(tDial.min, ang.min);
+      setRot(tDial.sec, ang.sec);
+    }
+    function settleHands(){
+      if(!tDial) return;
+      var t = (performance.now() - settleT0) / 600;
+      if(t >= 1){ setHands(true); return; }
+      var off = 16 * (1 - t) * (1 - t);
+      var ang = anglesFor(Date.now());
+      setRot(tDial.hour, ang.hour + off/12);
+      setRot(tDial.min, ang.min + off);
+      setRot(tDial.sec, ang.sec);
+      requestAnimationFrame(settleHands);
+    }
+    function buildTraveler(){
+      tDial = buildDial(tSvg);
+      /* the wall photo, slipped between the dial face and its hands */
+      var defs = svgEl("defs", {});
+      var cp = svgEl("clipPath", { id:"travelerClip" });
+      cp.appendChild(svgEl("circle", { cx:500, cy:500, r:447 }));
+      defs.appendChild(cp);
+      tSvg.appendChild(defs);
+      photoEl = svgEl("image", {
+        x:53, y:53, width:894, height:894,
+        preserveAspectRatio:"xMidYMid slice", opacity:"0",
+        "class":"traveler-photo", "clip-path":"url(#travelerClip)"
+      });
+      photoEl.setAttribute("href", "../shot-04-wall.jpg");
+      var anchor = tDial.ghostLayer, kids = tSvg.childNodes;
+      for(var i=0;i<kids.length;i++){
+        var f = kids[i].getAttribute && kids[i].getAttribute("fill");
+        if(f && f.indexOf("url(#") === 0){ anchor = kids[i].nextSibling; break; }
+      }
+      tSvg.insertBefore(photoEl, anchor);
+      setHands(true);
+    }
+    function berthDots(){
+      berthEls.forEach(function(b){
+        var svg = b.querySelector(".berth-dial");
+        if(!svg) return;
+        for(var m=0;m<12;m++){
+          var a = m*30*Math.PI/180;
+          svg.appendChild(svgEl("circle", {
+            cx:(500 + Math.sin(a)*412).toFixed(1), cy:(500 - Math.cos(a)*412).toFixed(1),
+            r:13, fill:"#A9835A", opacity:".75"
+          }));
+        }
+      });
+    }
+    function fallback(){
+      active = false;
+      traveler.style.display = "none";
+      berthEls.forEach(function(b){
+        var svg = b.querySelector(".berth-dial");
+        if(!svg) return;
+        while(svg.firstChild) svg.removeChild(svg.firstChild);
+        try{
+          var dd = buildDial(svg);
+          var ang = anglesFor(Date.now());
+          setRot(dd.hour, ang.hour); setRot(dd.min, ang.min); setRot(dd.sec, ang.sec);
+        }catch(e){}
+      });
+    }
+    function collapseOnce(){
+      var colors = [PAL.ink, PAL.accent, PAL.frame, PAL.frameLine, PAL.glass, "#FFFFFF"];
+      if(tSvg.animate){
+        tSvg.animate(
+          [{opacity:1},{opacity:.12, offset:.18},{opacity:.12, offset:.72},{opacity:1}],
+          {duration:2000, easing:"ease-in-out"}
+        );
+      }
+      for(var i=0;i<50;i++){
+        var b = document.createElement("div");
+        b.className = "traveler-bit";
+        var ang = Math.random()*Math.PI*2, rr = Math.sqrt(Math.random())*100;
+        var sz = 3 + Math.random()*6;
+        b.style.left = (110 + Math.sin(ang)*rr) + "px";
+        b.style.top = (110 - Math.cos(ang)*rr) + "px";
+        b.style.width = sz + "px"; b.style.height = sz + "px";
+        b.style.background = colors[i % colors.length];
+        traveler.appendChild(b);
+        var dx = (Math.random()-0.5)*130, dy = (Math.random()-0.35)*130;
+        var anim = b.animate([
+          {transform:"translate(0,0) rotate(0deg)", opacity:1},
+          {transform:"translate("+dx+"px,"+dy+"px) rotate("+(Math.random()*260-130)+"deg)", opacity:0}
+        ], {duration:1100 + Math.random()*700, easing:"cubic-bezier(.17,.67,.35,1)"});
+        (function(node, an){ an.onfinish = function(){ node.remove(); }; })(b, anim);
+      }
+    }
+    function onDock(idx){
+      if(idx === lastDock) return;
+      lastDock = idx;
+      if(idx >= 0 && tDial){
+        settleT0 = performance.now();
+        requestAnimationFrame(settleHands);
+        if(idx === 3 && !finaleDone && !reduced){ finaleDone = true; collapseOnce(); }
+      }
+    }
+    function opacityFor(s){
+      var a = legs[0].st - vh*0.20, b = legs[0].st - vh*0.05;
+      if(s <= a) return 0;
+      if(s >= b) return 1;
+      return (s - a) / (b - a);
+    }
+    function apply(cx, vy, size, tilt, wall, op){
+      var k = size / BASE;
+      traveler.style.opacity = op.toFixed(3);
+      traveler.style.visibility = op <= 0 ? "hidden" : "visible";
+      traveler.style.transform =
+        "translate3d(" + (cx - BASE/2).toFixed(1) + "px," + (vy - BASE/2).toFixed(1) + "px,0)" +
+        " scale(" + k.toFixed(4) + ") rotate(" + tilt.toFixed(2) + "deg)";
+      if(photoEl) photoEl.setAttribute("opacity", wall.toFixed(3));
+      if(wall > 0.5) traveler.classList.add("wall"); else traveler.classList.remove("wall");
+    }
+    function update(){
+      if(!active || !docks || !legs) return;
+      var s = window.scrollY || window.pageYOffset || 0;
+      var i, cx = 0, cy = 0, size = 0, wall = 0, parked = -1;
+      for(i=0;i<legs.length;i++){
+        if(s <= legs[i].en){
+          if(s < legs[i].st){
+            parked = i;
+            cx = docks[i].x; cy = docks[i].y; size = docks[i].size; wall = docks[i].w;
+          } else {
+            var p = (s - legs[i].st) / (legs[i].en - legs[i].st);
+            var A = docks[i], B = docks[i+1];
+            cx = A.x + (B.x - A.x)*p;
+            cy = A.y + (B.y - A.y)*p;
+            size = (A.size + (B.size - A.size)*p) * (1 - 0.10*Math.sin(p*Math.PI));
+            wall = A.w + (B.w - A.w)*p;
+            var dx = B.x - A.x;
+            var tilt = 4 * Math.sin(p*Math.PI) * (dx > 24 ? 1 : (dx < -24 ? -1 : 0));
+            var arc = Math.sin(p*Math.PI) * Math.min(64, Math.abs(window.innerWidth/2 - cx));
+            cx += (window.innerWidth/2 >= cx) ? arc : -arc;
+            apply(cx, cy - s, size, tilt, wall, opacityFor(s));
+            onDock(-1);
+            return;
+          }
+          break;
+        }
+      }
+      if(parked < 0){
+        var L = docks[docks.length-1];
+        parked = docks.length - 1;
+        cx = L.x; cy = L.y; size = L.size; wall = L.w;
+      }
+      apply(cx, cy - s, size, 0, wall, opacityFor(s));
+      onDock(parked);
+    }
+    var rafPend = false;
+    function requestUpdate(){
+      if(rafPend) return;
+      rafPend = true;
+      requestAnimationFrame(function(){ rafPend = false; update(); });
+    }
+    var measurePend = false;
+    function requestMeasure(){
+      if(measurePend) return;
+      measurePend = true;
+      requestAnimationFrame(function(){
+        measurePend = false;
+        if(!active) return;
+        try{ measure(); }catch(e){ fallback(); return; }
+        update();
+      });
+    }
+    function init(){
+      if(reduced){ fallback(); return; }
+      try{
+        buildTraveler();
+        berthDots();
+        measure();
+      }catch(e){ fallback(); return; }
+      if(!docks || docks.length < 2){ fallback(); return; }
+      active = true;
+      update();
+      window.addEventListener("scroll", requestUpdate, {passive:true});
+      window.addEventListener("resize", requestMeasure);
+      window.addEventListener("load", requestMeasure);
+      if(document.fonts && document.fonts.ready) document.fonts.ready.then(requestMeasure);
+      if(window.ResizeObserver){
+        var lastH = 0, lastW = 0;
+        var ro = new ResizeObserver(function(){
+          var h = document.body ? document.body.offsetHeight : 0;
+          var w = document.body ? document.body.offsetWidth : 0;
+          if(h !== lastH || w !== lastW){ lastH = h; lastW = w; requestMeasure(); }
+        });
+        if(document.body) ro.observe(document.body);
+      }
+      document.querySelectorAll("details").forEach(function(dt){
+        dt.addEventListener("toggle", requestMeasure);
+      });
+      setInterval(function(){ setHands(false); }, 20000);
+    }
+    init();
+  })();
 })();
 </script>
 </body>
