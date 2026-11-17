@@ -368,9 +368,9 @@
   #traveler svg{
     display:block;width:100%;height:100%;
     filter:drop-shadow(0 14px 22px rgba(80,58,30,.28));
-    transition:filter .45s ease;
   }
-  #traveler.wall svg{filter:drop-shadow(0 5px 8px rgba(60,40,18,.5))}
+  /* the wall-hung shadow is interpolated inline by the traveller JS,
+     driven by the same coefficient as the wall-photo crossfade */
   .traveler-bit{position:absolute;border-radius:2px;pointer-events:none;z-index:3}
 </style>
 </head>
@@ -1291,10 +1291,16 @@
 
   /* ---- v3: berth flights (a second clock travels the page) ----
      A display-only clone of the dial leaves the demo once the reader
-     scrolls on, and flies from berth to berth (steps -> wall ->
-     features -> price -> faq -> footer). Its position is a pure
-     function of scrollY: parked exactly on a dock, or interpolating
-     inside a leg. Nothing here touches the journey/demo code above. */
+     scrolls on, and travels from berth to berth (steps -> wall ->
+     features -> price -> faq -> footer). Each leg has three phases,
+     all a pure function of scrollY (scrolling up runs them in
+     reverse): departure (dock i -> a viewport-fixed guide point just
+     below the reader's eye, beside the NEXT section, so the clock
+     hovers where the eye is heading instead of sitting mid-screen),
+     guide (parked at that point while the reader scrolls on), and
+     arrival (guide point -> dock i+1). If two berths are too close
+     for the phases to fit, the leg degrades to a direct hop.
+     Nothing here touches the journey/demo code above. */
   (function(){
     var traveler = document.getElementById("traveler");
     var tSvg = document.getElementById("travelerDial");
@@ -1304,6 +1310,8 @@
     var dockEls = [dialWrap].concat(berthEls);
     var docks = null, legs = null;
     var vh = window.innerHeight || 800;
+    var vw = window.innerWidth || 390;
+    var kF = 0.85;   /* in-flight size factor, set properly in measure() */
     var active = false;
     var tDial = null, photoEl = null;
     var lastDock = -1, settleT0 = 0, finaleDone = false;
@@ -1317,6 +1325,8 @@
     }
     function measure(){
       vh = window.innerHeight || vh;
+      vw = window.innerWidth || vw;
+      kF = (vw <= 640) ? 0.58 : 0.85;
       var list = [], i, c;
       for(i=0;i<dockEls.length;i++){
         c = layoutCenter(dockEls[i]);
@@ -1332,10 +1342,30 @@
       }
       var lg = [];
       for(i=0;i<list.length-1;i++){
-        var st = list[i].y - vh*0.30;
-        var en = list[i+1].y - vh*0.60;
-        if(en < st + 1) en = st + 1;
-        lg.push({ st:st, en:en });
+        var A = list[i], B = list[i+1];
+        var gy = vh*0.70;
+        /* departure starts when dock i's centre rises above 0.38*vh
+           and takes 0.30vh of scrolling; arrival starts when dock
+           i+1's centre comes within 8px of the guide height and
+           takes 0.18vh of scrolling */
+        var depSt = A.y - vh*0.38;
+        var depEn = depSt + vh*0.30;
+        var arrSt = B.y - gy - 8;
+        var arrEn = arrSt + vh*0.18;
+        /* guide X: the next dock's own column, clamped so the whole
+           (shrunk) clock stays at least 10px inside the screen edges */
+        var gSize = B.size * kF;
+        var lo = 10 + gSize/2, hi = vw - 10 - gSize/2;
+        var gx = (lo > hi) ? vw/2 : Math.min(hi, Math.max(lo, B.x));
+        var leg = { depSt:depSt, depEn:depEn, arrSt:arrSt, arrEn:arrEn,
+                    gx:gx, gy:gy, start:depSt, end:arrEn, hop:false };
+        if(arrSt < depEn){
+          /* berths too close for a guide phase: degrade this leg to
+             a direct hop over the union of the two windows */
+          leg.hop = true;
+          leg.end = Math.max(arrEn, depSt + 1);
+        }
+        lg.push(leg);
       }
       docks = list; legs = lg;
     }
@@ -1446,7 +1476,7 @@
       }
     }
     function opacityFor(s){
-      var a = legs[0].st - vh*0.20, b = legs[0].st - vh*0.05;
+      var a = legs[0].start - vh*0.20, b = legs[0].start - vh*0.05;
       if(s <= a) return 0;
       if(s >= b) return 1;
       return (s - a) / (b - a);
@@ -1459,42 +1489,74 @@
         "translate3d(" + (cx - BASE/2).toFixed(1) + "px," + (vy - BASE/2).toFixed(1) + "px,0)" +
         " scale(" + k.toFixed(4) + ") rotate(" + tilt.toFixed(2) + "deg)";
       if(photoEl) photoEl.setAttribute("opacity", wall.toFixed(3));
-      if(wall > 0.5) traveler.classList.add("wall"); else traveler.classList.remove("wall");
+      /* the wall-hung shadow (shorter, darker, tighter) follows the
+         same coefficient as the photo crossfade */
+      var sy = 14 - 9*wall, sb = 22 - 14*wall, sa = 0.28 + 0.22*wall;
+      var sr = Math.round(80 - 20*wall), sg = Math.round(58 - 18*wall),
+          sl = Math.round(30 - 12*wall);
+      tSvg.style.filter = "drop-shadow(0 " + sy.toFixed(1) + "px " + sb.toFixed(1) +
+        "px rgba(" + sr + "," + sg + "," + sl + "," + sa.toFixed(3) + "))";
+    }
+    function lerp(a, b, t){ return a + (b - a)*t; }
+    function tiltFor(t, dx){
+      /* a gentle lean, only while actually moving between points */
+      return 3 * Math.sin(t*Math.PI) * (dx > 24 ? 1 : (dx < -24 ? -1 : 0));
     }
     function update(){
       if(!active || !docks || !legs) return;
       var s = window.scrollY || window.pageYOffset || 0;
-      var i, cx = 0, cy = 0, size = 0, wall = 0, parked = -1;
+      var op = opacityFor(s);
+      var i, leg, A, B;
       for(i=0;i<legs.length;i++){
-        if(s <= legs[i].en){
-          if(s < legs[i].st){
-            parked = i;
-            cx = docks[i].x; cy = docks[i].y; size = docks[i].size; wall = docks[i].w;
-          } else {
-            var p = (s - legs[i].st) / (legs[i].en - legs[i].st);
-            var A = docks[i], B = docks[i+1];
-            cx = A.x + (B.x - A.x)*p;
-            cy = A.y + (B.y - A.y)*p;
-            size = (A.size + (B.size - A.size)*p) * (1 - 0.10*Math.sin(p*Math.PI));
-            wall = A.w + (B.w - A.w)*p;
-            var dx = B.x - A.x;
-            var tilt = 4 * Math.sin(p*Math.PI) * (dx > 24 ? 1 : (dx < -24 ? -1 : 0));
-            var arc = Math.sin(p*Math.PI) * Math.min(64, Math.abs(window.innerWidth/2 - cx));
-            cx += (window.innerWidth/2 >= cx) ? arc : -arc;
-            apply(cx, cy - s, size, tilt, wall, opacityFor(s));
+        leg = legs[i]; A = docks[i]; B = docks[i+1];
+        if(s < leg.start){
+          /* docked at dock i, not yet departed */
+          apply(A.x, A.y - s, A.size, 0, A.w, op);
+          onDock(i);
+          return;
+        }
+        if(s <= leg.end){
+          if(leg.hop){
+            /* degraded leg: one direct hop, size dipping mid-hop */
+            var t = (s - leg.depSt) / (leg.end - leg.depSt);
+            apply(lerp(A.x, B.x, t), lerp(A.y, B.y, t) - s,
+                  lerp(A.size, B.size, t) * (1 - Math.sin(t*Math.PI)*(1 - kF)),
+                  tiltFor(t, B.x - A.x), lerp(A.w, B.w, t), op);
             onDock(-1);
             return;
           }
-          break;
+          if(s < leg.depEn){
+            /* departure: dock i -> the guide point. The guide point
+               is viewport-fixed, so in document space it sinks with
+               the scroll; blend toward where it is right now. */
+            var q = (s - leg.depSt) / (leg.depEn - leg.depSt);
+            apply(lerp(A.x, leg.gx, q), lerp(A.y, s + leg.gy, q) - s,
+                  lerp(A.size, B.size, q) * (1 - q*(1 - kF)),
+                  tiltFor(q, leg.gx - A.x), A.w * (1 - q), op);
+            onDock(-1);
+            return;
+          }
+          if(s < leg.arrSt){
+            /* guide: parked at (gx, gy) in the viewport, hovering
+               beside the next section while the reader scrolls on.
+               No idle motion, no tilt. */
+            apply(leg.gx, leg.gy, B.size * kF, 0, 0, op);
+            onDock(-1);
+            return;
+          }
+          /* arrival: guide point -> dock i+1's real position */
+          var r = (s - leg.arrSt) / (leg.arrEn - leg.arrSt);
+          apply(lerp(leg.gx, B.x, r), lerp(s + leg.gy, B.y, r) - s,
+                B.size * (1 - (1 - r)*(1 - kF)),
+                tiltFor(r, B.x - leg.gx), B.w * r, op);
+          onDock(-1);
+          return;
         }
       }
-      if(parked < 0){
-        var L = docks[docks.length-1];
-        parked = docks.length - 1;
-        cx = L.x; cy = L.y; size = L.size; wall = L.w;
-      }
-      apply(cx, cy - s, size, 0, wall, opacityFor(s));
-      onDock(parked);
+      /* past the last leg: docked at the final berth for good */
+      var L = docks[docks.length-1];
+      apply(L.x, L.y - s, L.size, 0, L.w, op);
+      onDock(docks.length - 1);
     }
     var rafPend = false;
     function requestUpdate(){
