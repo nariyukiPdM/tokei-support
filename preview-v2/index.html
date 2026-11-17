@@ -372,6 +372,22 @@
   /* the wall-hung shadow is interpolated inline by the traveller JS,
      driven by the same coefficient as the wall-photo crossfade */
   .traveler-bit{position:absolute;border-radius:2px;pointer-events:none;z-index:3}
+
+  /* ---------- v3 round 3: section dwell (read-and-pause) ----------
+     Four sections (#howto-steps / #wall / #features / #price) get a
+     sticky pause: the section itself is the (32vh taller) wrapper —
+     its id / data-name stay on it, so anchors and the scene spy keep
+     working — .dwell-in sticks under the fixed header while the
+     .dwell-space scrolls past, then the section releases and moves
+     on. Content layout inside .dwell-in is unchanged. The traveller
+     JS measures the live header height into --stick-top. */
+  :root{--stick-top:64px}
+  .dwell-in{position:sticky;top:var(--stick-top)}
+  .dwell-space{height:32vh}
+  @media (prefers-reduced-motion: reduce){
+    .dwell-in{position:static}
+    .dwell-space{display:none}
+  }
 </style>
 </head>
 <body data-scene="hero">
@@ -450,7 +466,8 @@
   </section>
 
   <!-- ===== howto: steps (v2) ===== -->
-  <section class="block" id="howto-steps" data-name="使い方" style="padding-top:8px">
+  <section class="block dwell" id="howto-steps" data-name="使い方" style="padding-top:8px">
+    <div class="dwell-in">
     <div class="narrow">
       <div class="berth-head">
         <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
@@ -487,16 +504,24 @@
         <p style="margin:0">設定→「時刻を進める」で、表示だけを先に進められます。端末の時刻は変わりません。</p>
       </div>
     </div>
+    </div>
+    <div class="dwell-space" aria-hidden="true"></div>
   </section>
 
     <!-- ===== wall ===== -->
-  <section class="block" id="wall" data-name="壁掛け" style="padding-top:20px">
+  <section class="block dwell" id="wall" data-name="壁掛け" style="padding-top:20px">
+    <div class="dwell-in">
     <div class="wrap">
       <div class="wall-band rv">
         <div class="wall-grid">
           <div>
-            <p class="kicker">壁掛け時計にする</p>
-            <h2>壁を撮ると、時計が壁になじみます</h2>
+            <div class="berth-head">
+              <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
+              <div class="berth-head-copy">
+                <p class="kicker">壁掛け時計にする</p>
+                <h2>壁を撮ると、時計が壁になじみます</h2>
+              </div>
+            </div>
             <p>設定→「壁の背景」で壁を撮影すると、時計の外側に同じ壁の写真が出て、一体化したように見えます。端末が傾いても、12時は真上を保ちます。</p>
             <p style="margin-bottom:0">撮影した写真は端末の中にだけ保存され、外部に送信されることはありません。いつでも設定から削除できます。</p>
             <div class="upright-demo" aria-hidden="true">
@@ -515,15 +540,17 @@
               <img src="../shot-04-wall.jpg" alt="木目の壁を背景にして、時計が壁になじんでいる画面" loading="lazy">
               <figcaption>壁の写真を背景にした表示</figcaption>
             </figure>
-            <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
           </div>
         </div>
       </div>
     </div>
+    </div>
+    <div class="dwell-space" aria-hidden="true"></div>
   </section>
 
   <!-- ===== features ===== -->
-  <section class="block" id="features" data-name="機能" style="padding-top:24px">
+  <section class="block dwell" id="features" data-name="機能" style="padding-top:24px">
+    <div class="dwell-in">
     <div class="wrap">
       <p class="kicker rv">機能</p>
       <h2 class="rv">食卓に合わせて、表示を変えられます</h2>
@@ -553,10 +580,13 @@
         </article>
       </div>
     </div>
+    </div>
+    <div class="dwell-space" aria-hidden="true"></div>
   </section>
 
   <!-- ===== price ===== -->
-  <section class="block" id="price" data-name="料金" style="padding-top:8px">
+  <section class="block dwell" id="price" data-name="料金" style="padding-top:8px">
+    <div class="dwell-in">
     <div class="narrow">
       <div class="price-flex">
         <div class="price-copy">
@@ -574,6 +604,8 @@
         <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg></div>
       </div>
     </div>
+    </div>
+    <div class="dwell-space" aria-hidden="true"></div>
   </section>
 
   <!-- ===== faq ===== -->
@@ -1292,15 +1324,23 @@
   /* ---- v3: berth flights (a second clock travels the page) ----
      A display-only clone of the dial leaves the demo once the reader
      scrolls on, and travels from berth to berth (steps -> wall ->
-     features -> price -> faq -> footer). Each leg has three phases,
-     all a pure function of scrollY (scrolling up runs them in
-     reverse): departure (dock i -> a viewport-fixed guide point just
-     below the reader's eye, beside the NEXT section, so the clock
-     hovers where the eye is heading instead of sitting mid-screen),
-     guide (parked at that point while the reader scrolls on), and
-     arrival (guide point -> dock i+1). If two berths are too close
-     for the phases to fit, the leg degrades to a direct hop.
-     Nothing here touches the journey/demo code above. */
+     features -> price -> faq -> footer). Every frame, every dock is
+     measured live with getBoundingClientRect, so the traveller lands
+     on the berths' real on-screen positions — including while a
+     section is held by the sticky dwell and while the demo is still
+     moving inside the journey stage. Each leg blends a departure
+     (dock i -> a guide point parked in a bottom corner of the
+     screen, on the side of the berth it is heading for, clear of the
+     text being read) with an arrival (guide point -> dock i+1);
+     both follow the live rects, so scrolling up runs them in
+     reverse. In flight the clock shrinks (further on narrow
+     screens) and turns translucent, settling back to full size and
+     opacity on landing. While a berth is pinned by the dwell — its
+     rect Y stops moving although the page keeps scrolling — the
+     clock does not depart; and if a berth pins mid-arrival, the
+     scroll itself drives the arrival to completion so the clock
+     still lands on it. Nothing here touches the journey/demo code
+     above. */
   (function(){
     var traveler = document.getElementById("traveler");
     var tSvg = document.getElementById("travelerDial");
@@ -1308,7 +1348,8 @@
     var BASE = 220;
     var berthEls = Array.prototype.slice.call(document.querySelectorAll("[data-berth]"));
     var dockEls = [dialWrap].concat(berthEls);
-    var docks = null, legs = null;
+    var ND = dockEls.length;
+    var WALL = 2;  /* dock order: demo0 steps1 wall2 features3 price4 faq5 footer6 */
     var vh = window.innerHeight || 800;
     var vw = window.innerWidth || 390;
     var kF = 0.85;   /* in-flight size factor, set properly in measure() */
@@ -1316,58 +1357,45 @@
     var tDial = null, photoEl = null;
     var lastDock = -1, settleT0 = 0, finaleDone = false;
     var lastMinute = -1;
+    /* dwell pins: pin[j] holds while dock j's rect Y is frozen by
+       the sticky dwell; pinThr[j] re-anchors that dock's departure
+       threshold just below where it froze, pinR[j] remembers the
+       arrival progress into dock j at the moment it froze */
+    var prevY = [], prevS = null, pin = [], pinS = [], pinThr = [], pinR = [];
+    var rawQPrev = [], rawRPrev = [], qpSm = [];
+    for(var i0=0;i0<ND;i0++){
+      prevY.push(null); pin.push(false); pinS.push(0); pinThr.push(0); pinR.push(0);
+      rawQPrev.push(0); rawRPrev.push(0); qpSm.push(0);
+    }
 
-    /* transform-independent document centre of an element (offset chain) */
-    function layoutCenter(el){
-      var x = 0, y = 0, n = el;
-      while(n){ x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
-      return { x:x + el.offsetWidth/2, y:y + el.offsetHeight/2, size:el.offsetWidth };
+    /* the dwell's sticky offset: the live fixed-header height + 8px,
+       published as a CSS variable (the stylesheet's own fallback is
+       64px when JS never runs) */
+    function setStickTop(){
+      try{
+        var hdr = document.querySelector("header");
+        if(hdr){
+          var hh = hdr.getBoundingClientRect().height;
+          if(hh > 0) document.documentElement.style.setProperty("--stick-top", Math.round(hh + 8) + "px");
+        }
+      }catch(e){}
+    }
+    setStickTop();
+    window.addEventListener("resize", setStickTop);
+
+    /* live on-screen centre of a dock (viewport coordinates) */
+    function rectOf(el){
+      var r = el.getBoundingClientRect();
+      return { x:r.left + r.width/2, y:r.top + r.height/2, size:r.width };
     }
     function measure(){
       vh = window.innerHeight || vh;
       vw = window.innerWidth || vw;
       kF = (vw <= 640) ? 0.58 : 0.85;
-      var list = [], i, c;
-      for(i=0;i<dockEls.length;i++){
-        c = layoutCenter(dockEls[i]);
-        if(i === 0 && journeyEl && jStage){
-          /* the demo's sticky stage comes to rest at the bottom of the
-             (300svh) journey, so shift the demo dock down by the travel
-             of the stage itself */
-          c.y += Math.max(0, journeyEl.offsetHeight - jStage.offsetHeight);
-        }
-        if(!(c.size > 0)) throw new Error("dock not measurable");
-        c.w = (i === 2) ? 1 : 0;   /* wall dock: demo0 steps1 wall2 features3 price4 faq5 footer6 */
-        list.push(c);
+      setStickTop();
+      for(var j=0;j<ND;j++){
+        if(!(rectOf(dockEls[j]).size > 0)) throw new Error("dock not measurable");
       }
-      var lg = [];
-      for(i=0;i<list.length-1;i++){
-        var A = list[i], B = list[i+1];
-        var gy = vh*0.70;
-        /* departure starts when dock i's centre rises above 0.38*vh
-           and takes 0.30vh of scrolling; arrival starts when dock
-           i+1's centre comes within 8px of the guide height and
-           takes 0.18vh of scrolling */
-        var depSt = A.y - vh*0.38;
-        var depEn = depSt + vh*0.30;
-        var arrSt = B.y - gy - 8;
-        var arrEn = arrSt + vh*0.18;
-        /* guide X: the next dock's own column, clamped so the whole
-           (shrunk) clock stays at least 10px inside the screen edges */
-        var gSize = B.size * kF;
-        var lo = 10 + gSize/2, hi = vw - 10 - gSize/2;
-        var gx = (lo > hi) ? vw/2 : Math.min(hi, Math.max(lo, B.x));
-        var leg = { depSt:depSt, depEn:depEn, arrSt:arrSt, arrEn:arrEn,
-                    gx:gx, gy:gy, start:depSt, end:arrEn, hop:false };
-        if(arrSt < depEn){
-          /* berths too close for a guide phase: degrade this leg to
-             a direct hop over the union of the two windows */
-          leg.hop = true;
-          leg.end = Math.max(arrEn, depSt + 1);
-        }
-        lg.push(leg);
-      }
-      docks = list; legs = lg;
     }
     function setHands(force){
       if(!tDial) return;
@@ -1393,7 +1421,8 @@
     }
     function buildTraveler(){
       tDial = buildDial(tSvg);
-      /* the wall photo, slipped between the dial face and its hands */
+      /* the wall texture (wood grain only — no clock in it), slipped
+         between the dial face and its hands */
       var defs = svgEl("defs", {});
       var cp = svgEl("clipPath", { id:"travelerClip" });
       cp.appendChild(svgEl("circle", { cx:500, cy:500, r:447 }));
@@ -1404,7 +1433,7 @@
         preserveAspectRatio:"xMidYMid slice", opacity:"0",
         "class":"traveler-photo", "clip-path":"url(#travelerClip)"
       });
-      photoEl.setAttribute("href", "../shot-04-wall.jpg");
+      photoEl.setAttribute("href", "../wall-texture.jpg");
       var anchor = tDial.ghostLayer, kids = tSvg.childNodes;
       for(var i=0;i<kids.length;i++){
         var f = kids[i].getAttribute && kids[i].getAttribute("fill");
@@ -1475,11 +1504,24 @@
         if(idx === 3 && !finaleDone && !reduced){ finaleDone = true; collapseOnce(); }
       }
     }
-    function opacityFor(s){
-      var a = legs[0].start - vh*0.20, b = legs[0].start - vh*0.05;
-      if(s <= a) return 0;
-      if(s >= b) return 1;
-      return (s - a) / (b - a);
+    function lerp(a, b, t){ return a + (b - a)*t; }
+    function clamp01(v){ return v < 0 ? 0 : (v > 1 ? 1 : v); }
+    /* departures linger a little: the first quarter of the raw
+       progress still counts as "at the berth" */
+    function remapQ(q){ return clamp01((q - 0.25) / 0.75); }
+    function tiltFor(t, dx){
+      /* a gentle lean, only while actually moving between points */
+      return 3 * Math.sin(t*Math.PI) * (dx > 24 ? 1 : (dx < -24 ? -1 : 0));
+    }
+    /* the guide point for a leg into dock B: a bottom corner of the
+       screen, on the same side as the berth it is heading for, with
+       the shrunk clock kept fully inside the screen */
+    function guideFor(B){
+      var gSize = B.size * kF;
+      var gy = Math.min(vh*0.80, vh - 12 - gSize/2);
+      gy = Math.max(gSize/2 + 8, gy);
+      var gx = (B.x < vw/2) ? (gSize/2 + 12) : (vw - gSize/2 - 12);
+      return { x:gx, y:gy };
     }
     function apply(cx, vy, size, tilt, wall, op){
       var k = size / BASE;
@@ -1490,73 +1532,89 @@
         " scale(" + k.toFixed(4) + ") rotate(" + tilt.toFixed(2) + "deg)";
       if(photoEl) photoEl.setAttribute("opacity", wall.toFixed(3));
       /* the wall-hung shadow (shorter, darker, tighter) follows the
-         same coefficient as the photo crossfade */
+         same coefficient as the texture crossfade */
       var sy = 14 - 9*wall, sb = 22 - 14*wall, sa = 0.28 + 0.22*wall;
       var sr = Math.round(80 - 20*wall), sg = Math.round(58 - 18*wall),
           sl = Math.round(30 - 12*wall);
       tSvg.style.filter = "drop-shadow(0 " + sy.toFixed(1) + "px " + sb.toFixed(1) +
         "px rgba(" + sr + "," + sg + "," + sl + "," + sa.toFixed(3) + "))";
     }
-    function lerp(a, b, t){ return a + (b - a)*t; }
-    function tiltFor(t, dx){
-      /* a gentle lean, only while actually moving between points */
-      return 3 * Math.sin(t*Math.PI) * (dx > 24 ? 1 : (dx < -24 ? -1 : 0));
-    }
     function update(){
-      if(!active || !docks || !legs) return;
+      if(!active) return;
       var s = window.scrollY || window.pageYOffset || 0;
-      var op = opacityFor(s);
-      var i, leg, A, B;
-      for(i=0;i<legs.length;i++){
-        leg = legs[i]; A = docks[i]; B = docks[i+1];
-        if(s < leg.start){
-          /* docked at dock i, not yet departed */
-          apply(A.x, A.y - s, A.size, 0, A.w, op);
-          onDock(i);
-          return;
-        }
-        if(s <= leg.end){
-          if(leg.hop){
-            /* degraded leg: one direct hop, size dipping mid-hop */
-            var t = (s - leg.depSt) / (leg.end - leg.depSt);
-            apply(lerp(A.x, B.x, t), lerp(A.y, B.y, t) - s,
-                  lerp(A.size, B.size, t) * (1 - Math.sin(t*Math.PI)*(1 - kF)),
-                  tiltFor(t, B.x - A.x), lerp(A.w, B.w, t), op);
-            onDock(-1);
-            return;
+      var j, V = [];
+      for(j=0;j<ND;j++) V.push(rectOf(dockEls[j]));
+      var dS = (prevS === null) ? 0 : Math.abs(s - prevS);
+      /* pin latches: a dock is pinned while its rect Y stays put
+         even though the page keeps scrolling (sticky dwell) */
+      for(j=0;j<ND;j++){
+        var dY = (prevY[j] === null) ? 99 : (V[j].y - prevY[j]);
+        if(prevS !== null && dS > 0.5 && Math.abs(dY) <= 0.5){
+          if(!pin[j]){
+            pin[j] = true; pinS[j] = s;
+            pinThr[j] = Math.min(vh*0.30, V[j].y - 8);
+            pinR[j] = rawRPrev[j];
           }
-          if(s < leg.depEn){
-            /* departure: dock i -> the guide point. The guide point
-               is viewport-fixed, so in document space it sinks with
-               the scroll; blend toward where it is right now. */
-            var q = (s - leg.depSt) / (leg.depEn - leg.depSt);
-            apply(lerp(A.x, leg.gx, q), lerp(A.y, s + leg.gy, q) - s,
-                  lerp(A.size, B.size, q) * (1 - q*(1 - kF)),
-                  tiltFor(q, leg.gx - A.x), A.w * (1 - q), op);
-            onDock(-1);
-            return;
-          }
-          if(s < leg.arrSt){
-            /* guide: parked at (gx, gy) in the viewport, hovering
-               beside the next section while the reader scrolls on.
-               No idle motion, no tilt. */
-            apply(leg.gx, leg.gy, B.size * kF, 0, 0, op);
-            onDock(-1);
-            return;
-          }
-          /* arrival: guide point -> dock i+1's real position */
-          var r = (s - leg.arrSt) / (leg.arrEn - leg.arrSt);
-          apply(lerp(leg.gx, B.x, r), lerp(s + leg.gy, B.y, r) - s,
-                B.size * (1 - (1 - r)*(1 - kF)),
-                tiltFor(r, B.x - leg.gx), B.w * r, op);
-          onDock(-1);
-          return;
-        }
+        }else if(Math.abs(dY) > 0.5){ pin[j] = false; }
+        prevY[j] = V[j].y;
       }
-      /* past the last leg: docked at the final berth for good */
-      var L = docks[docks.length-1];
-      apply(L.x, L.y - s, L.size, 0, L.w, op);
-      onDock(docks.length - 1);
+      /* raw departure / arrival progress from the live rects: a
+         departure starts once the berth's centre rises above 30% of
+         the viewport height (a pinned berth re-anchors that line
+         just below where it froze, so it departs only after the
+         dwell releases it); an arrival runs over the last 0.18vh of
+         the berth's approach to the guide height */
+      var rawQ = [], rawR = [0];
+      for(j=0;j<ND;j++){
+        var thr = (pinThr[j] > 0) ? Math.min(pinThr[j], vh*0.30) : vh*0.30;
+        rawQ.push(clamp01((thr - V[j].y) / (vh*0.30)));
+      }
+      for(j=0;j<ND-1;j++){
+        rawR.push(clamp01((guideFor(V[j+1]).y + 8 - V[j+1].y) / (vh*0.18)));
+      }
+      /* fade in as the demo rises toward its departure */
+      var op0 = clamp01((vh*0.42 - V[0].y) / (vh*0.12));
+      var done = false;
+      for(j=0;j<ND-1 && !done;j++){
+        var A = V[j], B = V[j+1], g = guideFor(B);
+        var r = rawR[j+1];
+        if(r < 1 && pin[j+1]){
+          /* a pinned berth cannot rise to meet the clock, so let
+             the scroll itself finish the arrival */
+          r = Math.max(r, Math.min(1, pinR[j+1] + (s - pinS[j+1]) / (vh*0.18)));
+        }
+        if(r >= 1) continue;   /* arrived at dock j+1: check the next leg */
+        /* the departure is rate-limited by the scroll delta, so a
+           dwell pin can call the clock smoothly back to its berth
+           instead of snapping */
+        var qpT = remapQ(rawQ[j]);
+        var rate = dS / (vh*0.30);
+        if(qpSm[j] < qpT) qpSm[j] = Math.min(qpT, qpSm[j] + rate);
+        else if(qpSm[j] > qpT) qpSm[j] = Math.max(qpT, qpSm[j] - rate);
+        var qp = qpSm[j];
+        var depX = lerp(A.x, g.x, qp), depY = lerp(A.y, g.y, qp);
+        var depSize = lerp(A.size, B.size, qp) * (1 - qp*(1 - kF));
+        var depWall = (j === WALL ? 1 : 0) * (1 - qp);
+        var depTilt = tiltFor(qp, g.x - A.x);
+        /* the arrival takes over from wherever the departure blend
+           currently is (the guide point when qp = 1) */
+        var cx = lerp(depX, B.x, r), cy = lerp(depY, B.y, r);
+        var size = lerp(depSize, B.size, r);
+        var wall = lerp(depWall, (j+1 === WALL ? 1 : 0), r);
+        var tilt = depTilt * (1 - r);
+        var f = qp * (1 - r);   /* flight factor: 0 docked, 1 at the guide point */
+        apply(cx, cy, size, tilt, wall, op0 * (1 - f*0.45));
+        onDock((qp === 0 && r === 0) ? j : -1);
+        done = true;
+      }
+      if(!done){
+        /* past the last leg: docked at the final berth for good */
+        var L = V[ND-1];
+        apply(L.x, L.y, L.size, 0, (ND-1 === WALL ? 1 : 0), op0);
+        onDock(ND - 1);
+      }
+      for(j=0;j<ND;j++){ rawQPrev[j] = rawQ[j]; rawRPrev[j] = rawR[j]; }
+      prevS = s;
     }
     var rafPend = false;
     function requestUpdate(){
@@ -1582,7 +1640,7 @@
         berthDots();
         measure();
       }catch(e){ fallback(); return; }
-      if(!docks || docks.length < 2){ fallback(); return; }
+      if(ND < 2){ fallback(); return; }
       active = true;
       update();
       window.addEventListener("scroll", requestUpdate, {passive:true});
