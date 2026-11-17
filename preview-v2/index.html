@@ -6,6 +6,7 @@
 <title>サポート｜子供にご飯を食べさせるための時計</title>
 <meta name="description" content="針を指で回すだけでタイマーになるアナログ時計アプリ「子供にご飯を食べさせるための時計」のサポートページ。使い方、よくある質問、お問い合わせ。">
 <link rel="icon" href="../icon-256.png">
+<link rel="apple-touch-icon" href="../icon-256.png">
 <script>document.documentElement.classList.add('js');</script>
 <style>
   :root{
@@ -352,6 +353,9 @@
     position:fixed;left:0;top:0;width:220px;height:220px;z-index:45;
     pointer-events:none;opacity:0;visibility:hidden;will-change:transform;
   }
+  /* phone hero: keep the h1 to its two intended lines
+     (ごはんの時間を決める。 = 11 glyphs must fit the content width) */
+  @media (max-width:640px){ h1{font-size:1.8rem;letter-spacing:.02em} }
   #traveler svg{
     position:relative;z-index:1;display:block;width:100%;height:100%;
     filter:drop-shadow(0 14px 22px rgba(80,58,30,.28));
