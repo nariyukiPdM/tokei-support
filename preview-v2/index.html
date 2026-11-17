@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サポート｜子供にご飯を食べさせるための時計</title>
+<meta name="description" content="針を指で回すだけでタイマーになるアナログ時計アプリ「子供にご飯を食べさせるための時計」のサポートページ。使い方、よくある質問、お問い合わせ。">
+<link rel="icon" href="../icon-256.png">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  :root{
+    --bg:#FAF6EE;
+    --ink:#2E2A24;
+    --sub:#5F574C;
+    --faint:#8A7E6E;
+    --card:#FFFCF6;
+    --line:rgba(90,70,45,.16);
+    --accent:#B5653E;
+    --accent-ink:#9A5130;
+    --ring1:#D97443;
+    --ring2:#4A8578;
+    --gold:#E0A842;
+    --wood:#C7A276;
+    --wood-dark:#A9835A;
+    --serif:"Hiragino Mincho ProN","Hiragino Mincho Pro","YuMincho","Yu Mincho","MS PMincho","Noto Serif JP",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    line-height:1.85;
+    background:var(--bg);
+    transition:background 1.4s ease;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;overflow-x:clip;
+  }
+  body[data-scene="howto"]{background:#F8F1E1}
+  body[data-scene="howto-steps"]{background:#F8F1E1}
+  body[data-scene="wall"]{background:#F3E7CF}
+  body[data-scene="features"]{background:#FAF6EE}
+  body[data-scene="price"]{background:#F8F1E1}
+  body[data-scene="faq"]{background:#F5EFE2}
+  body[data-scene="contact"]{background:#F2E5CC}
+  ::selection{background:rgba(217,116,67,.28)}
+  a{color:var(--accent-ink)}
+  img{max-width:100%;height:auto}
+
+  /* ---------- header ---------- */
+  header{
+    position:fixed;inset:0 0 auto 0;z-index:50;
+    background:rgba(250,246,238,.86);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .bar{
+    max-width:1060px;margin:0 auto;padding:8px 16px;
+    display:flex;align-items:center;gap:14px;
+  }
+  .brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:600;letter-spacing:.02em;white-space:nowrap}
+  .brand img{width:32px;height:32px;border-radius:8px}
+  nav{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+  nav a{
+    color:var(--sub);text-decoration:none;font-size:.86rem;
+    padding:8px 10px;border-radius:8px;white-space:nowrap;
+  }
+  nav a:hover{color:var(--ink);background:rgba(90,70,45,.07)}
+  .guide-mini{display:flex;align-items:center;gap:7px;margin-left:6px}
+  .guide-mini svg{display:block}
+  .guide-mini .g-label{font-size:.72rem;color:var(--faint);letter-spacing:.08em;white-space:nowrap}
+  @media (max-width:640px){ .guide-mini .g-label{display:none} nav a{padding:8px 6px;font-size:.8rem} .brand span{display:none} }
+
+  main{position:relative;z-index:1}
+  section{scroll-margin-top:76px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+  .narrow{max-width:760px;margin:0 auto;padding:0 20px}
+
+  .kicker{font-size:.72rem;letter-spacing:.4em;color:var(--accent-ink);margin:0 0 14px;font-weight:600}
+  h1,h2{font-family:var(--serif);font-weight:600;text-wrap:balance}
+  h1{font-size:2.35rem;line-height:1.45;margin:0 0 18px;letter-spacing:.03em}
+  h2{font-size:1.65rem;line-height:1.55;margin:0 0 18px}
+  h3{font-size:1.02rem;margin:0 0 6px}
+  p{margin:0 0 1.05em;color:var(--sub)}
+  .lead{font-size:1.06rem;color:var(--ink)}
+  strong{color:var(--ink)}
+
+  /* reveal */
+  .js .rv{opacity:0;transform:translateY(18px);transition:opacity .9s ease,transform .9s ease}
+  .js .rv.in{opacity:1;transform:none}
+  .js .rv.d1{transition-delay:.08s}.js .rv.d2{transition-delay:.16s}
+
+  /* ---------- hero ---------- */
+  .app-line{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+  .app-line img{width:40px;height:40px;border-radius:10px}
+  .app-line .app-name{font-size:.9rem;color:var(--sub)}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;align-items:center}
+  .btn{
+    display:inline-block;background:var(--accent);color:#FFF8EF;text-decoration:none;
+    padding:13px 22px;border-radius:999px;font-weight:600;font-size:.95rem;border:0;cursor:pointer;
+    box-shadow:0 10px 22px rgba(181,101,62,.28);
+  }
+  .btn:active{transform:scale(.98)}
+  .btn.ghost{background:transparent;color:var(--accent-ink);box-shadow:none;border:1px solid rgba(181,101,62,.45)}
+  .scroll-cue{margin-top:34px;font-size:.82rem;color:var(--faint);letter-spacing:.14em}
+  .scroll-cue a{color:var(--faint);text-decoration:none}
+  .scroll-cue .arr{display:inline-block;animation:bob 2.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+  /* ---------- generic blocks ---------- */
+  .block{padding:84px 0}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:26px 26px 22px;box-shadow:0 10px 26px rgba(90,70,45,.07);
+  }
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:26px 0 8px}
+  @media (max-width:760px){ .steps{grid-template-columns:1fr} }
+  .step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+  .step .num{
+    display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;
+    background:var(--accent);color:#FFF8EF;font-weight:700;font-size:.9rem;margin-bottom:10px;
+  }
+  .step p{margin:0;font-size:.94rem}
+
+  /* ---------- demo ---------- */
+  .demo-card{
+    background:var(--card);border:1px solid var(--line);border-radius:24px;
+    padding:30px 26px;box-shadow:0 16px 36px rgba(90,70,45,.1);
+    display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;position:relative;
+  }
+  @media (max-width:760px){ .demo-card{grid-template-columns:1fr;justify-items:center} }
+  .demo-stage{position:relative;width:344px;max-width:100%;padding:34px 28px 8px;margin:0 auto}
+  .dial-wrap{position:relative;width:288px;height:288px;margin:0 auto}
+  .dial-wrap:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:50%}
+  .dial-wrap svg{display:block;width:100%;height:100%}
+  #demoDial{touch-action:none}
+  #demoDial text{font-family:var(--sans)}
+  .pill{
+    position:absolute;z-index:6;background:#FFFCF6;border:1px solid rgba(176,126,82,.45);
+    border-radius:999px;padding:7px 15px;font-size:15px;font-weight:600;color:var(--ink);
+    white-space:nowrap;cursor:pointer;box-shadow:0 6px 16px rgba(90,70,45,.13);
+    font-variant-numeric:tabular-nums;line-height:1.35;
+  }
+  .pill .ring{position:absolute;inset:-2px;width:calc(100% + 4px);height:calc(100% + 4px);pointer-events:none;overflow:visible}
+  .pill0{top:0;left:50%;transform:translateX(-50%)}
+  .pill1{top:66px;left:50%;transform:translateX(-50%)}
+  .plus-label{
+    position:absolute;z-index:7;background:var(--ink);color:#FFF8EF;font-weight:700;font-size:14px;
+    border-radius:999px;padding:4px 11px;pointer-events:none;white-space:nowrap;
+    transform:translate(-50%,-50%);font-variant-numeric:tabular-nums;
+  }
+  .confirm-pop{
+    position:absolute;z-index:8;left:50%;transform:translateX(-50%);
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 14px 30px rgba(90,70,45,.2);padding:14px 16px;text-align:center;min-width:210px;
+  }
+  .confirm-pop p{margin:0 0 10px;font-size:.93rem;font-weight:600}
+  .confirm-pop .row{display:flex;gap:9px;justify-content:center}
+  .mini-btn{
+    border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    padding:8px 13px;font-size:.88rem;cursor:pointer;font-family:var(--sans);
+  }
+  .mini-btn:active{transform:scale(.97)}
+  .mini-btn.danger{color:#C62F24;border-color:rgba(198,47,36,.45);font-weight:600}
+  .burst-bit{position:absolute;border-radius:2px;pointer-events:none;z-index:5}
+  .demo-read{font-size:1.28rem;font-weight:700;letter-spacing:.02em;color:var(--ink);margin:0 0 10px}
+  .demo-side p{font-size:.94rem}
+  .demo-note{font-size:.82rem;color:var(--faint);margin-top:12px}
+  .finale-fig{margin:28px auto 0;max-width:400px;text-align:center}
+  .finale-video{
+    width:100%;aspect-ratio:760/1200;object-fit:cover;display:block;border-radius:22px;
+    box-shadow:0 16px 34px rgba(80,58,30,.18);background:#EFE9DC;
+  }
+  .finale-fig figcaption{font-size:.82rem;color:var(--faint);margin-top:10px}
+
+  /* ---------- wall ---------- */
+  .wall-band{
+    border-radius:28px;padding:44px 30px;
+    background:
+      radial-gradient(120% 90% at 70% 0%, rgba(255,244,214,.45), rgba(255,244,214,0) 55%),
+      repeating-linear-gradient(93deg,#C9A87C 0 54px,#C2A075 54px 57px,#CBA97E 57px 112px,#BE9C6E 112px 115px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.35), inset 0 -18px 34px rgba(96,66,32,.18);
+  }
+  .wall-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:36px;align-items:center}
+  @media (max-width:860px){ .wall-grid{grid-template-columns:1fr} }
+  .wall-grid h2,.wall-grid p{color:#3A2E20}
+  .wall-grid .kicker{color:#7C4A26}
+  .wall-shot{margin:0;text-align:center}
+  .wall-shot img{border-radius:18px;box-shadow:0 16px 34px rgba(80,55,25,.3);max-width:400px;width:100%}
+  .wall-shot figcaption{font-size:.8rem;color:#5D4630;margin-top:10px}
+  .upright-demo{display:flex;gap:22px;margin-top:22px;flex-wrap:wrap}
+  .upright-demo figure{margin:0;text-align:center}
+  .upright-demo figcaption{font-size:.78rem;color:#5D4630;margin-top:6px}
+
+  /* ---------- features ---------- */
+  .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media (max-width:760px){ .feat-grid{grid-template-columns:1fr} }
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 10px 24px rgba(90,70,45,.07)}
+  .feat img{display:block;width:100%;aspect-ratio:3/3.4;object-fit:cover;object-position:top}
+  .feat video.feat-video{display:block;width:100%;aspect-ratio:3/3.4;object-fit:cover;object-position:50% 88%;background:#EFE9DC}
+  .feat .txt{padding:16px 20px 18px}
+  .feat .txt p{margin:0;font-size:.93rem}
+  .feat.wide{grid-column:1/-1}
+  .feat.wide img{aspect-ratio:16/10.5}
+
+  /* ---------- price / faq / contact ---------- */
+  .badges{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 6px}
+  .badge{
+    border:1px solid rgba(90,70,45,.25);border-radius:999px;padding:9px 16px;
+    font-size:.9rem;background:rgba(255,252,246,.7);color:var(--ink);font-weight:600;
+  }
+  .faq-item{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-bottom:14px}
+  .faq-item h3{font-size:1rem;margin-bottom:8px}
+  .faq-item p{margin:0;font-size:.95rem}
+  .contact-card{text-align:center;padding:44px 26px}
+  .mail-big{font-size:1.12rem;font-weight:700;letter-spacing:.02em;word-break:break-all}
+  footer{border-top:1px solid var(--line);padding:30px 20px 40px;text-align:center;color:var(--faint);font-size:.85rem}
+  footer a{color:var(--sub)}
+
+  /* ---------- floating guide dial ---------- */
+  .guide-float{
+    position:fixed;right:22px;bottom:22px;z-index:40;text-align:center;
+    transition:opacity 1.2s ease;
+  }
+  .guide-float .gf-label{
+    margin-top:7px;font-size:.7rem;letter-spacing:.12em;color:var(--sub);
+    background:rgba(250,246,238,.85);border:1px solid var(--line);border-radius:999px;padding:3px 10px;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  }
+  .guide-float .gf-dial{filter:drop-shadow(0 10px 18px rgba(80,58,30,.25));transition:opacity 1.2s ease}
+  body[data-scene="wall"] .guide-float .gf-dial{opacity:.55}
+  @media (max-width:899px){ .guide-float{display:none} }
+
+
+  /* ---------- v2: journey (hero -> travel -> demo) ---------- */
+  .journey{position:relative}
+  .journey-stage{position:relative;padding:104px 0 64px}
+  .stage-inner{max-width:1060px;margin:0 auto;padding:0 20px;position:relative}
+  .hero-copy{max-width:640px}
+  .mawasu-copy{display:none}
+  .mawasu-big{font-family:var(--serif);font-size:2rem;font-weight:600;line-height:1.5;margin:0 0 10px;color:var(--ink)}
+  .mawasu-sub{margin:0;color:var(--sub);font-size:.98rem}
+  @media (max-width:640px){ .mawasu-big{font-size:1.55rem} }
+  .journey .demo-card{margin-top:36px;background:transparent;border-color:transparent;box-shadow:none}
+  .card-chrome{position:absolute;inset:0;border-radius:24px;background:var(--card);border:1px solid var(--line);box-shadow:0 16px 36px rgba(90,70,45,.1);z-index:0}
+  .demo-side{position:relative;z-index:1}
+  .demo-stage{z-index:1}
+  .dial-shadow{position:absolute;left:50%;top:54%;width:300px;height:300px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(80,58,30,.32),rgba(80,58,30,0) 72%);opacity:0;pointer-events:none}
+  .howto-anchor{position:absolute;top:0;left:0;width:1px;height:1px;scroll-margin-top:76px;pointer-events:none}
+  .mawasu-marker{display:none;pointer-events:none}
+  #demoStage.measuring{animation:none !important}
+  @media (max-width:760px){
+    .journey .demo-card{padding:22px 18px}
+    .journey .demo-stage{padding-top:28px}
+  }
+  @supports (animation-timeline: view()){
+    @media (prefers-reduced-motion: no-preference){
+      .journey{height:300svh;view-timeline-name:--journey;view-timeline-axis:block}
+      .journey-stage{position:sticky;top:0;height:100svh;padding:0;overflow:hidden}
+      .stage-inner{height:100%;display:flex;align-items:center;justify-content:center}
+      .hero-copy{position:absolute;top:72px;left:0;right:0;margin:0 auto;max-width:720px;text-align:center;z-index:3;animation:heroOut linear both;animation-timeline:--journey;animation-range:cover 25% cover 41%}
+      .hero-copy .app-line{justify-content:center}
+      .hero-copy .cta-row{justify-content:center}
+      @media (min-width:861px){
+        .hero-copy{left:5%;right:auto;top:47%;translate:0 -50%;margin:0;max-width:540px;text-align:left}
+        .hero-copy .app-line{justify-content:flex-start}
+        .hero-copy .cta-row{justify-content:flex-start}
+      }
+      @media (max-width:640px){ .hero-copy .scroll-cue{display:none} }
+      .mawasu-copy{display:block;position:absolute;bottom:5svh;left:0;right:0;margin:0 auto;max-width:620px;padding:0 20px;text-align:center;z-index:3;opacity:0;animation:mawasuIn linear both;animation-timeline:--journey;animation-range:cover 42% cover 66%}
+      .journey .demo-card{margin-top:0;width:100%}
+      #demoStage{animation:travel linear both;animation-timeline:--journey;animation-range:cover 25% cover 70%;will-change:transform;pointer-events:none}
+      .journey-stage.landed #demoStage{pointer-events:auto}
+      .card-chrome{animation:chromeIn linear both;animation-timeline:--journey;animation-range:cover 53% cover 70%}
+      .demo-side{animation:sideIn linear both;animation-timeline:--journey;animation-range:cover 55% cover 71%}
+      .dial-shadow{animation:shadowIn linear both;animation-timeline:--journey;animation-range:cover 25% cover 70%}
+      .howto-anchor{top:200svh}
+      .mawasu-marker{display:block;position:absolute;top:175svh;left:0;width:100%;height:2px}
+    }
+  }
+  @keyframes heroOut{from{opacity:1;transform:translateY(0);visibility:visible}to{opacity:0;transform:translateY(-26px);visibility:hidden}}
+  @keyframes mawasuIn{0%{opacity:0;transform:translateY(16px);visibility:visible}30%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px);visibility:hidden}}
+  @keyframes travel{0%{transform:translate(var(--tx,0px),var(--ty,0px)) scale(var(--ts,1))}55%{transform:translate(calc(var(--tx,0px)*.38),calc(var(--ty,0px)*.38)) scale(calc(1 + (var(--ts,1) - 1)*.62))}100%{transform:translate(0px,0px) scale(1)}}
+  @keyframes chromeIn{from{opacity:0}to{opacity:1}}
+  @keyframes sideIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes shadowIn{from{opacity:.5}to{opacity:.15}}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none !important;transition:none !important}
+    .js .rv{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body data-scene="hero">
+
+<header>
+  <div class="bar">
+    <a class="brand" href="#top"><img src="../icon-256.png" alt=""><span>Tokei サポート</span></a>
+    <div class="guide-mini" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="18.5" fill="#FFFCF6" stroke="#C7A276" stroke-width="2.5"/>
+        <circle id="gArc" cx="20" cy="20" r="15.5" fill="none" stroke="#D97443" stroke-width="2.6"
+          stroke-linecap="round" stroke-dasharray="0 97.4" transform="rotate(-90 20 20)"/>
+        <g id="gHand"><line x1="20" y1="20" x2="20" y2="8.5" stroke="#2E2A24" stroke-width="2.2" stroke-linecap="round"/></g>
+        <circle cx="20" cy="20" r="2.2" fill="#2E2A24"/>
+      </svg>
+      <span class="g-label" id="gLabel">はじめに</span>
+    </div>
+    <nav>
+      <a href="#howto">使い方</a><a href="#features">機能</a><a href="#faq">よくある質問</a><a href="#contact">お問い合わせ</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===== journey: hero -> mawasu -> demo (v2 phase 1) ===== -->
+  <section class="journey" id="journey" data-name="はじめに">
+    <span class="howto-anchor" id="howto" aria-hidden="true"></span>
+    <div class="mawasu-marker" id="mawasuMarker" aria-hidden="true"></div>
+    <div class="journey-stage" id="journeyStage">
+      <div class="stage-inner">
+        <div class="hero-copy">
+        <div class="app-line">
+          <img src="../icon-256.png" alt="アプリアイコン">
+          <span class="app-name">子供にご飯を食べさせるための時計（iPad / iPhone、iOS 17以降）</span>
+        </div>
+        <h1>針を回して、<br>ごはんの時間を決める。</h1>
+        <p class="lead">時計の針を指で回すだけでタイマーになる、アナログ時計アプリです。「あと何分？」を、終わりの場所に残る色の針と「設定・残り」の数字で見せます。終わる時間になると、時計が粒になって飛び散る演出が流れます。</p>
+        <div class="cta-row">
+          <a class="btn" href="#howto">使い方を見る</a>
+          <a class="btn ghost" href="#faq">よくある質問へ</a>
+        </div>
+        <p class="scroll-cue"><a href="#howto">SCROLL <span class="arr">↓</span></a></p>
+        </div>
+        <div class="mawasu-copy" aria-hidden="true">
+          <p class="mawasu-big">長針を、回す。</p>
+          <p class="mawasu-sub">回した分が、そのままタイマーになります。<br>回している間、元の場所には薄い針が残ります。</p>
+        </div>
+      <div class="demo-card" id="demoCard">
+        <div class="card-chrome" aria-hidden="true"></div>
+        <div class="demo-stage" id="demoStage">
+          <div class="dial-shadow" aria-hidden="true"></div>
+          <div class="pill pill0" id="pill0" data-slot="0" hidden><svg class="ring" aria-hidden="true"><path class="ring-frame" fill="none"/><path class="ring-base" fill="none"/><path class="ring-rem" fill="none"/></svg><span class="pill-text"></span></div>
+          <div class="pill pill1" id="pill1" data-slot="1" hidden><svg class="ring" aria-hidden="true"><path class="ring-frame" fill="none"/><path class="ring-base" fill="none"/><path class="ring-rem" fill="none"/></svg><span class="pill-text"></span></div>
+          <div class="dial-wrap" id="dialWrap" tabindex="0" role="slider" aria-label="練習用タイマー。長針か秒針をつかんで回すとタイマーを置けます。矢印キーでも1分ずつ置けます" aria-valuemin="0" aria-valuemax="720" aria-valuenow="0" aria-valuetext="タイマーはありません">
+            <svg id="demoDial" viewBox="0 0 1000 1000" aria-hidden="true"></svg>
+          </div>
+          <div class="plus-label" id="plusLabel" hidden>+15分</div>
+          <div class="confirm-pop" id="confirmPop" hidden>
+            <p>タイマーを消しますか？</p>
+            <div class="row">
+              <button class="mini-btn danger" id="confirmYes">消す</button>
+              <button class="mini-btn" id="confirmNo">キャンセル</button>
+            </div>
+          </div>
+        </div>
+        <div class="demo-side">
+          <p class="demo-read" id="demoStatus">長針を回してみてください</p>
+          <p>長針をつかんで時計回りに回した分が、そのままタイマーになります。離すと、終わりの場所に半透明の色の針が残ります。</p>
+          <p>秒針なら秒単位（アプリでは有料機能）。タイマーは2つまで。表示のふちを触ると色が変わり、真ん中を触ると消す確認が出ます。</p>
+          <p class="demo-note" id="demoMsg">お試し用のデモです。時間の進み方だけを早回しにしています。</p>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== howto: steps (v2) ===== -->
+  <section class="block" id="howto-steps" data-name="使い方" style="padding-top:8px">
+    <div class="narrow">
+      <p class="kicker rv">使い方</p>
+      <h2 class="rv">まず、針を回してみてください</h2>
+      <p class="rv">長針を時計回りに回すと分単位、秒針を回すと秒単位でタイマーが始まります。タイマーは2つまで同時に置けます。このページの時計は、練習用として試せます。</p>
+
+      <div class="steps">
+        <div class="step rv"><span class="num">1</span><h3>針をつまんで回す</h3><p>長針で「分」、秒針で「秒」。メニューはありません。</p></div>
+        <div class="step rv d1"><span class="num">2</span><h3>色の針が「おわり」の場所</h3><p>色の針と「設定・残り」の表示で、あと何分かを見せます。</p></div>
+        <div class="step rv d2"><span class="num">3</span><h3>終わると粒子の演出</h3><p>時間内に食事が終わらなければ、その家庭は崩壊します（家庭によります）。だから時間になると、時計の世界も崩壊して、時計が粒になって崩れ落ちます。下の映像が実際のアプリの動きです。</p></div>
+      </div>
+
+      <figure class="finale-fig rv">
+        <video class="finale-video" src="../finale.mp4" poster="../finale-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="タイマーが終わり、時計が粒になって飛び散る、実際のアプリの映像"></video>
+        <figcaption>タイマーが終わる瞬間（実際のアプリの映像）</figcaption>
+      </figure>
+
+      <div class="card rv" style="margin-top:26px">
+        <h3>時刻を進める</h3>
+        <p style="margin:0">設定→「時刻を進める」で、表示だけを先に進められます。「針がここまで来たら、ごはん」という見せ方ができます。<strong>端末の時刻は変わりません</strong>。</p>
+      </div>
+    </div>
+  </section>
+
+    <!-- ===== wall ===== -->
+  <section class="block" id="wall" data-name="壁掛け" style="padding-top:20px">
+    <div class="wrap">
+      <div class="wall-band rv">
+        <div class="wall-grid">
+          <div>
+            <p class="kicker">壁掛け時計にする</p>
+            <h2>壁を撮ると、時計が壁になじみます</h2>
+            <p>設定→「壁の背景」で貼り付ける壁を撮影すると、時計の外側に同じ壁の写真が出て、壁と一体化したように見えます。「壁掛け時に0時を真上に」をオンにすると、端末が少し傾いても、センサーが読み取って12時が物理的な真上を向き続けます。</p>
+            <p style="margin-bottom:0">撮影した写真は<strong>端末の中にだけ保存され、外部に送信されることはありません</strong>。いつでも設定から削除できます。</p>
+            <div class="upright-demo" aria-hidden="true">
+              <figure>
+                <svg width="104" height="104" viewBox="0 0 100 100"><g transform="rotate(14 50 50)"><circle cx="50" cy="50" r="46" fill="#FFFCF6" stroke="#A9835A" stroke-width="4"/><g font-size="13" font-family="sans-serif" fill="#2E2A24" text-anchor="middle"><text x="50" y="19">12</text><text x="50" y="90">6</text><text x="14" y="55">9</text><text x="86" y="55">3</text></g></g></svg>
+                <figcaption>端末が傾くと…</figcaption>
+              </figure>
+              <figure>
+                <svg width="104" height="104" viewBox="0 0 100 100"><g transform="rotate(14 50 50)"><circle cx="50" cy="50" r="46" fill="none" stroke="#A9835A" stroke-width="4" stroke-dasharray="3 5"/></g><circle cx="50" cy="50" r="42" fill="#FFFCF6"/><g font-size="13" font-family="sans-serif" fill="#2E2A24" text-anchor="middle"><text x="50" y="19">12</text><text x="50" y="90">6</text><text x="14" y="55">9</text><text x="86" y="55">3</text></g></svg>
+                <figcaption>12は真上を保ちます</figcaption>
+              </figure>
+            </div>
+          </div>
+          <figure class="wall-shot">
+            <img src="../shot-04-wall.jpg" alt="木目の壁を背景にして、時計が壁になじんでいる画面" loading="lazy">
+            <figcaption>壁の写真を背景にした表示</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== features ===== -->
+  <section class="block" id="features" data-name="機能" style="padding-top:24px">
+    <div class="wrap">
+      <p class="kicker rv">機能</p>
+      <h2 class="rv">食卓に合わせて、表示を変えられます</h2>
+      <div class="feat-grid">
+        <article class="feat rv">
+          <img src="../shot-08-two-timers.jpg" alt="2本のタイマーを同時にセットし、それぞれの色の針と表示が出ている画面" loading="lazy">
+          <div class="txt"><h3>タイマーは2本まで</h3><p>長針と秒針で別々のタイマーを置けます。終わりの場所に残る色の針と、「設定・残り」の表示で見せます。</p></div>
+        </article>
+        <article class="feat rv d1">
+          <img src="../shot-03-hourglass.jpg" alt="砂時計で残り時間を表示している画面" loading="lazy">
+          <div class="txt"><h3>砂時計表示</h3><p>残り時間の見せ方は、「設定・残り」のデジタル表示、または砂時計から選べます。</p></div>
+        </article>
+        <article class="feat rv">
+          <img src="../shot-06-afternoon-digital.jpg" alt="午後を13から24で表示し、デジタル時計も置いた画面" loading="lazy">
+          <div class="txt"><h3>午後の13〜24表示と、置けるデジタル時計</h3><p>午後を13〜24で表示する学習モード。デジタル時計は好きな場所へドラッグして置けます。</p></div>
+        </article>
+        <article class="feat rv d1">
+          <img src="../shot-05-dark.jpg" alt="暗い色合いで表示した時計の画面" loading="lazy">
+          <div class="txt"><h3>ダークな外観</h3><p>部屋の明るさに合わせて、落ち着いた色合いの表示にもできます。</p></div>
+        </article>
+        <article class="feat wide rv">
+          <video class="feat-video" src="../finale.mp4" poster="../finale-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="タイマーが終わり、時計が粒になって飛び散る、実際のアプリの映像"></video>
+          <div class="txt"><h3>終わりは、粒子のフィナーレ</h3><p>時間内に子供の食事が終わらないことは、その家庭の崩壊を意味します（家庭によります）。だから「時間切れ」は、世界の終わりとして描きました。時間が来ると、時計も粒になって崩れ落ちます。</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== price ===== -->
+  <section class="block" id="price" data-name="料金" style="padding-top:8px">
+    <div class="narrow">
+      <p class="kicker rv">料金</p>
+      <h2 class="rv">無料で始めて、気に入ったら買い切り</h2>
+      <p class="rv">ダウンロードは無料です。初回起動から<strong>14日間は全機能をお試し</strong>いただけます。期間が終わっても、時計表示・壁の背景・タイマー1本などの無料機能はそのまま使えます。全機能のアンロックは<strong>¥800の買い切り</strong>（非消耗型のアプリ内課金）で、サブスクリプションはありません。</p>
+      <div class="badges rv">
+        <span class="badge">14日間 全機能トライアル</span>
+        <span class="badge">¥800 買い切り</span>
+        <span class="badge">広告なし</span>
+        <span class="badge">通信なし・データ収集なし</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== faq ===== -->
+  <section class="block" id="faq" data-name="よくある質問" style="padding-top:8px">
+    <div class="narrow">
+      <p class="kicker rv">サポート案内</p>
+      <h2 class="rv">よくある質問</h2>
+      <div class="faq-item rv">
+        <h3>Q. データは収集されますか？</h3>
+        <p>A. いいえ。本アプリは通信を行わず、写真や設定は端末内にのみ保存されます。広告やアクセス解析の仕組みもありません。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+      </div>
+      <div class="faq-item rv">
+        <h3>Q. 使っている途中で画面が消えてしまいます</h3>
+        <p>A. 表示開始から1時間は自動で消灯しない設定になっています。それ以降は端末の自動ロック設定に従います。長時間の壁掛け利用では、端末の設定で自動ロックを「なし」にしてください。</p>
+      </div>
+      <div class="faq-item rv">
+        <h3>Q. 壁の写真が送信されることはありますか？</h3>
+        <p>A. ありません。壁の写真は端末内にのみ保存され、外部に送信されることはありません。アプリの設定からいつでも削除できます。</p>
+      </div>
+      <div class="faq-item rv">
+        <h3>Q. 「時刻を進める」を使うと、iPadの時計が狂いませんか？</h3>
+        <p>A. 狂いません。変わるのはこのアプリの表示だけです。端末の時刻設定には一切触れません。</p>
+      </div>
+      <div class="faq-item rv">
+        <h3>Q. 料金はかかりますか？</h3>
+        <p>A. ダウンロードは無料で、14日間は全機能をお試しいただけます。その後も無料機能は使い続けられます。全機能のアンロックは¥800の買い切りです（<a href="#price">料金の説明</a>）。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== contact ===== -->
+  <section class="block" id="contact" data-name="お問い合わせ" style="padding-top:8px">
+    <div class="narrow">
+      <div class="card contact-card rv">
+        <p class="kicker" style="letter-spacing:.4em">お問い合わせ</p>
+        <h2 style="margin-bottom:10px">困ったときは、メールでどうぞ</h2>
+        <p>不具合のご報告・ご要望は、開発者（ナリユキPdM）までご連絡ください。端末の種類と iOS のバージョンを添えていただくと、確認が早くなります。</p>
+        <p class="mail-big"><a href="mailto:nariyukipdm@gmail.com">nariyukipdm@gmail.com</a></p>
+        <p style="margin:18px 0 0"><a class="btn" href="mailto:nariyukipdm@gmail.com">メールで問い合わせる</a></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p style="margin:0 0 6px"><a href="privacy.html">プライバシーポリシー</a>　｜　<a href="#top">上へ戻る ↑</a></p>
+  <p style="margin:0">© 2026 ナリユキPdM — 子供にご飯を食べさせるための時計</p>
+</footer>
+
+<!-- floating guide dial (PC) -->
+<div class="guide-float" aria-hidden="true">
+  <svg class="gf-dial" width="104" height="104" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="48" fill="#B98F5F"/>
+    <circle cx="50" cy="50" r="43" fill="#FFFCF6"/>
+    <circle id="fArc" cx="50" cy="50" r="37" fill="none" stroke="#D97443" stroke-width="4.5"
+      stroke-linecap="round" stroke-dasharray="0 232.5" transform="rotate(-90 50 50)"/>
+    <g id="fHand"><line x1="50" y1="50" x2="50" y2="20" stroke="#2E2A24" stroke-width="3.4" stroke-linecap="round"/></g>
+    <circle cx="50" cy="50" r="3.4" fill="#2E2A24"/>
+  </svg>
+  <div class="gf-label" id="fLabel">はじめに</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- app-faithful dial (constants from the app's ClockView, 1000x1000) ---- */
+  var NS = "http://www.w3.org/2000/svg";
+  var PAL = { frame:"#D9AE80", frameLine:"#B07E52", frameHi:"#F0D2AD", glass:"#E2E2E2", face:"#FFFFFF", ink:"#141414", accent:"#E2392C" };
+  var PRESETS = ["#0A84FF","#50C878","#FF9F0A","#FF375F","#BF5AF2","#FF453A","#FFD60A","#64D2FF"];
+  var gradSeq = 0;
+  function svgEl(name, attrs){
+    var e = document.createElementNS(NS, name);
+    for(var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function minuteHandShape(body, stripe, tip){
+    var g = svgEl("g", {});
+    g.appendChild(svgEl("path", {d:"M-12 30 L-12 -282 L12 -282 L12 30 Z", fill:body}));
+    g.appendChild(svgEl("line", {x1:0, y1:16, x2:0, y2:-262, stroke:stripe, "stroke-width":4, "stroke-linecap":"round"}));
+    g.appendChild(svgEl("path", {d:"M-12 -280 L0 -342 L12 -280 Z", fill:tip}));
+    return g;
+  }
+  function hourHandShape(){
+    var g = svgEl("g", {});
+    g.appendChild(svgEl("path", {d:"M-26 22 L-26 -56 L-14 -136 L14 -136 L26 -56 L26 22 Z", fill:PAL.ink}));
+    g.appendChild(svgEl("path", {d:"M-14 -134 L0 -172 L14 -134 Z", fill:PAL.accent}));
+    return g;
+  }
+  function secondHandLine(color){
+    return svgEl("line", {x1:0, y1:136, x2:0, y2:-386, stroke:color, "stroke-width":5});
+  }
+  function handUnit(shape){
+    var outer = svgEl("g", {transform:"translate(500 500)"});
+    var rotor = svgEl("g", {});
+    rotor.appendChild(shape);
+    outer.appendChild(rotor);
+    return { outer:outer, rotor:rotor };
+  }
+  function setRot(unit, deg){ if(unit) unit.rotor.setAttribute("transform", "rotate("+deg+")"); }
+  function buildDial(svg){
+    var D = {};
+    var gid = "refl" + (++gradSeq);
+    var defs = svgEl("defs", {});
+    var grad = svgEl("radialGradient", {id:gid, cx:"366", cy:"303", r:"700", gradientUnits:"userSpaceOnUse"});
+    grad.appendChild(svgEl("stop", {offset:"0", "stop-color":"#FFFFFF", "stop-opacity":".14"}));
+    grad.appendChild(svgEl("stop", {offset:".65", "stop-color":"#FFFFFF", "stop-opacity":"0"}));
+    defs.appendChild(grad);
+    svg.appendChild(defs);
+    svg.appendChild(svgEl("circle", {cx:500, cy:500, r:500, fill:PAL.frame}));
+    [[489,PAL.frameLine,2],[481,PAL.frameHi,3],[473,PAL.frameLine,2]].forEach(function(t){
+      svg.appendChild(svgEl("circle", {cx:500, cy:500, r:t[0], fill:"none", stroke:t[1], "stroke-width":t[2]}));
+    });
+    svg.appendChild(svgEl("circle", {cx:500, cy:500, r:469, fill:PAL.glass}));
+    svg.appendChild(svgEl("circle", {cx:500, cy:500, r:447, fill:PAL.face}));
+    svg.appendChild(svgEl("circle", {cx:500, cy:500, r:447, fill:"url(#"+gid+")"}));
+    var m, a, t;
+    for(m=0; m<60; m++){
+      a = m*6*Math.PI/180;
+      svg.appendChild(svgEl("circle", {cx:(500+Math.sin(a)*412).toFixed(1), cy:(500-Math.cos(a)*412).toFixed(1), r:(m%5===0?7.5:3.6), fill:PAL.ink}));
+    }
+    for(m=0; m<60; m+=5){
+      a = m*6*Math.PI/180;
+      t = svgEl("text", {x:(500+Math.sin(a)*367).toFixed(1), y:(500-Math.cos(a)*367).toFixed(1), "text-anchor":"middle", "dominant-baseline":"central", "font-size":"38", "font-weight":"700", fill:PAL.ink});
+      t.textContent = m;
+      svg.appendChild(t);
+    }
+    for(m=1; m<=12; m++){
+      a = m*30*Math.PI/180;
+      t = svgEl("text", {x:(500+Math.sin(a)*208).toFixed(1), y:(500-Math.cos(a)*208).toFixed(1), "text-anchor":"middle", "dominant-baseline":"central", "font-size":"68", "font-weight":"700", fill:PAL.ink});
+      t.textContent = m;
+      svg.appendChild(t);
+    }
+    D.ghostLayer = svgEl("g", {});
+    svg.appendChild(D.ghostLayer);
+    D.shadowMin = handUnit(minuteHandShape(PAL.ink, PAL.face, PAL.ink));
+    D.shadowMin.outer.setAttribute("opacity", "0.35");
+    D.shadowMin.outer.style.display = "none";
+    svg.appendChild(D.shadowMin.outer);
+    D.shadowSec = handUnit(secondHandLine(PAL.accent));
+    D.shadowSec.outer.setAttribute("opacity", "0.35");
+    D.shadowSec.outer.style.display = "none";
+    svg.appendChild(D.shadowSec.outer);
+    D.hour = handUnit(hourHandShape());
+    svg.appendChild(D.hour.outer);
+    D.min = handUnit(minuteHandShape(PAL.ink, PAL.face, PAL.accent));
+    svg.appendChild(D.min.outer);
+    D.sec = handUnit(secondHandLine(PAL.accent));
+    svg.appendChild(D.sec.outer);
+    var cap = svgEl("g", {transform:"translate(500 500)"});
+    cap.appendChild(svgEl("circle", {r:16, fill:PAL.ink}));
+    cap.appendChild(svgEl("circle", {r:10, fill:PAL.accent}));
+    svg.appendChild(cap);
+    D.makeGhostMin = function(color){
+      var u = handUnit(minuteHandShape(color, "#FFFFFF", color));
+      u.outer.setAttribute("opacity", "0.45");
+      return u;
+    };
+    D.makeGhostSec = function(color){
+      var u = handUnit(secondHandLine(color));
+      u.outer.setAttribute("opacity", "0.45");
+      return u;
+    };
+    return D;
+  }
+  function anglesFor(vms){
+    var d = new Date(vms), s = d.getSeconds() + d.getMilliseconds()/1000;
+    return { sec:s*6, min:(d.getMinutes()+s/60)*6, hour:((d.getHours()%12)+d.getMinutes()/60)*30 };
+  }
+
+  /* ---- scenes + reveals ---- */
+  var label = document.getElementById("gLabel"), fLabel = document.getElementById("fLabel");
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.querySelectorAll(".rv").forEach(function(el){ el.classList.add("in"); });
+        if(e.target.dataset.name){
+          document.body.dataset.scene = e.target.id || sceneOf(e.target);
+          var nm = e.target.dataset.name;
+          if(label) label.textContent = nm;
+          if(fLabel) fLabel.textContent = nm;
+        }
+      }
+    });
+  }, {rootMargin:"-38% 0px -45% 0px"});
+  function sceneOf(sec){ return sec.classList.contains("hero") ? "hero" : (sec.id||"hero"); }
+  document.querySelectorAll("main section").forEach(function(sec){
+    if(sec.classList.contains("hero")) sec.dataset.scene="hero";
+    io.observe(sec);
+  });
+  /* sections outside viewport at load (below hero) also reveal when close */
+  var io2 = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add("in"); });
+  }, {rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".rv").forEach(function(el){ io2.observe(el); });
+
+  /* ---- guide hands follow scroll (page = 60 minutes) ---- */
+  var gHand=document.getElementById("gHand"), gArc=document.getElementById("gArc"),
+      fHand=document.getElementById("fHand"), fArc=document.getElementById("fArc"),
+      ticking=false;
+  function guide(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max>0 ? Math.min(1, h.scrollTop/max) : 0;
+    var deg = p*360;
+    if(gHand) gHand.setAttribute("transform","rotate("+deg+" 20 20)");
+    if(gArc) gArc.setAttribute("stroke-dasharray", (97.4*p).toFixed(1)+" 97.4");
+    if(fHand) fHand.setAttribute("transform","rotate("+deg+" 50 50)");
+    if(fArc) fArc.setAttribute("stroke-dasharray", (232.5*p).toFixed(1)+" 232.5");
+    ticking=false;
+  }
+  window.addEventListener("scroll", function(){
+    if(!ticking){ ticking=true; requestAnimationFrame(guide); }
+  }, {passive:true});
+  guide();
+
+  /* ---- demo: the app's timer, faithfully (drag the hands; time is fast-forwarded) ---- */
+  var stage = document.getElementById("demoStage"),
+      demoSvg = document.getElementById("demoDial"),
+      dialWrap = document.getElementById("dialWrap"),
+      statusEl = document.getElementById("demoStatus"),
+      plusLabel = document.getElementById("plusLabel"),
+      confirmPop = document.getElementById("confirmPop");
+  var demo = buildDial(demoSvg);
+  var pills = [document.getElementById("pill0"), document.getElementById("pill1")];
+  var pillText = [pills[0].querySelector(".pill-text"), pills[1].querySelector(".pill-text")];
+  var PRESET_NAMES = PRESETS;
+  var slotColor = [0, 1];
+  var timers = [null, null];
+  var ghosts = [null, null];
+  var rate = 1, vAnchor = Date.now(), vAnchorReal = Date.now();
+  function vNow(){ return vAnchor + (Date.now() - vAnchorReal) * rate; }
+  function snapToReal(){ vAnchor = Date.now(); vAnchorReal = Date.now(); rate = 1; }
+  function durText(sec){
+    if(sec < 60) return sec + "秒";
+    if(sec % 60 === 0) return (sec/60) + "分";
+    return Math.floor(sec/60) + "分" + (sec%60) + "秒";
+  }
+  function cdText(sec){
+    if(sec <= 0) return "0:00";
+    var h = Math.floor(sec/3600), m = Math.floor(sec%3600/60), s = sec%60;
+    var ss = (s<10 ? "0" : "") + s;
+    if(h > 0) return h + ":" + (m<10 ? "0" : "") + m + ":" + ss;
+    return m + ":" + ss;
+  }
+  function capsulePath(W, H, o){
+    var r = (H - 2*o)/2, x0 = o, x1 = W - o, y0 = o, y1 = H - o, cx = W/2;
+    return "M "+cx+" "+y0+" L "+(x1-r)+" "+y0+" A "+r+" "+r+" 0 0 1 "+x1+" "+(y0+r)+
+           " L "+x1+" "+(y1-r)+" A "+r+" "+r+" 0 0 1 "+(x1-r)+" "+y1+
+           " L "+(x0+r)+" "+y1+" A "+r+" "+r+" 0 0 1 "+x0+" "+(y1-r)+
+           " L "+x0+" "+(y0+r)+" A "+r+" "+r+" 0 0 1 "+(x0+r)+" "+y0+" Z";
+  }
+  function paintRing(slot){
+    var color = PRESET_NAMES[slotColor[slot]];
+    var svg = pills[slot].querySelector(".ring");
+    svg.querySelector(".ring-base").setAttribute("stroke", color);
+    svg.querySelector(".ring-rem").setAttribute("stroke", color);
+  }
+  function buildRing(slot){
+    var pill = pills[slot];
+    var w = pill.offsetWidth, h = pill.offsetHeight;
+    var svg = pill.querySelector(".ring");
+    svg.setAttribute("viewBox", "0 0 " + (w+4) + " " + (h+4));
+    var d = capsulePath(w+4, h+4, 2);
+    var frame = svg.querySelector(".ring-frame");
+    frame.setAttribute("d", d);
+    frame.setAttribute("stroke", PAL.frameLine);
+    frame.setAttribute("stroke-width", "1");
+    frame.setAttribute("opacity", ".7");
+    var base = svg.querySelector(".ring-base");
+    base.setAttribute("d", d);
+    base.setAttribute("stroke-width", "3.5");
+    base.setAttribute("opacity", ".25");
+    var rem = svg.querySelector(".ring-rem");
+    rem.setAttribute("d", d);
+    rem.setAttribute("stroke-width", "3.5");
+    rem.setAttribute("stroke-linecap", "round");
+    rem.setAttribute("pathLength", "100");
+    paintRing(slot);
+  }
+  function updateRing(slot, frac){
+    var F = Math.max(0, Math.min(1, frac)) * 100;
+    var rem = pills[slot].querySelector(".ring-rem");
+    rem.setAttribute("stroke-dasharray", "0 " + (100-F).toFixed(1) + " " + F.toFixed(1) + " 100");
+  }
+  function paintGhost(slot){
+    var color = PRESET_NAMES[slotColor[slot]];
+    var g = ghosts[slot];
+    if(!g) return;
+    while(g.min.rotor.firstChild) g.min.rotor.removeChild(g.min.rotor.firstChild);
+    var shape = minuteHandShape(color, "#FFFFFF", color);
+    while(shape.firstChild) g.min.rotor.appendChild(shape.firstChild);
+    while(g.sec.rotor.firstChild) g.sec.rotor.removeChild(g.sec.rotor.firstChild);
+    g.sec.rotor.appendChild(secondHandLine(color));
+  }
+  function makeGhosts(slot){
+    var minU = demo.makeGhostMin(PRESET_NAMES[slotColor[slot]]);
+    var secU = demo.makeGhostSec(PRESET_NAMES[slotColor[slot]]);
+    demo.ghostLayer.appendChild(minU.outer);
+    demo.ghostLayer.appendChild(secU.outer);
+    ghosts[slot] = { min:minU, sec:secU };
+    paintGhost(slot);
+  }
+  function setStatus(txt){ if(statusEl) statusEl.textContent = txt; }
+  function ariaUpdate(){
+    var parts = [];
+    for(var i=0;i<2;i++) if(timers[i]) parts.push((i+1) + "つ目 " + durText(timers[i].total));
+    dialWrap.setAttribute("aria-valuetext", parts.length ? "タイマー：" + parts.join("、") : "タイマーはありません");
+    dialWrap.setAttribute("aria-valuenow", timers[0] ? Math.round(timers[0].total/60) : 0);
+  }
+  function createTimer(bySec, totalSec){
+    var slot;
+    if(!timers[0]) slot = 0;
+    else if(!timers[1]) slot = 1;
+    else slot = timers[0].startV <= timers[1].startV ? 0 : 1;
+    if(!timers[0] && !timers[1]){
+      var demoSecs = Math.min(10, Math.max(4, totalSec/60));
+      var v = vNow();
+      vAnchor = v; vAnchorReal = Date.now(); rate = totalSec / demoSecs;
+    }
+    timers[slot] = { total:totalSec, endV:vNow() + totalSec*1000, bySec:bySec, startV:vNow() };
+    if(!ghosts[slot]) makeGhosts(slot);
+    paintGhost(slot);
+    pills[slot].hidden = false;
+    buildRing(slot);
+    setStatus("タイマー中です（早回し）");
+    ariaUpdate();
+  }
+  function removeTimer(slot, silent){
+    timers[slot] = null;
+    pills[slot].hidden = true;
+    if(ghosts[slot]){
+      demo.ghostLayer.removeChild(ghosts[slot].min.outer);
+      demo.ghostLayer.removeChild(ghosts[slot].sec.outer);
+      ghosts[slot] = null;
+    }
+    if(!timers[0] && !timers[1]){
+      snapToReal();
+      if(!silent) setStatus("長針を回してみてください");
+    }
+    ariaUpdate();
+  }
+  function burst(){
+    if(reduced) return;
+    var rect = dialWrap.getBoundingClientRect(), srect = stage.getBoundingClientRect();
+    var cx = rect.left - srect.left + rect.width/2, cy = rect.top - srect.top + rect.height/2;
+    var R = rect.width/2, colors = [PAL.ink, PAL.accent, PAL.frame, PAL.frameLine, PAL.glass, "#FFFFFF"];
+    demoSvg.animate(
+      [{opacity:1},{opacity:.12, offset:.18},{opacity:.12, offset:.72},{opacity:1}],
+      {duration:1600, easing:"ease-in-out"}
+    );
+    for(var i=0;i<90;i++){
+      var b = document.createElement("div");
+      b.className = "burst-bit";
+      var ang = Math.random()*Math.PI*2, rr = Math.sqrt(Math.random())*R*0.92;
+      var x = cx + Math.sin(ang)*rr, y = cy - Math.cos(ang)*rr;
+      var sz = 3 + Math.random()*6;
+      b.style.left = x + "px"; b.style.top = y + "px";
+      b.style.width = sz + "px"; b.style.height = sz + "px";
+      b.style.background = colors[i % colors.length];
+      stage.appendChild(b);
+      var dx = (Math.random()-0.5)*130, dy = (Math.random()-0.35)*130;
+      var anim = b.animate([
+        {transform:"translate(0,0) rotate(0deg)", opacity:1},
+        {transform:"translate("+dx+"px,"+dy+"px) rotate("+(Math.random()*260-130)+"deg)", opacity:0}
+      ], {duration:1000 + Math.random()*600, easing:"cubic-bezier(.17,.67,.35,1)"});
+      (function(node, an){ an.onfinish = function(){ node.remove(); }; })(b, anim);
+    }
+  }
+  function finishTimer(slot){
+    var wasRunning = !!(timers[0] || timers[1]);
+    removeTimer(slot, true);
+    setStatus("おしまい！ 時計が粒になりました");
+    burst();
+    setTimeout(function(){
+      if(!timers[0] && !timers[1]) setStatus("長針を回してみてください");
+      else setStatus("タイマー中です（早回し）");
+    }, 1900);
+    if(wasRunning) ariaUpdate();
+  }
+
+  /* ---- drag (same rules as the app) ---- */
+  var drag = null;
+  function signedDelta(d){ return ((d + 540) % 360) - 180; }
+  function ptAngle(e){
+    var r = demoSvg.getBoundingClientRect();
+    var x = (e.clientX - r.left)/r.width*1000 - 500;
+    var y = (e.clientY - r.top)/r.height*1000 - 500;
+    return { a:(Math.atan2(x, -y)*180/Math.PI + 360) % 360, dist:Math.hypot(x, y) };
+  }
+  demoSvg.addEventListener("pointerdown", function(e){
+    if(drag) return;
+    var p = ptAngle(e);
+    if(p.dist <= 200) return;
+    var ang = anglesFor(vNow());
+    var kind = null;
+    if(Math.abs(signedDelta(p.a - ang.min)) <= 20) kind = "min";
+    else if(Math.abs(signedDelta(p.a - ang.sec)) <= 20) kind = "sec";
+    if(!kind) return;
+    drag = { kind:kind, last:p.a, pending:0, startMinA:ang.min, startSecA:ang.sec, id:e.pointerId, lastInt:-1 };
+    try{ demoSvg.setPointerCapture(e.pointerId); }catch(err){}
+    if(kind === "min"){ demo.shadowMin.outer.style.display = ""; setRot(demo.shadowMin, ang.min); }
+    else { demo.shadowSec.outer.style.display = ""; setRot(demo.shadowSec, ang.sec); }
+    plusLabel.hidden = false;
+    setStatus("回した分がタイマーになります");
+    e.preventDefault();
+  });
+  demoSvg.addEventListener("pointermove", function(e){
+    if(!drag || e.pointerId !== drag.id) return;
+    var p = ptAngle(e);
+    var d = signedDelta(p.a - drag.last);
+    drag.last = p.a;
+    var cap = drag.kind === "min" ? 720 : 43200;
+    drag.pending = Math.max(0, Math.min(cap, drag.pending + d/6));
+  });
+  function endDrag(commit){
+    if(!drag) return;
+    var val = Math.round(drag.pending);
+    var kind = drag.kind;
+    drag = null;
+    demo.shadowMin.outer.style.display = "none";
+    demo.shadowSec.outer.style.display = "none";
+    plusLabel.hidden = true;
+    if(commit && val > 0) createTimer(kind === "sec", kind === "min" ? val*60 : val);
+    else if(timers[0] || timers[1]) setStatus("タイマー中です（早回し）");
+    else setStatus("長針を回してみてください");
+  }
+  demoSvg.addEventListener("pointerup", function(){ endDrag(true); });
+  demoSvg.addEventListener("pointercancel", function(){ endDrag(false); });
+
+  /* ---- pill taps: band = next colour, body = delete confirm (same as the app) ---- */
+  var confirmSlot = 0;
+  pills.forEach(function(pill){
+    pill.addEventListener("click", function(e){
+      var slot = +pill.getAttribute("data-slot");
+      if(!timers[slot]) return;
+      var r = pill.getBoundingClientRect();
+      var x = e.clientX - r.left, y = e.clientY - r.top, band = 11;
+      var inBody = x > band && x < r.width - band && y > band && y < r.height - band;
+      if(inBody){
+        confirmSlot = slot;
+        confirmPop.style.top = (pill.offsetTop + pill.offsetHeight + 10) + "px";
+        confirmPop.hidden = false;
+      } else {
+        slotColor[slot] = (slotColor[slot] + 1) % PRESET_NAMES.length;
+        paintGhost(slot);
+        paintRing(slot);
+      }
+    });
+  });
+  document.getElementById("confirmYes").addEventListener("click", function(){
+    confirmPop.hidden = true;
+    removeTimer(confirmSlot, false);
+  });
+  document.getElementById("confirmNo").addEventListener("click", function(){
+    confirmPop.hidden = true;
+  });
+
+  /* ---- keyboard (accessibility fallback) ---- */
+  dialWrap.addEventListener("keydown", function(e){
+    var d = 0;
+    if(e.key === "ArrowRight" || e.key === "ArrowUp") d = 1;
+    else if(e.key === "ArrowLeft" || e.key === "ArrowDown") d = -1;
+    else if(e.key === "PageUp") d = 5;
+    else if(e.key === "PageDown") d = -5;
+    else return;
+    e.preventDefault();
+    var slot = timers[0] ? 0 : (timers[1] ? 1 : -1);
+    if(slot < 0){ if(d > 0) createTimer(false, d*60); return; }
+    var t = timers[slot], nt = t.total + d*60;
+    if(nt <= 0){ removeTimer(slot, false); return; }
+    t.endV += d*60000;
+    t.total = nt;
+    ariaUpdate();
+  });
+
+  /* ---- finale videos: respect reduced motion ---- */
+  if(reduced){
+    document.querySelectorAll("video.finale-video, video.feat-video").forEach(function(v){
+      v.removeAttribute("autoplay");
+      v.setAttribute("controls", "");
+    });
+  }
+
+  /* ---- finale videos: play while in view, pause out of view (mobile autoplay対策) ---- */
+  (function(){
+    var vids = document.querySelectorAll("video.finale-video, video.feat-video");
+    if(!reduced && "IntersectionObserver" in window){
+      var vio = new IntersectionObserver(function(es){
+        es.forEach(function(e){
+          var v = e.target;
+          if(e.isIntersecting){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }
+          else{ v.pause(); }
+        });
+      }, { threshold: 0.2 });
+      vids.forEach(function(v){ vio.observe(v); });
+    }
+    vids.forEach(function(v){
+      v.addEventListener("click", function(){
+        if(reduced) return;
+        if(v.paused){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }
+        else{ v.pause(); }
+      });
+    });
+  })();
+
+  /* ---- v2: the journey (one clock: hero -> travel -> demo) ---- */
+  var journeyEl = document.getElementById("journey"),
+      jStage = document.getElementById("journeyStage"),
+      mawasuMarker = document.getElementById("mawasuMarker");
+  var journeyMode = false, showMode = true, userTouched = false;
+  var handOff = 0, journeyHandDeg = 0, reenactStarted = false, scriptObj = null;
+
+  function landStage(){
+    if(jStage && !jStage.classList.contains("landed")){
+      jStage.classList.add("landed");
+      if(dialWrap) dialWrap.tabIndex = 0;
+    }
+  }
+  function measureTravel(){
+    if(!journeyMode || !jStage) return;
+    stage.classList.add("measuring");
+    var sr = jStage.getBoundingClientRect();
+    var tr = stage.getBoundingClientRect();
+    var dw = dialWrap.getBoundingClientRect().width || 288;
+    stage.classList.remove("measuring");
+    var homeCx = tr.left - sr.left + tr.width/2;
+    var homeCy = tr.top - sr.top + tr.height/2;
+    var W = jStage.clientWidth, H = jStage.clientHeight, cx, cy, dial;
+    if(W >= 861){ cx = W*0.60; cy = H*0.52; dial = Math.min(500, H*0.50, W*0.42); }
+    else { cx = W*0.5; cy = H*0.70; dial = Math.min(W*0.80, H*0.34, 460); }
+    var ts = dial / dw;
+    stage.style.setProperty("--tx", (cx - homeCx).toFixed(1) + "px");
+    stage.style.setProperty("--ty", (cy - homeCy).toFixed(1) + "px");
+    stage.style.setProperty("--ts", ts.toFixed(3));
+  }
+  function journeyScroll(){
+    if(!journeyMode || !journeyEl) return;
+    var vh = window.innerHeight;
+    var rect = journeyEl.getBoundingClientRect();
+    var total = journeyEl.offsetHeight - vh;
+    if(total <= 0) return;
+    var s = Math.min(total, Math.max(0, -rect.top));
+    var cover = (s + vh) / (journeyEl.offsetHeight + vh);
+    journeyHandDeg = Math.max(0, Math.min(1, (cover - 0.25) / 0.50)) * 360;
+    if(cover >= 0.695) landStage();
+    if(rect.top <= 1 && rect.bottom >= vh - 1){
+      var nm = cover < 0.42 ? "はじめに" : (cover < 0.66 ? "回す" : "使い方");
+      if(label && label.textContent !== nm) label.textContent = nm;
+      if(fLabel && fLabel.textContent !== nm) fLabel.textContent = nm;
+    }
+  }
+  var journeyTicking = false;
+  window.addEventListener("scroll", function(){
+    if(!journeyTicking){
+      journeyTicking = true;
+      requestAnimationFrame(function(){ journeyScroll(); journeyTicking = false; });
+    }
+  }, {passive:true});
+  function probeJourney(){
+    if(!journeyEl || !jStage){ journeyMode = false; return; }
+    journeyMode = !reduced && window.getComputedStyle(jStage).position === "sticky";
+    if(journeyMode){
+      if(dialWrap && !jStage.classList.contains("landed")) dialWrap.tabIndex = -1;
+      measureTravel();
+    }
+  }
+  var resizeTick = false;
+  window.addEventListener("resize", function(){
+    if(!resizeTick){
+      resizeTick = true;
+      requestAnimationFrame(function(){ probeJourney(); journeyScroll(); resizeTick = false; });
+    }
+  });
+  /* Scripted drag re-enactment: drives the demo's own drag state machine.
+     The origin shadow, the +N label, the snap and the timer are all the
+     demo's real behaviour; a user pointerdown takes over instantly. */
+  function playReenact(){
+    if(reenactStarted) return;
+    reenactStarted = true;
+    if(!journeyMode || reduced) return;
+    showMode = false;
+    setTimeout(function(){
+      if(userTouched || drag || timers[0] || timers[1]) return;
+      var ang = anglesFor(vNow());
+      scriptObj = { kind:"min", last:ang.min, pending:0, startMinA:ang.min, startSecA:ang.sec, id:-1, lastInt:-1 };
+      drag = scriptObj;
+      demo.shadowMin.outer.style.display = "";
+      setRot(demo.shadowMin, ang.min);
+      plusLabel.hidden = false;
+      setStatus("回した分がタイマーになります");
+      var t0 = performance.now(), dur = 1800;
+      function step(ts){
+        if(drag !== scriptObj){ scriptObj = null; return; }
+        var p = Math.min(1, (ts - t0) / dur);
+        var e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2;
+        scriptObj.pending = 5 * e;
+        if(p < 1){ requestAnimationFrame(step); }
+        else {
+          var o = scriptObj; scriptObj = null;
+          if(drag === o){ endDrag(true); landStage(); }
+        }
+      }
+      requestAnimationFrame(step);
+    }, 550);
+  }
+  if(mawasuMarker && "IntersectionObserver" in window){
+    var mio = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ mio.disconnect(); playReenact(); } });
+    }, {rootMargin:"-45% 0px -45% 0px"});
+    mio.observe(mawasuMarker);
+  }
+  demoSvg.addEventListener("pointerdown", function(){
+    userTouched = true;
+    if(scriptObj && drag === scriptObj) endDrag(false);
+  }, true);
+  dialWrap.addEventListener("keydown", function(){ userTouched = true; }, true);
+  probeJourney();
+  window.addEventListener("load", function(){ probeJourney(); journeyScroll(); });
+  journeyScroll();
+
+  /* ---- render loop ---- */
+  function frame(){
+    var v = vNow();
+    var ang = anglesFor(v);
+    /* v2: while the clock is "on show" in the journey (untouched, no timers
+       running), its hands also advance with scroll progress. This is a display
+       offset only — timer maths (endV) is never touched. */
+    var handTarget = (showMode && !userTouched && !drag && !timers[0] && !timers[1]) ? journeyHandDeg : 0;
+    handOff += (handTarget - handOff) * 0.09;
+    if(handTarget === 0 && Math.abs(handOff) < 0.02) handOff = 0;
+    var minA = ang.min + handOff, secA = ang.sec;
+    var hourA = ang.hour + handOff/12;
+    if(drag){
+      if(drag.kind === "min") minA = drag.startMinA + drag.pending*6;
+      else secA = drag.startSecA + drag.pending*6;
+      var n = Math.round(drag.pending);
+      plusLabel.textContent = "+" + n + (drag.kind === "min" ? "分" : "秒");
+      var handA = drag.kind === "min" ? minA : secA;
+      var wr = dialWrap.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+      var cx = wr.left - sr.left + wr.width/2, cy = wr.top - sr.top + wr.height/2;
+      var rad = wr.width/2 + 24, ar = handA*Math.PI/180;
+      plusLabel.style.left = (cx + Math.sin(ar)*rad) + "px";
+      plusLabel.style.top = (cy - Math.cos(ar)*rad) + "px";
+      if(n !== drag.lastInt){
+        drag.lastInt = n;
+        if(!reduced){
+          plusLabel.animate(
+            [{transform:"translate(-50%,-50%) scale(1.3)"},{transform:"translate(-50%,-50%) scale(1)"}],
+            {duration:180, easing:"ease-out"}
+          );
+        }
+      }
+    }
+    setRot(demo.hour, hourA);
+    setRot(demo.min, minA);
+    setRot(demo.sec, secA);
+    for(var i=0;i<2;i++){
+      var t = timers[i];
+      if(!t) continue;
+      var ea = anglesFor(t.endV);
+      if(ghosts[i]){
+        setRot(ghosts[i].min, ea.min);
+        ghosts[i].sec.outer.style.display = t.bySec ? "" : "none";
+        if(t.bySec) setRot(ghosts[i].sec, ea.sec);
+      }
+      var rem = Math.max(0, (t.endV - v)/1000);
+      pillText[i].textContent = "設定 " + durText(t.total) + "　残り " + cdText(Math.ceil(rem));
+      updateRing(i, t.total > 0 ? rem/t.total : 0);
+      if(v >= t.endV) finishTimer(i);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
