@@ -6,6 +6,7 @@
 <title>サポート｜子供にご飯を食べさせるための時計</title>
 <meta name="description" content="針を指で回すだけでタイマーになるアナログ時計アプリ「子供にご飯を食べさせるための時計」のサポートページ。使い方、よくある質問、お問い合わせ。">
 <link rel="icon" href="icon-256.png">
+<link rel="apple-touch-icon" href="icon-256.png">
 <script>document.documentElement.classList.add('js');</script>
 <style>
   :root{
@@ -35,9 +36,10 @@
     background:var(--bg);
     transition:background 1.4s ease;
     -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
+    overflow-x:hidden;overflow-x:clip;
   }
   body[data-scene="howto"]{background:#F8F1E1}
+  body[data-scene="howto-steps"]{background:#F8F1E1}
   body[data-scene="wall"]{background:#F3E7CF}
   body[data-scene="features"]{background:#FAF6EE}
   body[data-scene="price"]{background:#F8F1E1}
@@ -91,21 +93,6 @@
   .js .rv.d1{transition-delay:.08s}.js .rv.d2{transition-delay:.16s}
 
   /* ---------- hero ---------- */
-  .hero{padding:118px 0 64px}
-  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
-  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr} }
-  .wood-panel{
-    border-radius:26px;padding:34px 26px 30px;position:relative;
-    background:
-      radial-gradient(120% 90% at 30% 0%, rgba(255,244,214,.5), rgba(255,244,214,0) 55%),
-      repeating-linear-gradient(93deg,#C9A87C 0 54px,#C2A075 54px 57px,#CBA97E 57px 112px,#BE9C6E 112px 115px);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.35), inset 0 -18px 34px rgba(96,66,32,.18), 0 22px 44px rgba(80,58,30,.16);
-    text-align:center;
-  }
-  .wood-panel .clock-live{filter:drop-shadow(0 14px 22px rgba(80,55,25,.28))}
-  .hero-shot{margin:0}
-  .hero-shot img{border-radius:22px;box-shadow:0 18px 40px rgba(80,58,30,.18);display:block;margin:0 auto}
-  .hero-shot figcaption{font-size:.8rem;color:var(--faint);text-align:center;margin-top:10px}
   .app-line{display:flex;align-items:center;gap:10px;margin-bottom:20px}
   .app-line img{width:40px;height:40px;border-radius:10px}
   .app-line .app-name{font-size:.9rem;color:var(--sub)}
@@ -149,7 +136,7 @@
   .dial-wrap:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:50%}
   .dial-wrap svg{display:block;width:100%;height:100%}
   #demoDial{touch-action:none}
-  #demoDial text, #liveClock text{font-family:var(--sans)}
+  #demoDial text{font-family:var(--sans)}
   .pill{
     position:absolute;z-index:6;background:#FFFCF6;border:1px solid rgba(176,126,82,.45);
     border-radius:999px;padding:7px 15px;font-size:15px;font-weight:600;color:var(--ink);
@@ -232,24 +219,187 @@
   footer{border-top:1px solid var(--line);padding:30px 20px 40px;text-align:center;color:var(--faint);font-size:.85rem}
   footer a{color:var(--sub)}
 
-  /* ---------- floating guide dial ---------- */
-  .guide-float{
-    position:fixed;right:22px;bottom:22px;z-index:40;text-align:center;
-    transition:opacity 1.2s ease;
+
+
+  /* ---------- v2: journey (hero -> travel -> demo) ---------- */
+  .journey{position:relative}
+  .journey-stage{position:relative;padding:104px 0 64px}
+  .stage-inner{max-width:1060px;margin:0 auto;padding:0 20px;position:relative}
+  .hero-copy{max-width:640px}
+  .mawasu-copy{display:none}
+  .mawasu-big{font-family:var(--serif);font-size:2rem;font-weight:600;line-height:1.5;margin:0 0 10px;color:var(--ink)}
+  .mawasu-sub{margin:0;color:var(--sub);font-size:.98rem}
+  @media (max-width:640px){ .mawasu-big{font-size:1.55rem} }
+  .journey .demo-card{margin-top:36px;background:transparent;border-color:transparent;box-shadow:none}
+  .card-chrome{position:absolute;inset:0;border-radius:24px;background:var(--card);border:1px solid var(--line);box-shadow:0 16px 36px rgba(90,70,45,.1);z-index:0}
+  .demo-side{position:relative;z-index:1}
+  .demo-stage{z-index:1}
+  .dial-shadow{position:absolute;left:50%;top:54%;width:300px;height:300px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(80,58,30,.32),rgba(80,58,30,0) 72%);opacity:0;pointer-events:none}
+  .howto-anchor{position:absolute;top:0;left:0;width:1px;height:1px;scroll-margin-top:76px;pointer-events:none}
+  .mawasu-marker{display:none;pointer-events:none}
+  #demoStage.measuring{animation:none !important}
+  @media (max-width:760px){
+    .journey .demo-card{padding:22px 18px}
+    .journey .demo-stage{padding-top:28px}
   }
-  .guide-float .gf-label{
-    margin-top:7px;font-size:.7rem;letter-spacing:.12em;color:var(--sub);
-    background:rgba(250,246,238,.85);border:1px solid var(--line);border-radius:999px;padding:3px 10px;
-    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  @supports (animation-timeline: view()){
+    @media (prefers-reduced-motion: no-preference){
+      .journey{height:300svh;view-timeline-name:--journey;view-timeline-axis:block}
+      .journey-stage{position:sticky;top:0;height:100svh;padding:0;overflow:hidden}
+      .stage-inner{height:100%;display:flex;align-items:center;justify-content:center}
+      .hero-copy{position:absolute;top:72px;left:0;right:0;margin:0 auto;max-width:720px;text-align:center;z-index:3;animation:heroOut linear both;animation-timeline:--journey;animation-range:cover 25% cover 41%}
+      .hero-copy .app-line{justify-content:center}
+      .hero-copy .cta-row{justify-content:center}
+      @media (min-width:861px){
+        .hero-copy{left:5%;right:auto;top:47%;translate:0 -50%;margin:0;max-width:min(540px,42vw);text-align:left}
+        .hero-copy .app-line{justify-content:flex-start}
+        .hero-copy .cta-row{justify-content:flex-start}
+      }
+      @media (max-width:640px){ .hero-copy .scroll-cue{display:none} }
+      .mawasu-copy{display:block;position:absolute;bottom:5svh;left:0;right:0;margin:0 auto;max-width:620px;padding:0 20px;text-align:center;z-index:3;opacity:0;animation:mawasuIn linear both;animation-timeline:--journey;animation-range:cover 42% cover 66%}
+      .mawasu-copy::before{content:"";position:absolute;inset:-18px -22px;border-radius:26px;background:radial-gradient(115% 135% at 50% 50%,rgba(250,246,238,.94) 58%,rgba(250,246,238,0) 100%);z-index:-1}
+      .journey .demo-card{margin-top:0;width:100%}
+      #demoStage{animation:travel linear both;animation-timeline:--journey;animation-range:cover 25% cover 70%;will-change:transform;pointer-events:none}
+      .journey-stage.landed #demoStage{pointer-events:auto}
+      .card-chrome{animation:chromeIn linear both;animation-timeline:--journey;animation-range:cover 53% cover 70%}
+      .demo-side{animation:sideIn linear both;animation-timeline:--journey;animation-range:cover 63% cover 72%}
+      .dial-shadow{animation:shadowIn linear both;animation-timeline:--journey;animation-range:cover 25% cover 70%}
+      .howto-anchor{top:200svh}
+      .mawasu-marker{display:block;position:absolute;top:175svh;left:0;width:100%;height:2px}
+    }
   }
-  .guide-float .gf-dial{filter:drop-shadow(0 10px 18px rgba(80,58,30,.25));transition:opacity 1.2s ease}
-  body[data-scene="wall"] .guide-float .gf-dial{opacity:.55}
-  @media (max-width:899px){ .guide-float{display:none} }
+  @keyframes heroOut{from{opacity:1;transform:translateY(0);visibility:visible}to{opacity:0;transform:translateY(-26px);visibility:hidden}}
+  @keyframes mawasuIn{0%{opacity:0;transform:translateY(16px);visibility:visible}30%{opacity:1;transform:translateY(0)}78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px);visibility:hidden}}
+  @keyframes travel{0%{transform:translate(var(--tx,0px),var(--ty,0px)) scale(var(--ts,1))}55%{transform:translate(calc(var(--tx,0px)*.38),calc(var(--ty,0px)*.38)) scale(calc(1 + (var(--ts,1) - 1)*.62))}100%{transform:translate(0px,0px) scale(1)}}
+  @keyframes chromeIn{from{opacity:0}to{opacity:1}}
+  @keyframes sideIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes shadowIn{from{opacity:.5}to{opacity:.15}}
 
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
     *,*::before,*::after{animation:none !important;transition:none !important}
     .js .rv{opacity:1;transform:none}
+  }
+
+  /* ---------- v3: sample pill / pill band / finale stills / paid badge ---------- */
+  .pill-sample{
+    display:inline-flex;align-items:center;background:#FFFCF6;border:2px solid #0A84FF;
+    border-radius:999px;padding:7px 15px;font-size:15px;font-weight:600;color:var(--ink);
+    white-space:nowrap;font-variant-numeric:tabular-nums;line-height:1.35;
+    box-shadow:0 6px 16px rgba(90,70,45,.10);
+  }
+  .pill-band{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:16px 20px;margin-top:18px;
+  }
+  .pill-band p{margin:0;font-size:.93rem;flex:1 1 260px}
+  .color-dots{display:inline-flex;gap:6px}
+  .color-dots i{width:14px;height:14px;border-radius:50%;display:block;border:1px solid rgba(90,70,45,.18)}
+  .finale-stills{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:400px;margin:16px auto 0}
+  .finale-stills figure{margin:0;text-align:center}
+  .finale-stills img{display:block;width:100%;aspect-ratio:9/10;object-fit:cover;border-radius:14px;box-shadow:0 10px 22px rgba(80,58,30,.14);background:#EFE9DC}
+  .finale-stills figcaption{font-size:.78rem;color:var(--faint);margin-top:6px}
+  .paid-badge{
+    display:inline-block;vertical-align:.16em;background:var(--accent);color:#FFF8EF;
+    font-size:.66rem;font-weight:700;letter-spacing:.08em;border-radius:999px;
+    padding:2px 9px;margin-left:9px;white-space:nowrap;
+  }
+  .paid-line{margin:14px 0 0;font-size:.9rem}
+
+  /* ---------- v3: FAQ as details/summary ---------- */
+  details.faq-item summary{
+    font-size:1rem;font-weight:700;color:var(--ink);cursor:pointer;list-style:none;
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  }
+  details.faq-item summary::-webkit-details-marker{display:none}
+  details.faq-item summary::after{content:"＋";color:var(--accent-ink);font-weight:600;flex:none}
+  details.faq-item[open ] summary{margin-bottom:8px}
+  details.faq-item[open ] summary::after{content:"−"}
+
+  /* ---------- v3: berths (landing spots reserved in the layout) ---------- */
+  .berth{
+    position:relative;width:200px;height:200px;flex:none;
+    border:2px dashed rgba(169,131,90,.5);border-radius:50%;
+  }
+  .berth svg{display:block;width:100%;height:100%}
+  .berth-faq{width:120px;height:120px;margin:0 auto 20px}
+  .berth-footer{width:176px;height:176px;margin:0 auto 20px}
+  .berth-head{display:flex;gap:28px;align-items:center;margin-bottom:6px}
+  .berth-head-copy{min-width:0}
+  .berth-head .kicker{margin-bottom:10px}
+  .berth-head h2{margin-bottom:0}
+  .wall-side{display:flex;flex-direction:column;align-items:center;gap:22px}
+  .wall-side .wall-shot{width:100%}
+  .finale-flex{display:flex;gap:20px;align-items:center}
+  .finale-flex video.feat-video{flex:1 1 auto;min-width:0;width:auto}
+  .price-flex{display:flex;gap:26px;align-items:flex-start}
+  .price-copy{flex:1 1 auto;min-width:0}
+  @media (max-width:760px){
+    .berth{width:min(152px,44vw);height:min(152px,44vw)}
+    .berth-faq{width:120px;height:120px}
+    .berth-footer{width:144px;height:144px}
+    .berth-head{flex-direction:column;gap:16px}
+    .berth-head-copy{align-self:stretch}
+    .finale-flex{flex-direction:column}
+    .finale-flex video.feat-video{width:100%}
+    .price-flex{flex-direction:column;align-items:center}
+    .price-flex .berth{order:-1}
+    .price-copy{align-self:stretch}
+  }
+
+  /* ---------- v3: the travelling clock ---------- */
+  #traveler{
+    position:fixed;left:0;top:0;width:220px;height:220px;z-index:45;
+    pointer-events:none;opacity:0;visibility:hidden;will-change:transform;
+  }
+  /* phone hero: keep the h1 to its two intended lines
+     (ごはんの時間を決める。 = 11 glyphs must fit the content width) */
+  @media (max-width:640px){ h1{font-size:1.8rem;letter-spacing:.02em} }
+  #traveler svg{
+    position:relative;z-index:1;display:block;width:100%;height:100%;
+    filter:drop-shadow(0 14px 22px rgba(80,58,30,.28));
+  }
+  /* the berth's own static dial: hidden while the berth is just a
+     landing ring; shown (over the ring) while the clock is parked
+     here — an in-flow element, so it scrolls in perfect sync with
+     the page and cannot tremble the way a JS-tracked fixed
+     element does */
+  .berth .berth-clock{position:absolute;left:0;top:0;z-index:1;display:none}
+  .berth.docked .berth-clock{display:block}
+  .berth.docked .berth-dial{visibility:hidden}
+  /* the wall board behind the clock at the wall berth: as in the
+     app, the photographed wall goes AROUND the clock, never inside
+     the dial. The board lives in the berth (it stays with the
+     parked clock), is only 106% of the clock so it never reaches
+     the surrounding text, and its opacity is driven by wallness */
+  .wall-panel{
+    position:absolute;left:50%;top:50%;width:106%;height:106%;z-index:0;
+    transform:translate(-50%,-50%);border-radius:22px;opacity:0;
+    background:url("wall-texture.jpg") center/cover no-repeat;
+    box-shadow:0 18px 34px rgba(80,58,30,.35), inset 0 0 0 1px rgba(120,86,50,.35);
+  }
+  /* the wall-hung shadow is interpolated inline by the traveller JS,
+     driven by the same coefficient as the wall board behind it */
+  .traveler-bit{position:absolute;border-radius:2px;pointer-events:none;z-index:3}
+
+  /* ---------- v3 round 3: section dwell (read-and-pause) ----------
+     Four sections (#howto-steps / #wall / #features / #price) get a
+     sticky pause: the section itself is the (32vh taller) wrapper —
+     its id / data-name stay on it, so anchors and the scene spy keep
+     working — .dwell-in sticks under the fixed header while the
+     .dwell-space scrolls past, then the section releases and moves
+     on. Content layout inside .dwell-in is unchanged. The traveller
+     JS measures the live header height into --stick-top. */
+  :root{--stick-top:64px}
+  .dwell-in{position:sticky;top:var(--stick-top)}
+  .dwell-space{height:32vh}
+  /* scroll room below the footer, so the final leg's arrival into
+     the footer berth can always complete */
+  .foot-space{height:35vh}
+  @media (prefers-reduced-motion: reduce){
+    .dwell-in{position:static}
+    .dwell-space{display:none}
   }
 </style>
 </head>
@@ -276,38 +426,33 @@
 
 <main id="top">
 
-  <!-- ===== hero ===== -->
-  <section class="hero" data-name="はじめに">
-    <div class="wrap hero-grid">
-      <div>
-        <div class="app-line rv">
+  <!-- ===== journey: hero -> mawasu -> demo (v2 phase 1) ===== -->
+  <section class="journey" id="journey" data-name="はじめに">
+    <span class="howto-anchor" id="howto" aria-hidden="true"></span>
+    <div class="mawasu-marker" id="mawasuMarker" aria-hidden="true"></div>
+    <div class="journey-stage" id="journeyStage">
+      <div class="stage-inner">
+        <div class="hero-copy">
+        <div class="app-line">
           <img src="icon-256.png" alt="アプリアイコン">
           <span class="app-name">子供にご飯を食べさせるための時計（iPad / iPhone、iOS 17以降）</span>
         </div>
-        <h1 class="rv d1">針を回して、<br>ごはんの時間を決める。</h1>
-        <p class="lead rv d2">時計の針を指で回すだけでタイマーになる、アナログ時計アプリです。「あと何分？」を、終わりの場所に残る色の針と「設定・残り」の数字で見せます。終わる時間になると、時計が粒になって飛び散る演出が流れます。</p>
-        <div class="cta-row rv d2">
+        <h1>針を回して、<br>ごはんの時間を決める。</h1>
+        <p class="lead">針を指で回すだけで、タイマーになる時計です。</p>
+        <div class="cta-row">
           <a class="btn" href="#howto">使い方を見る</a>
           <a class="btn ghost" href="#faq">よくある質問へ</a>
         </div>
-        <p class="scroll-cue rv d2"><a href="#howto">SCROLL <span class="arr">↓</span></a></p>
-      </div>
-      <div class="wood-panel rv d1">
-        <svg class="clock-live" id="liveClock" width="252" height="252" viewBox="0 0 1000 1000" role="img" aria-label="いまの時刻を示す時計"></svg>
-        <p style="margin:12px 0 0;font-size:.82rem;color:#5D4630">この時計は、いまの時刻で動いています</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== howto / demo ===== -->
-  <section class="block" id="howto" data-name="使い方">
-    <div class="narrow">
-      <p class="kicker rv">使い方</p>
-      <h2 class="rv">まず、針を回してみてください</h2>
-      <p class="rv">長針を時計回りに回すと分単位、秒針を回すと秒単位でタイマーが始まります。タイマーは2つまで同時に置けます。下の時計は、このページで試せる練習用です。</p>
-
-      <div class="demo-card rv" id="demoCard">
+        <p class="scroll-cue"><a href="#howto">SCROLL <span class="arr">↓</span></a></p>
+        </div>
+        <div class="mawasu-copy" aria-hidden="true">
+          <p class="mawasu-big">長針を、回す。</p>
+          <p class="mawasu-sub">回した分が、そのままタイマーになります。<br>回している間、元の場所には薄い針が残ります。</p>
+        </div>
+      <div class="demo-card" id="demoCard">
+        <div class="card-chrome" aria-hidden="true"></div>
         <div class="demo-stage" id="demoStage">
+          <div class="dial-shadow" aria-hidden="true"></div>
           <div class="pill pill0" id="pill0" data-slot="0" hidden><svg class="ring" aria-hidden="true"><path class="ring-frame" fill="none"/><path class="ring-base" fill="none"/><path class="ring-rem" fill="none"/></svg><span class="pill-text"></span></div>
           <div class="pill pill1" id="pill1" data-slot="1" hidden><svg class="ring" aria-hidden="true"><path class="ring-frame" fill="none"/><path class="ring-base" fill="none"/><path class="ring-rem" fill="none"/></svg><span class="pill-text"></span></div>
           <div class="dial-wrap" id="dialWrap" tabindex="0" role="slider" aria-label="練習用タイマー。長針か秒針をつかんで回すとタイマーを置けます。矢印キーでも1分ずつ置けます" aria-valuemin="0" aria-valuemax="720" aria-valuenow="0" aria-valuetext="タイマーはありません">
@@ -324,40 +469,74 @@
         </div>
         <div class="demo-side">
           <p class="demo-read" id="demoStatus">長針を回してみてください</p>
-          <p>長針をつかんで時計回りに回した分が、そのままタイマーになります。離すと、終わりの場所に半透明の色の針が残ります。</p>
-          <p>秒針なら秒単位（アプリでは有料機能）。タイマーは2つまで。表示のふちを触ると色が変わり、真ん中を触ると消す確認が出ます。</p>
+          <p>回した分が、そのままタイマーになります。離すと、終わりの場所に薄い色の針が残ります。</p>
+          <p style="margin:14px 0 4px"><span class="pill-sample" aria-hidden="true">設定 10分　残り 09:58</span></p>
           <p class="demo-note" id="demoMsg">お試し用のデモです。時間の進み方だけを早回しにしています。</p>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== howto: steps (v2) ===== -->
+  <section class="block dwell" id="howto-steps" data-name="使い方" style="padding-top:8px">
+    <div class="dwell-in">
+    <div class="narrow">
+      <div class="berth-head">
+        <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg><svg class="berth-clock" viewBox="0 0 1000 1000"></svg></div>
+        <div class="berth-head-copy">
+          <p class="kicker rv">使い方</p>
+          <h2 class="rv">まず、針を回してみてください</h2>
         </div>
       </div>
 
       <div class="steps">
         <div class="step rv"><span class="num">1</span><h3>針をつまんで回す</h3><p>長針で「分」、秒針で「秒」。メニューはありません。</p></div>
         <div class="step rv d1"><span class="num">2</span><h3>色の針が「おわり」の場所</h3><p>色の針と「設定・残り」の表示で、あと何分かを見せます。</p></div>
-        <div class="step rv d2"><span class="num">3</span><h3>終わると粒子の演出</h3><p>時間内に食事が終わらなければ、その家庭は崩壊します（家庭によります）。だから時間になると、時計の世界も崩壊して、時計が粒になって崩れ落ちます。下の映像が実際のアプリの動きです。</p></div>
+        <div class="step rv d2"><span class="num">3</span><h3>終わると粒子の演出</h3><p>時間内に食事が終わらなければ、その家庭は崩壊します（家庭によります）。だから時計も、粒になって崩れ落ちます。</p></div>
+      </div>
+
+      <div class="pill-band rv">
+        <span class="pill-sample" aria-hidden="true">設定 10分　残り 09:58</span>
+        <span class="color-dots" aria-hidden="true"><i style="background:#0A84FF"></i><i style="background:#50C878"></i><i style="background:#FF9F0A"></i><i style="background:#FF375F"></i><i style="background:#BF5AF2"></i><i style="background:#FF453A"></i><i style="background:#FFD60A"></i><i style="background:#64D2FF"></i></span>
+        <p>縁をタップすると色が変わります。中央をタップすると、消す確認が出ます。タイマーは2つまで。</p>
       </div>
 
       <figure class="finale-fig rv">
         <video class="finale-video" src="finale.mp4" poster="finale-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="タイマーが終わり、時計が粒になって飛び散る、実際のアプリの映像"></video>
         <figcaption>タイマーが終わる瞬間（実際のアプリの映像）</figcaption>
       </figure>
+      <div class="finale-stills rv">
+        <figure><img src="finale-still-1.jpg" alt="タイマーが終わる直前の時計" loading="lazy"><figcaption>終わる前</figcaption></figure>
+        <figure><img src="finale-still-2.jpg" alt="粒になって崩れる途中の時計" loading="lazy"><figcaption>崩れる途中</figcaption></figure>
+        <figure><img src="finale-still-3.jpg" alt="崩れたあとに残った粒" loading="lazy"><figcaption>崩れたあと</figcaption></figure>
+      </div>
 
       <div class="card rv" style="margin-top:26px">
         <h3>時刻を進める</h3>
-        <p style="margin:0">設定→「時刻を進める」で、表示だけを先に進められます。「針がここまで来たら、ごはん」という見せ方ができます。<strong>端末の時刻は変わりません</strong>。</p>
+        <p style="margin:0">設定→「時刻を進める」で、表示だけを先に進められます。端末の時刻は変わりません。</p>
       </div>
     </div>
+    </div>
+    <div class="dwell-space" aria-hidden="true"></div>
   </section>
 
-  <!-- ===== wall ===== -->
-  <section class="block" id="wall" data-name="壁掛け" style="padding-top:20px">
+    <!-- ===== wall ===== -->
+  <section class="block dwell" id="wall" data-name="壁掛け" style="padding-top:20px">
+    <div class="dwell-in">
     <div class="wrap">
       <div class="wall-band rv">
         <div class="wall-grid">
           <div>
-            <p class="kicker">壁掛け時計にする</p>
-            <h2>壁を撮ると、時計が壁になじみます</h2>
-            <p>設定→「壁の背景」で貼り付ける壁を撮影すると、時計の外側に同じ壁の写真が出て、壁と一体化したように見えます。「壁掛け時に0時を真上に」をオンにすると、端末が少し傾いても、センサーが読み取って12時が物理的な真上を向き続けます。</p>
-            <p style="margin-bottom:0">撮影した写真は<strong>端末の中にだけ保存され、外部に送信されることはありません</strong>。いつでも設定から削除できます。</p>
+            <div class="berth-head">
+              <div class="berth" data-berth aria-hidden="true"><div class="wall-panel" aria-hidden="true"></div><svg class="berth-dial" viewBox="0 0 1000 1000"></svg><svg class="berth-clock" viewBox="0 0 1000 1000"></svg></div>
+              <div class="berth-head-copy">
+                <p class="kicker">壁掛け時計にする</p>
+                <h2>壁を撮ると、時計が壁になじみます</h2>
+              </div>
+            </div>
+            <p>設定→「壁の背景」で壁を撮影すると、時計の外側に同じ壁の写真が出て、一体化したように見えます。端末が傾いても、12時は真上を保ちます。</p>
+            <p style="margin-bottom:0">撮影した写真は端末の中にだけ保存され、外部に送信されることはありません。いつでも設定から削除できます。</p>
             <div class="upright-demo" aria-hidden="true">
               <figure>
                 <svg width="104" height="104" viewBox="0 0 100 100"><g transform="rotate(14 50 50)"><circle cx="50" cy="50" r="46" fill="#FFFCF6" stroke="#A9835A" stroke-width="4"/><g font-size="13" font-family="sans-serif" fill="#2E2A24" text-anchor="middle"><text x="50" y="19">12</text><text x="50" y="90">6</text><text x="14" y="55">9</text><text x="86" y="55">3</text></g></g></svg>
@@ -369,85 +548,105 @@
               </figure>
             </div>
           </div>
-          <figure class="wall-shot">
-            <img src="shot-04-wall.jpg" alt="木目の壁を背景にして、時計が壁になじんでいる画面" loading="lazy">
-            <figcaption>壁の写真を背景にした表示</figcaption>
-          </figure>
+          <div class="wall-side">
+            <figure class="wall-shot">
+              <img src="shot-04-wall.jpg" alt="木目の壁を背景にして、時計が壁になじんでいる画面" loading="lazy">
+              <figcaption>壁の写真を背景にした表示</figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </div>
+    </div>
+    <div class="dwell-space" aria-hidden="true"></div>
   </section>
 
   <!-- ===== features ===== -->
-  <section class="block" id="features" data-name="機能" style="padding-top:24px">
+  <section class="block dwell" id="features" data-name="機能" style="padding-top:24px">
+    <div class="dwell-in">
     <div class="wrap">
       <p class="kicker rv">機能</p>
       <h2 class="rv">食卓に合わせて、表示を変えられます</h2>
       <div class="feat-grid">
         <article class="feat rv">
           <img src="shot-08-two-timers.jpg" alt="2本のタイマーを同時にセットし、それぞれの色の針と表示が出ている画面" loading="lazy">
-          <div class="txt"><h3>タイマーは2本まで</h3><p>長針と秒針で別々のタイマーを置けます。終わりの場所に残る色の針と、「設定・残り」の表示で見せます。</p></div>
+          <div class="txt"><h3>タイマーは2本まで</h3><p>長針と秒針で、別々のタイマーを置けます。</p></div>
         </article>
         <article class="feat rv d1">
           <img src="shot-03-hourglass.jpg" alt="砂時計で残り時間を表示している画面" loading="lazy">
-          <div class="txt"><h3>砂時計表示</h3><p>残り時間の見せ方は、「設定・残り」のデジタル表示、または砂時計から選べます。</p></div>
+          <div class="txt"><h3>砂時計表示<span class="paid-badge">有料</span></h3><p>残り時間の見せ方は、デジタル表示と砂時計から選べます。</p></div>
         </article>
         <article class="feat rv">
           <img src="shot-06-afternoon-digital.jpg" alt="午後を13から24で表示し、デジタル時計も置いた画面" loading="lazy">
-          <div class="txt"><h3>午後の13〜24表示と、置けるデジタル時計</h3><p>午後を13〜24で表示する学習モード。デジタル時計は好きな場所へドラッグして置けます。</p></div>
+          <div class="txt"><h3>午後の13〜24表示と、置けるデジタル時計<span class="paid-badge">有料</span></h3><p>午後の学習モード（13〜24表示）。デジタル時計は好きな場所へドラッグして置けます。</p></div>
         </article>
         <article class="feat rv d1">
           <img src="shot-05-dark.jpg" alt="暗い色合いで表示した時計の画面" loading="lazy">
-          <div class="txt"><h3>ダークな外観</h3><p>部屋の明るさに合わせて、落ち着いた色合いの表示にもできます。</p></div>
+          <div class="txt"><h3>ダークな外観</h3><p>部屋の明るさに合わせて、落ち着いた色合いにもできます。</p></div>
         </article>
         <article class="feat wide rv">
-          <video class="feat-video" src="finale.mp4" poster="finale-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="タイマーが終わり、時計が粒になって飛び散る、実際のアプリの映像"></video>
-          <div class="txt"><h3>終わりは、粒子のフィナーレ</h3><p>時間内に子供の食事が終わらないことは、その家庭の崩壊を意味します（家庭によります）。だから「時間切れ」は、世界の終わりとして描きました。時間が来ると、時計も粒になって崩れ落ちます。</p></div>
+          <div class="finale-flex">
+            <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg><svg class="berth-clock" viewBox="0 0 1000 1000"></svg></div>
+            <video class="feat-video" src="finale.mp4" poster="finale-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="タイマーが終わり、時計が粒になって飛び散る、実際のアプリの映像"></video>
+          </div>
+          <div class="txt"><h3>終わりは、粒子のフィナーレ</h3><p>時間内に子供の食事が終わらないことは、その家庭の崩壊を意味します（家庭によります）。「時間切れ」は、世界の終わりとして描きました。</p></div>
         </article>
       </div>
     </div>
+    </div>
+    <div class="dwell-space" aria-hidden="true"></div>
   </section>
 
   <!-- ===== price ===== -->
-  <section class="block" id="price" data-name="料金" style="padding-top:8px">
+  <section class="block dwell" id="price" data-name="料金" style="padding-top:8px">
+    <div class="dwell-in">
     <div class="narrow">
-      <p class="kicker rv">料金</p>
-      <h2 class="rv">無料で始めて、気に入ったら買い切り</h2>
-      <p class="rv">ダウンロードは無料です。初回起動から<strong>14日間は全機能をお試し</strong>いただけます。期間が終わっても、時計表示・壁の背景・タイマー1本などの無料機能はそのまま使えます。全機能のアンロックは<strong>¥800の買い切り</strong>（非消耗型のアプリ内課金）で、サブスクリプションはありません。</p>
-      <div class="badges rv">
-        <span class="badge">14日間 全機能トライアル</span>
-        <span class="badge">¥800 買い切り</span>
-        <span class="badge">広告なし</span>
-        <span class="badge">通信なし・データ収集なし</span>
+      <div class="price-flex">
+        <div class="price-copy">
+          <p class="kicker rv">料金</p>
+          <h2 class="rv">無料で始めて、気に入ったら買い切り</h2>
+          <p class="rv">ダウンロードは無料。初回起動から14日間は全機能をお試しいただけます。期間が終わっても、無料機能はそのまま使えます。</p>
+          <div class="badges rv">
+            <span class="badge">14日間 全機能トライアル</span>
+            <span class="badge">¥800 買い切り</span>
+            <span class="badge">広告なし</span>
+            <span class="badge">通信なし・データ収集なし</span>
+          </div>
+          <p class="paid-line rv">有料機能：2本目のタイマー、秒針タイマー、砂時計表示、表示時刻を進める、13〜24表示、秒針のスタイル</p>
+        </div>
+        <div class="berth" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg><svg class="berth-clock" viewBox="0 0 1000 1000"></svg></div>
       </div>
     </div>
+    </div>
+    <div class="dwell-space" aria-hidden="true"></div>
   </section>
 
   <!-- ===== faq ===== -->
   <section class="block" id="faq" data-name="よくある質問" style="padding-top:8px">
     <div class="narrow">
+      <div class="berth berth-faq" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg><svg class="berth-clock" viewBox="0 0 1000 1000"></svg></div>
       <p class="kicker rv">サポート案内</p>
       <h2 class="rv">よくある質問</h2>
-      <div class="faq-item rv">
-        <h3>Q. データは収集されますか？</h3>
-        <p>A. いいえ。本アプリは通信を行わず、写真や設定は端末内にのみ保存されます。広告やアクセス解析の仕組みもありません。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
-      </div>
-      <div class="faq-item rv">
-        <h3>Q. 使っている途中で画面が消えてしまいます</h3>
+      <details class="faq-item rv">
+        <summary>Q. データは収集されますか？</summary>
+        <p>A. いいえ。通信を行わず、写真や設定は端末内にのみ保存されます。広告やアクセス解析もありません。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+      </details>
+      <details class="faq-item rv">
+        <summary>Q. 使っている途中で画面が消えてしまいます</summary>
         <p>A. 表示開始から1時間は自動で消灯しない設定になっています。それ以降は端末の自動ロック設定に従います。長時間の壁掛け利用では、端末の設定で自動ロックを「なし」にしてください。</p>
-      </div>
-      <div class="faq-item rv">
-        <h3>Q. 壁の写真が送信されることはありますか？</h3>
+      </details>
+      <details class="faq-item rv">
+        <summary>Q. 壁の写真が送信されることはありますか？</summary>
         <p>A. ありません。壁の写真は端末内にのみ保存され、外部に送信されることはありません。アプリの設定からいつでも削除できます。</p>
-      </div>
-      <div class="faq-item rv">
-        <h3>Q. 「時刻を進める」を使うと、iPadの時計が狂いませんか？</h3>
+      </details>
+      <details class="faq-item rv">
+        <summary>Q. 「時刻を進める」を使うと、iPadの時計が狂いませんか？</summary>
         <p>A. 狂いません。変わるのはこのアプリの表示だけです。端末の時刻設定には一切触れません。</p>
-      </div>
-      <div class="faq-item rv">
-        <h3>Q. 料金はかかりますか？</h3>
+      </details>
+      <details class="faq-item rv">
+        <summary>Q. 料金はかかりますか？</summary>
         <p>A. ダウンロードは無料で、14日間は全機能をお試しいただけます。その後も無料機能は使い続けられます。全機能のアンロックは¥800の買い切りです（<a href="#price">料金の説明</a>）。</p>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -457,7 +656,7 @@
       <div class="card contact-card rv">
         <p class="kicker" style="letter-spacing:.4em">お問い合わせ</p>
         <h2 style="margin-bottom:10px">困ったときは、メールでどうぞ</h2>
-        <p>不具合のご報告・ご要望は、開発者（ナリユキPdM）までご連絡ください。端末の種類と iOS のバージョンを添えていただくと、確認が早くなります。</p>
+        <p>不具合のご報告・ご要望は、開発者（ナリユキPdM）までご連絡ください。端末の種類とiOSのバージョンを添えていただくと、確認が早くなります。</p>
         <p class="mail-big"><a href="mailto:nariyukipdm@gmail.com">nariyukipdm@gmail.com</a></p>
         <p style="margin:18px 0 0"><a class="btn" href="mailto:nariyukipdm@gmail.com">メールで問い合わせる</a></p>
       </div>
@@ -466,22 +665,15 @@
 </main>
 
 <footer>
+  <div class="berth berth-footer" data-berth aria-hidden="true"><svg class="berth-dial" viewBox="0 0 1000 1000"></svg><svg class="berth-clock" viewBox="0 0 1000 1000"></svg></div>
   <p style="margin:0 0 6px"><a href="privacy.html">プライバシーポリシー</a>　｜　<a href="#top">上へ戻る ↑</a></p>
   <p style="margin:0">© 2026 ナリユキPdM — 子供にご飯を食べさせるための時計</p>
 </footer>
+<div class="foot-space" aria-hidden="true"></div>
 
-<!-- floating guide dial (PC) -->
-<div class="guide-float" aria-hidden="true">
-  <svg class="gf-dial" width="104" height="104" viewBox="0 0 100 100">
-    <circle cx="50" cy="50" r="48" fill="#B98F5F"/>
-    <circle cx="50" cy="50" r="43" fill="#FFFCF6"/>
-    <circle id="fArc" cx="50" cy="50" r="37" fill="none" stroke="#D97443" stroke-width="4.5"
-      stroke-linecap="round" stroke-dasharray="0 232.5" transform="rotate(-90 50 50)"/>
-    <g id="fHand"><line x1="50" y1="50" x2="50" y2="20" stroke="#2E2A24" stroke-width="3.4" stroke-linecap="round"/></g>
-    <circle cx="50" cy="50" r="3.4" fill="#2E2A24"/>
-  </svg>
-  <div class="gf-label" id="fLabel">はじめに</div>
-</div>
+<!-- v3: the travelling clock (flies between the berths) -->
+<div id="traveler" aria-hidden="true"><svg id="travelerDial" viewBox="0 0 1000 1000"></svg></div>
+
 
 <script>
 (function(){
@@ -592,17 +784,6 @@
     return { sec:s*6, min:(d.getMinutes()+s/60)*6, hour:((d.getHours()%12)+d.getMinutes()/60)*30 };
   }
 
-  /* ---- live clock (hero) ---- */
-  var heroDial = buildDial(document.getElementById("liveClock"));
-  function tickHero(){
-    var a = anglesFor(Date.now());
-    setRot(heroDial.hour, a.hour);
-    setRot(heroDial.min, a.min);
-    setRot(heroDial.sec, a.sec);
-  }
-  tickHero();
-  if(!reduced) setInterval(tickHero, 1000);
-
   /* ---- scenes + reveals ---- */
   var label = document.getElementById("gLabel"), fLabel = document.getElementById("fLabel");
   var io = new IntersectionObserver(function(es){
@@ -691,12 +872,14 @@
     svg.querySelector(".ring-base").setAttribute("stroke", color);
     svg.querySelector(".ring-rem").setAttribute("stroke", color);
   }
+  var ringSize = [{w:0, h:0}, {w:0, h:0}];
   function buildRing(slot){
     var pill = pills[slot];
     var w = pill.offsetWidth, h = pill.offsetHeight;
+    ringSize[slot].w = w; ringSize[slot].h = h;
     var svg = pill.querySelector(".ring");
-    svg.setAttribute("viewBox", "0 0 " + (w+4) + " " + (h+4));
-    var d = capsulePath(w+4, h+4, 2);
+    svg.setAttribute("viewBox", "0 0 " + (w+2) + " " + (h+2));
+    var d = capsulePath(w+2, h+2, 1.5);
     var frame = svg.querySelector(".ring-frame");
     frame.setAttribute("d", d);
     frame.setAttribute("stroke", PAL.frameLine);
@@ -717,6 +900,20 @@
     var F = Math.max(0, Math.min(1, frac)) * 100;
     var rem = pills[slot].querySelector(".ring-rem");
     rem.setAttribute("stroke-dasharray", "0 " + (100-F).toFixed(1) + " " + F.toFixed(1) + " 100");
+  }
+  /* The pill's width follows its countdown text (e.g. 1:00:00 -> 59:59);
+     rebuild the ring whenever the pill's box actually changes so the
+     outline always coincides with the pill's border. */
+  if(window.ResizeObserver){
+    for(var ri = 0; ri < 2; ri++){
+      (function(slot){
+        new ResizeObserver(function(){
+          var p = pills[slot];
+          if(p.hidden) return;
+          if(p.offsetWidth !== ringSize[slot].w || p.offsetHeight !== ringSize[slot].h) buildRing(slot);
+        }).observe(pills[slot]);
+      })(ri);
+    }
   }
   function paintGhost(slot){
     var color = PRESET_NAMES[slotColor[slot]];
@@ -757,6 +954,7 @@
     if(!ghosts[slot]) makeGhosts(slot);
     paintGhost(slot);
     pills[slot].hidden = false;
+    pillText[slot].textContent = "設定 " + durText(totalSec) + "　残り " + cdText(totalSec);
     buildRing(slot);
     setStatus("タイマー中です（早回し）");
     ariaUpdate();
@@ -939,11 +1137,150 @@
     });
   })();
 
+  /* ---- v2: the journey (one clock: hero -> travel -> demo) ---- */
+  var journeyEl = document.getElementById("journey"),
+      jStage = document.getElementById("journeyStage"),
+      mawasuMarker = document.getElementById("mawasuMarker");
+  var journeyMode = false, showMode = true, userTouched = false;
+  var handOff = 0, journeyHandDeg = 0, reenactStarted = false, scriptObj = null;
+
+  function landStage(){
+    if(jStage && !jStage.classList.contains("landed")){
+      jStage.classList.add("landed");
+      if(dialWrap) dialWrap.tabIndex = 0;
+    }
+  }
+  function measureTravel(){
+    if(!journeyMode || !jStage) return;
+    stage.classList.add("measuring");
+    var sr = jStage.getBoundingClientRect();
+    var tr = stage.getBoundingClientRect();
+    var dw = dialWrap.getBoundingClientRect().width || 288;
+    stage.classList.remove("measuring");
+    var homeCx = tr.left - sr.left + tr.width/2;
+    var homeCy = tr.top - sr.top + tr.height/2;
+    var W = jStage.clientWidth, H = jStage.clientHeight, cx, cy, dial;
+    var copyEl = jStage.querySelector(".hero-copy");
+    var cr = copyEl ? copyEl.getBoundingClientRect() : null;
+    if(W >= 861){
+      cx = W*0.60; cy = H*0.52; dial = Math.min(500, H*0.50, W*0.42);
+      if(cr){
+        /* keep the hero clock fully clear of the headline copy */
+        var need = (cr.right - sr.left) + 24 + dial/2;
+        if(need > cx) cx = need;
+        if(cx + dial/2 > W - 12) dial = Math.max(120, 2*(W - 12 - cx));
+      }
+    } else {
+      cx = W*0.5; cy = H*0.70; dial = Math.min(W*0.80, H*0.34, 460);
+      if(cr){
+        var topLim = (cr.bottom - sr.top) + 16;
+        var avail = H - 12 - topLim;
+        if(dial > avail) dial = Math.max(120, avail);
+        if(topLim + dial/2 > cy) cy = topLim + dial/2;
+      }
+    }
+    var ts = dial / dw;
+    stage.style.setProperty("--tx", (cx - homeCx).toFixed(1) + "px");
+    stage.style.setProperty("--ty", (cy - homeCy).toFixed(1) + "px");
+    stage.style.setProperty("--ts", ts.toFixed(3));
+  }
+  function journeyScroll(){
+    if(!journeyMode || !journeyEl) return;
+    var vh = window.innerHeight;
+    var rect = journeyEl.getBoundingClientRect();
+    var total = journeyEl.offsetHeight - vh;
+    if(total <= 0) return;
+    var s = Math.min(total, Math.max(0, -rect.top));
+    var cover = (s + vh) / (journeyEl.offsetHeight + vh);
+    journeyHandDeg = Math.max(0, Math.min(1, (cover - 0.25) / 0.50)) * 360;
+    if(cover >= 0.695) landStage();
+    if(rect.top <= 1 && rect.bottom >= vh - 1){
+      var nm = cover < 0.42 ? "はじめに" : (cover < 0.66 ? "回す" : "使い方");
+      if(label && label.textContent !== nm) label.textContent = nm;
+      if(fLabel && fLabel.textContent !== nm) fLabel.textContent = nm;
+    }
+  }
+  var journeyTicking = false;
+  window.addEventListener("scroll", function(){
+    if(!journeyTicking){
+      journeyTicking = true;
+      requestAnimationFrame(function(){ journeyScroll(); journeyTicking = false; });
+    }
+  }, {passive:true});
+  function probeJourney(){
+    if(!journeyEl || !jStage){ journeyMode = false; return; }
+    journeyMode = !reduced && window.getComputedStyle(jStage).position === "sticky";
+    if(journeyMode){
+      if(dialWrap && !jStage.classList.contains("landed")) dialWrap.tabIndex = -1;
+      measureTravel();
+    }
+  }
+  var resizeTick = false;
+  window.addEventListener("resize", function(){
+    if(!resizeTick){
+      resizeTick = true;
+      requestAnimationFrame(function(){ probeJourney(); journeyScroll(); resizeTick = false; });
+    }
+  });
+  /* Scripted drag re-enactment: drives the demo's own drag state machine.
+     The origin shadow, the +N label, the snap and the timer are all the
+     demo's real behaviour; a user pointerdown takes over instantly. */
+  function playReenact(){
+    if(reenactStarted) return;
+    reenactStarted = true;
+    if(!journeyMode || reduced) return;
+    showMode = false;
+    setTimeout(function(){
+      if(userTouched || drag || timers[0] || timers[1]) return;
+      var ang = anglesFor(vNow());
+      scriptObj = { kind:"min", last:ang.min, pending:0, startMinA:ang.min, startSecA:ang.sec, id:-1, lastInt:-1 };
+      drag = scriptObj;
+      demo.shadowMin.outer.style.display = "";
+      setRot(demo.shadowMin, ang.min);
+      plusLabel.hidden = false;
+      setStatus("回した分がタイマーになります");
+      var t0 = performance.now(), dur = 1800;
+      function step(ts){
+        if(drag !== scriptObj){ scriptObj = null; return; }
+        var p = Math.min(1, (ts - t0) / dur);
+        var e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2;
+        scriptObj.pending = 5 * e;
+        if(p < 1){ requestAnimationFrame(step); }
+        else {
+          var o = scriptObj; scriptObj = null;
+          if(drag === o){ endDrag(true); landStage(); }
+        }
+      }
+      requestAnimationFrame(step);
+    }, 550);
+  }
+  if(mawasuMarker && "IntersectionObserver" in window){
+    var mio = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ mio.disconnect(); playReenact(); } });
+    }, {rootMargin:"-45% 0px -45% 0px"});
+    mio.observe(mawasuMarker);
+  }
+  demoSvg.addEventListener("pointerdown", function(){
+    userTouched = true;
+    if(scriptObj && drag === scriptObj) endDrag(false);
+  }, true);
+  dialWrap.addEventListener("keydown", function(){ userTouched = true; }, true);
+  probeJourney();
+  window.addEventListener("load", function(){ probeJourney(); journeyScroll(); });
+  journeyScroll();
+
   /* ---- render loop ---- */
   function frame(){
     var v = vNow();
     var ang = anglesFor(v);
-    var minA = ang.min, secA = ang.sec;
+    /* v2: while the clock is "on show" in the journey (untouched, no timers
+       running), its hands also advance with scroll progress. This is a display
+       offset only — timer maths (endV) is never touched. */
+    var handTarget = (showMode && !userTouched && !drag && !timers[0] && !timers[1]) ? journeyHandDeg : 0;
+    handOff += (handTarget - handOff) * 0.09;
+    if(handTarget === 0 && Math.abs(handOff) < 0.02) handOff = 0;
+    var minA = ang.min + handOff, secA = ang.sec;
+    var hourA = ang.hour + handOff/12;
     if(drag){
       if(drag.kind === "min") minA = drag.startMinA + drag.pending*6;
       else secA = drag.startSecA + drag.pending*6;
@@ -965,7 +1302,7 @@
         }
       }
     }
-    setRot(demo.hour, ang.hour);
+    setRot(demo.hour, hourA);
     setRot(demo.min, minA);
     setRot(demo.sec, secA);
     for(var i=0;i<2;i++){
@@ -985,6 +1322,491 @@
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  /* ---- v3: berth flights (a second clock travels the page) ----
+     A display-only clone of the dial leaves the demo once the
+     reader scrolls on, and travels from berth to berth (steps ->
+     wall -> features -> price -> faq -> footer). Every frame,
+     every dock is measured live with getBoundingClientRect, so
+     the traveller lands on the berths' real on-screen positions —
+     including while a section is held by the sticky dwell and
+     while the demo is still moving inside the journey stage. Each
+     leg blends a departure (dock i -> a guide point parked in a
+     bottom corner of the screen; the corner alternates left/right
+     per leg) with an arrival (guide point -> dock i+1); both
+     follow the live rects, so scrolling up runs them in reverse.
+     Departures and arrivals are slow (0.55vh / 0.35vh of
+     scrolling, smoothstep-eased). In flight the clock shrinks
+     (further on narrow screens), turns translucent, and its hands
+     spin with the scroll (one full minute-hand turn per 1.2vh
+     scrolled, the hour hand at 1/12 of that); across an arrival
+     the accumulated rotation folds away (handFold), so the hands
+     read the exact current time at the moment of handover.
+     While fully docked at a berth, the traveller is NOT what is
+     shown: the berth's own static dial — an ordinary in-flow
+     element — takes over with its hands set to the current time,
+     and the traveller hides. A position:fixed element tracked by
+     JS can never stay in perfect sync with the browser's scroll
+     compositing (it trembled by a frame however carefully it was
+     frozen); an in-flow dial scrolls with the page itself and
+     cannot tremble at all. The handover is exact: at arrival the
+     swap happens within a pixel of the berth, at departure on
+     the frame where the traveller reappears exactly on the
+     berth, and the parked berth dial's hands are refreshed every
+     20 seconds. The demo dock needs no static dial — the real
+     demo dial is the display there, and the traveller just rests
+     on it under its fade, as before. Arrivals are driven purely
+     by the next berth's live rect — a berth frozen by the dwell
+     can neither start nor complete one — and the applied centre
+     is clamped inside the viewport, so the travelling clock can
+     neither fall away nor vanish mid-page; a 35vh spacer below
+     the footer (plus a bottom clamp) guarantees the last berth
+     is reachable. At the wall berth the dial keeps its plain
+     white face: a wall board (wall-texture.jpg) sits in the
+     berth BEHIND the clock and fades with wallness, so the clock
+     looks hung on the photographed wall — the app puts the photo
+     around the clock, never inside it. Nothing here touches the
+     journey/demo code above. */
+  (function(){
+    var traveler = document.getElementById("traveler");
+    var tSvg = document.getElementById("travelerDial");
+    if(!traveler || !tSvg) return;
+    var BASE = 220;
+    var berthEls = Array.prototype.slice.call(document.querySelectorAll("[data-berth]"));
+    var dockEls = [dialWrap].concat(berthEls);
+    var ND = dockEls.length;
+    var WALL = 2;  /* dock order: demo0 steps1 wall2 features3 price4 faq5 footer6 */
+    var FEATURES = 3;
+    /* the wall board lives in the wall berth itself (it stays with
+       the parked clock); the traveller only drives its opacity —
+       through apply() in flight, and directly while handed over */
+    var wallPanelEl = (berthEls[WALL-1] && berthEls[WALL-1].querySelector(".wall-panel")) || null;
+    var berthClockEls = [], berthDials = [];
+    /* which static display currently owns the clock: -1 = the
+       traveller (airborne), 0 = the demo dial, >= 1 = that berth's
+       own static dial */
+    var dispDock = -1;
+    var WALL_SHADOW = "drop-shadow(0 5px 8px rgba(60,40,18,.5))";
+    var vh = window.innerHeight || 800;
+    var vw = window.innerWidth || 390;
+    var kF = 0.85;   /* in-flight size factor, set properly in measure() */
+    var active = false;
+    var tDial = null;
+    var finaleDone = false;
+    var lastMinute = -1;
+    /* flight hand offset: extra minute-hand degrees accumulated
+       from scrolling while airborne (the hour hand takes 1/12 of
+       it in renderHands). handFold is 0 in flight and eases to 1
+       across an arrival, folding the offset away so the hands
+       read the exact current time at the handover */
+    var dispOff = 0, handFold = 1;
+    /* the frozen snapshot while fully docked: {idx, x, y, size} */
+    var dockState = null;
+    /* dwell pins: pin[j] holds while dock j's rect Y is frozen by
+       the sticky dwell; pinThr[j] re-anchors that dock's departure
+       threshold just below where it froze */
+    var prevY = [], prevS = null, pin = [], pinThr = [];
+    var qpSm = [];
+    for(var i0=0;i0<ND;i0++){
+      prevY.push(null); pin.push(false); pinThr.push(0); qpSm.push(0);
+    }
+
+    /* the dwell's sticky offset: the live fixed-header height + 8px,
+       published as a CSS variable (the stylesheet's own fallback is
+       64px when JS never runs) */
+    function setStickTop(){
+      try{
+        var hdr = document.querySelector("header");
+        if(hdr){
+          var hh = hdr.getBoundingClientRect().height;
+          if(hh > 0) document.documentElement.style.setProperty("--stick-top", Math.round(hh + 8) + "px");
+        }
+      }catch(e){}
+    }
+    setStickTop();
+    window.addEventListener("resize", setStickTop);
+
+    /* live on-screen centre of a dock (viewport coordinates) */
+    function rectOf(el){
+      var r = el.getBoundingClientRect();
+      return { x:r.left + r.width/2, y:r.top + r.height/2, size:r.width };
+    }
+    function measure(){
+      vh = window.innerHeight || vh;
+      vw = window.innerWidth || vw;
+      kF = (vw <= 640) ? 0.58 : 0.85;
+      setStickTop();
+      for(var j=0;j<ND;j++){
+        if(!(rectOf(dockEls[j]).size > 0)) throw new Error("dock not measurable");
+      }
+    }
+    function renderHands(){
+      if(!tDial) return;
+      var ang = anglesFor(Date.now());
+      var off = dispOff * (1 - handFold);
+      setRot(tDial.hour, ang.hour + off/12);
+      setRot(tDial.min, ang.min + off);
+      setRot(tDial.sec, ang.sec);
+    }
+    function setHands(force){
+      if(!tDial) return;
+      var now = new Date();
+      var m = now.getHours()*60 + now.getMinutes();
+      if(!force && m === lastMinute) return;
+      lastMinute = m;
+      renderHands();
+    }
+    function buildTraveler(){
+      tDial = buildDial(tSvg);
+      setHands(true);
+    }
+    /* every berth carries its own static dial (built once, hidden
+       until the handover shows it) */
+    function buildBerthDials(){
+      berthEls.forEach(function(b, i){
+        var svg = b.querySelector(".berth-clock");
+        berthClockEls[i] = svg || null;
+        berthDials[i] = null;
+        if(!svg) return;
+        var dd = buildDial(svg);
+        berthDials[i] = dd;
+        var ang = anglesFor(Date.now());
+        setRot(dd.hour, ang.hour); setRot(dd.min, ang.min); setRot(dd.sec, ang.sec);
+      });
+    }
+    function syncBerthHands(j){
+      var dd = berthDials[j-1];
+      if(!dd) return;
+      var ang = anglesFor(Date.now());
+      setRot(dd.hour, ang.hour); setRot(dd.min, ang.min); setRot(dd.sec, ang.sec);
+    }
+    function berthDots(){
+      berthEls.forEach(function(b){
+        var svg = b.querySelector(".berth-dial");
+        if(!svg) return;
+        for(var m=0;m<12;m++){
+          var a = m*30*Math.PI/180;
+          svg.appendChild(svgEl("circle", {
+            cx:(500 + Math.sin(a)*412).toFixed(1), cy:(500 - Math.cos(a)*412).toFixed(1),
+            r:13, fill:"#A9835A", opacity:".75"
+          }));
+        }
+      });
+    }
+    function fallback(){
+      active = false;
+      traveler.style.display = "none";
+      berthEls.forEach(function(b){
+        var svg = b.querySelector(".berth-clock");
+        if(!svg) return;
+        while(svg.firstChild) svg.removeChild(svg.firstChild);
+        try{
+          var dd = buildDial(svg);
+          var ang = anglesFor(Date.now());
+          setRot(dd.hour, ang.hour); setRot(dd.min, ang.min); setRot(dd.sec, ang.sec);
+        }catch(e){}
+        b.classList.add("docked");
+      });
+      if(wallPanelEl) wallPanelEl.style.opacity = "1";
+    }
+    /* the finale collapse now plays on the features berth's own
+       static dial, after the handover: the grains are spawned
+       inside the berth (position:absolute), so they scroll with
+       the page like everything else there */
+    function collapseBerth(){
+      var host = berthEls[FEATURES-1];
+      var svg = berthClockEls[FEATURES-1];
+      if(!host) return;
+      var S = host.getBoundingClientRect().width || 200;
+      var colors = [PAL.ink, PAL.accent, PAL.frame, PAL.frameLine, PAL.glass, "#FFFFFF"];
+      if(svg && svg.animate){
+        svg.animate(
+          [{opacity:1},{opacity:.12, offset:.18},{opacity:.12, offset:.72},{opacity:1}],
+          {duration:2000, easing:"ease-in-out"}
+        );
+      }
+      for(var i=0;i<50;i++){
+        var b = document.createElement("div");
+        b.className = "traveler-bit";
+        var ang = Math.random()*Math.PI*2, rr = Math.sqrt(Math.random())*S*0.45;
+        var sz = 3 + Math.random()*6;
+        b.style.left = (S/2 + Math.sin(ang)*rr) + "px";
+        b.style.top = (S/2 - Math.cos(ang)*rr) + "px";
+        b.style.width = sz + "px"; b.style.height = sz + "px";
+        b.style.background = colors[i % colors.length];
+        host.appendChild(b);
+        var dx = (Math.random()-0.5)*S*0.59, dy = (Math.random()-0.35)*S*0.59;
+        var anim = b.animate([
+          {transform:"translate(0,0) rotate(0deg)", opacity:1},
+          {transform:"translate("+dx+"px,"+dy+"px) rotate("+(Math.random()*260-130)+"deg)", opacity:0}
+        ], {duration:1100 + Math.random()*700, easing:"cubic-bezier(.17,.67,.35,1)"});
+        (function(node, an){ an.onfinish = function(){ node.remove(); }; })(b, anim);
+      }
+    }
+    /* ---- the handover: parked at a berth, the berth's own
+       static dial is the display and the traveller hides ---- */
+    function showBerth(j, atRect){
+      if(dispDock === j) return;
+      clearBerth();
+      var b = berthEls[j-1];
+      if(b) b.classList.add("docked");
+      syncBerthHands(j);
+      if(berthClockEls[j-1]) berthClockEls[j-1].style.filter = (j === WALL) ? WALL_SHADOW : "";
+      /* one last placement, exact and invisible: the traveller's
+         final painted position is the berth itself, so the swap
+         to the berth's own dial has no jump at all */
+      if(atRect) apply(atRect.x, atRect.y, atRect.size, 0, (j === WALL ? 1 : 0), 0);
+      traveler.style.display = "none";
+      if(wallPanelEl) wallPanelEl.style.opacity = (j === WALL ? "1" : "0");
+      dispOff = 0; handFold = 1;
+      dispDock = j;
+      if(j === FEATURES && !finaleDone && !reduced){ finaleDone = true; collapseBerth(); }
+    }
+    function clearBerth(){
+      if(dispDock >= 1){
+        var b = berthEls[dispDock-1];
+        if(b) b.classList.remove("docked");
+        if(berthClockEls[dispDock-1]) berthClockEls[dispDock-1].style.filter = "";
+      }
+      dispDock = -1;
+    }
+    function showTraveler(){
+      if(traveler.style.display === "none") traveler.style.display = "";
+    }
+    function lerp(a, b, t){ return a + (b - a)*t; }
+    function clamp01(v){ return v < 0 ? 0 : (v > 1 ? 1 : v); }
+    function smooth(t){ return t*t*(3 - 2*t); }
+    /* departures linger a little: the first quarter of the raw
+       progress still counts as "at the berth". This dead-zone is
+       load-bearing — a berth the dwell froze inside the departure
+       zone (centre already past the 30% line) stays exactly docked
+       instead of leaning away and being called back */
+    function remapQ(q){ return clamp01((q - 0.25) / 0.75); }
+    function tiltFor(t, dx){
+      /* a gentle lean, only while actually moving between points */
+      return 3 * Math.sin(t*Math.PI) * (dx > 24 ? 1 : (dx < -24 ? -1 : 0));
+    }
+    /* the guide point for a leg: a bottom corner of the screen —
+       the corner alternates per leg (even legs right, odd legs
+       left), so the clock does not camp on one side — with the
+       shrunk clock kept fully inside the screen */
+    function guideFor(B, leg){
+      var gSize = B.size * kF;
+      var gy = Math.min(vh*0.80, vh - 12 - gSize/2);
+      gy = Math.max(gSize/2 + 8, gy);
+      var gx = (leg % 2 === 0) ? (vw - gSize/2 - 12) : (gSize/2 + 12);
+      return { x:gx, y:gy };
+    }
+    function apply(cx, vy, size, tilt, wall, op){
+      /* hard guard: a travelling clock's centre never leaves the
+         viewport (the berths it docks on are on-screen by
+         construction; this only trims fast-scroll overshoot) */
+      cx = Math.max(0, Math.min(vw, cx));
+      vy = Math.max(0, Math.min(vh, vy));
+      var k = size / BASE;
+      traveler.style.opacity = op.toFixed(3);
+      traveler.style.visibility = op <= 0 ? "hidden" : "visible";
+      traveler.style.transform =
+        "translate3d(" + (cx - BASE/2).toFixed(1) + "px," + (vy - BASE/2).toFixed(1) + "px,0)" +
+        " scale(" + k.toFixed(4) + ") rotate(" + tilt.toFixed(2) + "deg)";
+      /* the wall board behind the clock follows wallness; the dial
+         itself always keeps its plain white face */
+      if(wallPanelEl) wallPanelEl.style.opacity = wall.toFixed(3);
+      /* the wall-hung shadow (shorter, darker, tighter) follows the
+         same coefficient as the wall board */
+      var sy = 14 - 9*wall, sb = 22 - 14*wall, sa = 0.28 + 0.22*wall;
+      var sr = Math.round(80 - 20*wall), sg = Math.round(58 - 18*wall),
+          sl = Math.round(30 - 12*wall);
+      tSvg.style.filter = "drop-shadow(0 " + sy.toFixed(1) + "px " + sb.toFixed(1) +
+        "px rgba(" + sr + "," + sg + "," + sl + "," + sa.toFixed(3) + "))";
+    }
+    function update(){
+      if(!active) return;
+      var s = window.scrollY || window.pageYOffset || 0;
+      var j, V = [];
+      for(j=0;j<ND;j++) V.push(rectOf(dockEls[j]));
+      var dS = (prevS === null) ? 0 : Math.abs(s - prevS);
+      var dScr = (prevS === null) ? 0 : (s - prevS);
+      /* pin latches: a dock is pinned while its rect Y stays put
+         even though the page keeps scrolling (sticky dwell) */
+      for(j=0;j<ND;j++){
+        var dY = (prevY[j] === null) ? 99 : (V[j].y - prevY[j]);
+        if(prevS !== null && dS > 0.5 && Math.abs(dY) <= 0.5){
+          if(!pin[j]){
+            pin[j] = true;
+            pinThr[j] = Math.min(vh*0.30, V[j].y - 8);
+          }
+        }else if(Math.abs(dY) > 0.5){ pin[j] = false; }
+        prevY[j] = V[j].y;
+      }
+      /* raw departure / arrival progress from the live rects: a
+         departure runs over 0.55vh of the berth's rise past the 30%
+         line (a pinned berth re-anchors that line just below where
+         it froze, so it departs only after the dwell releases it);
+         an arrival runs over the last 0.35vh of the berth's approach
+         to the guide height. Arrivals are rect-driven only: a berth
+         frozen by the dwell can neither start nor complete one, so
+         a clock parked at the guide point is never dragged away */
+      var rawQ = [], rawR = [0];
+      for(j=0;j<ND;j++){
+        var thr = (pinThr[j] > 0) ? Math.min(pinThr[j], vh*0.30) : vh*0.30;
+        rawQ.push(clamp01((thr - V[j].y) / (vh*0.55)));
+      }
+      for(j=0;j<ND-1;j++){
+        rawR.push(clamp01((guideFor(V[j+1], j).y + 8 - V[j+1].y) / (vh*0.35)));
+      }
+      /* the page bottom: treat the final arrival as complete at
+         max scroll, so the footer berth is always reachable (the
+         35vh spacer below the footer makes this a backstop) */
+      var docH = Math.max(
+        document.documentElement ? (document.documentElement.scrollHeight || 0) : 0,
+        document.body ? (document.body.scrollHeight || 0) : 0);
+      var atBottom = (docH - vh > 0) && (s >= docH - vh - 2);
+      /* fade in as the demo rises toward its departure */
+      var op0 = clamp01((vh*0.42 - V[0].y) / (vh*0.12));
+      var done = false;
+      for(j=0;j<ND-1 && !done;j++){
+        var A = V[j], B = V[j+1], g = guideFor(B, j);
+        var r = rawR[j+1];
+        if(j === ND-2 && atBottom) r = 1;
+        if(r >= 1) continue;   /* arrived at dock j+1: check the next leg */
+        var qpT = remapQ(rawQ[j]);
+        if(qpT === 0 && r === 0 && qpSm[j] === 0){
+          if(j === 0){
+            /* docked on the demo: the real demo dial is the
+               display there; the traveller just rests on it under
+               the op0 fade, frozen on a snapshot of the demo (the
+               1.5px deadband absorbs sub-pixel rect noise) */
+            clearBerth(); showTraveler(); dispDock = 0;
+            handFold = 1; dispOff = 0;
+            if(!dockState || dockState.idx !== 0 ||
+               Math.abs(A.x - dockState.x) >= 1.5 ||
+               Math.abs(A.y - dockState.y) >= 1.5 ||
+               Math.abs(A.size - dockState.size) >= 1.5){
+              dockState = { idx:0, x:A.x, y:A.y, size:A.size };
+            }
+            apply(dockState.x, dockState.y, dockState.size, 0, 0, op0);
+          }else{
+            /* fully docked at berth j: hand over to the berth's
+               own static dial and hide the traveller — the parked
+               clock is then an ordinary in-flow element, in
+               perfect sync with the page, and cannot tremble */
+            showBerth(j, A);
+          }
+          done = true;
+          break;
+        }
+        if(dispDock === j && j >= 1 && r === 0 && qpSm[j] === 0){
+          /* departure swap frame: the departure is pending but
+             the traveller has not moved yet (qp still 0), so it
+             reappears exactly on the berth — same centre, same
+             size, hands at the current time — and the berth's
+             dial hands over in the same frame */
+          clearBerth(); showTraveler();
+          handFold = 0;
+          apply(A.x, A.y, A.size, 0, (j === WALL ? 1 : 0), op0);
+          renderHands();
+          done = true;
+          break;
+        }
+        dockState = null;
+        clearBerth(); showTraveler();
+        /* the departure is rate-limited by the scroll delta, so a
+           reversal mid-flight glides back instead of snapping;
+           smoothstep easing is applied on top for the blend */
+        var rate = dS / (vh*0.55);
+        if(qpSm[j] < qpT) qpSm[j] = Math.min(qpT, qpSm[j] + rate);
+        else if(qpSm[j] > qpT) qpSm[j] = Math.max(qpT, qpSm[j] - rate);
+        var qp = smooth(qpSm[j]);
+        var rE = smooth(r);
+        handFold = rE;
+        var depX = lerp(A.x, g.x, qp), depY = lerp(A.y, g.y, qp);
+        var depSize = lerp(A.size, B.size, qp) * (1 - qp*(1 - kF));
+        var depWall = (j === WALL ? 1 : 0) * (1 - qp);
+        var depTilt = tiltFor(qp, g.x - A.x);
+        /* the arrival takes over from wherever the departure blend
+           currently is (the guide point when qp = 1) */
+        var cx = lerp(depX, B.x, rE), cy = lerp(depY, B.y, rE);
+        var size = lerp(depSize, B.size, rE);
+        var wall = lerp(depWall, (j+1 === WALL ? 1 : 0), rE);
+        var tilt = depTilt * (1 - rE);
+        var f = qp * (1 - rE);   /* flight factor: 0 docked, 1 at the guide point */
+        /* arrival snap: within a pixel of the berth on every
+           axis, hand over now — the swap is exact at any scroll
+           speed, not just at the sampled frame where r reaches 1 */
+        if(r > 0 && Math.hypot(cx - B.x, cy - B.y) <= 1 &&
+           Math.abs(size - B.size) <= 1){
+          showBerth(j+1, B);
+          done = true;
+          break;
+        }
+        apply(cx, cy, size, tilt, wall, op0 * (1 - f*0.45));
+        /* airborne: the hands spin with the scroll — one full
+           minute-hand turn per 1.2vh scrolled (the hour hand takes
+           1/12 of it in renderHands); across the arrival handFold
+           folds the accumulated spin back to the current time */
+        if(f > 0) dispOff += dScr * 360 / (vh*1.2);
+        renderHands();
+        done = true;
+      }
+      if(!done){
+        /* past the last leg: parked at the final berth for good,
+           on the berth's own static dial like any other berth */
+        showBerth(ND - 1, V[ND-1]);
+      }
+      prevS = s;
+    }
+    var rafPend = false;
+    function requestUpdate(){
+      if(rafPend) return;
+      rafPend = true;
+      requestAnimationFrame(function(){ rafPend = false; update(); });
+    }
+    var measurePend = false;
+    function requestMeasure(){
+      if(measurePend) return;
+      measurePend = true;
+      requestAnimationFrame(function(){
+        measurePend = false;
+        if(!active) return;
+        try{ measure(); }catch(e){ fallback(); return; }
+        update();
+      });
+    }
+    function init(){
+      if(reduced){ fallback(); return; }
+      try{
+        buildTraveler();
+        buildBerthDials();
+        berthDots();
+        measure();
+      }catch(e){ fallback(); return; }
+      if(ND < 2){ fallback(); return; }
+      active = true;
+      update();
+      window.addEventListener("scroll", requestUpdate, {passive:true});
+      window.addEventListener("resize", requestMeasure);
+      window.addEventListener("load", requestMeasure);
+      if(document.fonts && document.fonts.ready) document.fonts.ready.then(requestMeasure);
+      if(window.ResizeObserver){
+        var lastH = 0, lastW = 0;
+        var ro = new ResizeObserver(function(){
+          var h = document.body ? document.body.offsetHeight : 0;
+          var w = document.body ? document.body.offsetWidth : 0;
+          if(h !== lastH || w !== lastW){ lastH = h; lastW = w; requestMeasure(); }
+        });
+        if(document.body) ro.observe(document.body);
+      }
+      document.querySelectorAll("details").forEach(function(dt){
+        dt.addEventListener("toggle", requestMeasure);
+      });
+      setInterval(function(){
+        setHands(false);
+        if(dispDock >= 1) syncBerthHands(dispDock);
+      }, 20000);
+    }
+    init();
+  })();
 })();
 </script>
 </body>
