@@ -263,17 +263,18 @@
       .hero-copy .app-line{justify-content:center}
       .hero-copy .cta-row{justify-content:center}
       @media (min-width:861px){
-        .hero-copy{left:5%;right:auto;top:47%;translate:0 -50%;margin:0;max-width:540px;text-align:left}
+        .hero-copy{left:5%;right:auto;top:47%;translate:0 -50%;margin:0;max-width:min(540px,42vw);text-align:left}
         .hero-copy .app-line{justify-content:flex-start}
         .hero-copy .cta-row{justify-content:flex-start}
       }
       @media (max-width:640px){ .hero-copy .scroll-cue{display:none} }
       .mawasu-copy{display:block;position:absolute;bottom:5svh;left:0;right:0;margin:0 auto;max-width:620px;padding:0 20px;text-align:center;z-index:3;opacity:0;animation:mawasuIn linear both;animation-timeline:--journey;animation-range:cover 42% cover 66%}
+      .mawasu-copy::before{content:"";position:absolute;inset:-18px -22px;border-radius:26px;background:radial-gradient(115% 135% at 50% 50%,rgba(250,246,238,.94) 58%,rgba(250,246,238,0) 100%);z-index:-1}
       .journey .demo-card{margin-top:0;width:100%}
       #demoStage{animation:travel linear both;animation-timeline:--journey;animation-range:cover 25% cover 70%;will-change:transform;pointer-events:none}
       .journey-stage.landed #demoStage{pointer-events:auto}
       .card-chrome{animation:chromeIn linear both;animation-timeline:--journey;animation-range:cover 53% cover 70%}
-      .demo-side{animation:sideIn linear both;animation-timeline:--journey;animation-range:cover 55% cover 71%}
+      .demo-side{animation:sideIn linear both;animation-timeline:--journey;animation-range:cover 63% cover 72%}
       .dial-shadow{animation:shadowIn linear both;animation-timeline:--journey;animation-range:cover 25% cover 70%}
       .howto-anchor{top:200svh}
       .mawasu-marker{display:block;position:absolute;top:175svh;left:0;width:100%;height:2px}
@@ -725,12 +726,14 @@
     svg.querySelector(".ring-base").setAttribute("stroke", color);
     svg.querySelector(".ring-rem").setAttribute("stroke", color);
   }
+  var ringSize = [{w:0, h:0}, {w:0, h:0}];
   function buildRing(slot){
     var pill = pills[slot];
     var w = pill.offsetWidth, h = pill.offsetHeight;
+    ringSize[slot].w = w; ringSize[slot].h = h;
     var svg = pill.querySelector(".ring");
-    svg.setAttribute("viewBox", "0 0 " + (w+4) + " " + (h+4));
-    var d = capsulePath(w+4, h+4, 2);
+    svg.setAttribute("viewBox", "0 0 " + (w+2) + " " + (h+2));
+    var d = capsulePath(w+2, h+2, 1.5);
     var frame = svg.querySelector(".ring-frame");
     frame.setAttribute("d", d);
     frame.setAttribute("stroke", PAL.frameLine);
@@ -751,6 +754,20 @@
     var F = Math.max(0, Math.min(1, frac)) * 100;
     var rem = pills[slot].querySelector(".ring-rem");
     rem.setAttribute("stroke-dasharray", "0 " + (100-F).toFixed(1) + " " + F.toFixed(1) + " 100");
+  }
+  /* The pill's width follows its countdown text (e.g. 1:00:00 -> 59:59);
+     rebuild the ring whenever the pill's box actually changes so the
+     outline always coincides with the pill's border. */
+  if(window.ResizeObserver){
+    for(var ri = 0; ri < 2; ri++){
+      (function(slot){
+        new ResizeObserver(function(){
+          var p = pills[slot];
+          if(p.hidden) return;
+          if(p.offsetWidth !== ringSize[slot].w || p.offsetHeight !== ringSize[slot].h) buildRing(slot);
+        }).observe(pills[slot]);
+      })(ri);
+    }
   }
   function paintGhost(slot){
     var color = PRESET_NAMES[slotColor[slot]];
@@ -791,6 +808,7 @@
     if(!ghosts[slot]) makeGhosts(slot);
     paintGhost(slot);
     pills[slot].hidden = false;
+    pillText[slot].textContent = "設定 " + durText(totalSec) + "　残り " + cdText(totalSec);
     buildRing(slot);
     setStatus("タイマー中です（早回し）");
     ariaUpdate();
@@ -996,8 +1014,25 @@
     var homeCx = tr.left - sr.left + tr.width/2;
     var homeCy = tr.top - sr.top + tr.height/2;
     var W = jStage.clientWidth, H = jStage.clientHeight, cx, cy, dial;
-    if(W >= 861){ cx = W*0.60; cy = H*0.52; dial = Math.min(500, H*0.50, W*0.42); }
-    else { cx = W*0.5; cy = H*0.70; dial = Math.min(W*0.80, H*0.34, 460); }
+    var copyEl = jStage.querySelector(".hero-copy");
+    var cr = copyEl ? copyEl.getBoundingClientRect() : null;
+    if(W >= 861){
+      cx = W*0.60; cy = H*0.52; dial = Math.min(500, H*0.50, W*0.42);
+      if(cr){
+        /* keep the hero clock fully clear of the headline copy */
+        var need = (cr.right - sr.left) + 24 + dial/2;
+        if(need > cx) cx = need;
+        if(cx + dial/2 > W - 12) dial = Math.max(120, 2*(W - 12 - cx));
+      }
+    } else {
+      cx = W*0.5; cy = H*0.70; dial = Math.min(W*0.80, H*0.34, 460);
+      if(cr){
+        var topLim = (cr.bottom - sr.top) + 16;
+        var avail = H - 12 - topLim;
+        if(dial > avail) dial = Math.max(120, avail);
+        if(topLim + dial/2 > cy) cy = topLim + dial/2;
+      }
+    }
     var ts = dial / dw;
     stage.style.setProperty("--tx", (cx - homeCx).toFixed(1) + "px");
     stage.style.setProperty("--ty", (cy - homeCy).toFixed(1) + "px");
